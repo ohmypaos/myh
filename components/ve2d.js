@@ -1,4 +1,4 @@
-/* Mã vẽ SVG chuyển nguyên văn từ index.html cũ — cố ý KHÔNG viết lại theo lối React.
+/* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua 13 phép kiểm và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi khoiTao() một lần sau khi mount. */
 import { LOT } from '../lib/lot.js';

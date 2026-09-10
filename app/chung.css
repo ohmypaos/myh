@@ -1,5 +1,6 @@
 /* Khung chung cho cả trang 2D và trang 3D — bảng màu giấy can, chữ hệ thống.
-   Chuyển từ <style> của index.html cũ, tách phần dùng chung ra khỏi phần riêng của bản vẽ. */
+   Chuyển từ <style> của bản vẽ HTML một-file trước đây, tách phần dùng chung ra khỏi
+   phần riêng của bản vẽ. */
 
 :root{
   --ink:#111; --dim:#8a1c1c; --paper:#fdfdfb; --panel:#fff; --muted:#666;

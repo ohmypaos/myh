@@ -1,4 +1,4 @@
-/* Phần riêng của bản vẽ 2D — chuyển nguyên văn từ index.html cũ. */
+/* Phần riêng của bản vẽ 2D — chuyển nguyên văn từ bản vẽ HTML một-file trước đây. */
 
 .app{flex:1;min-height:0;display:flex;align-items:stretch}
 .side{width:440px;flex:none;min-width:0;overflow-y:auto;overscroll-behavior:contain;
