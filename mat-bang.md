@@ -1,13 +1,51 @@
-# Mặt bằng nhà cấp 4 — 9.5 × 30 m — HIỆN TRẠNG (v1)
+# Mặt bằng nhà cấp 4 — 9.5 × 30 m
 
-> ⚠️ **File này chỉ mô tả HIỆN TRẠNG (v1)**, tức bản vẽ gốc `banve.png`.
-> Phương án đang làm việc là **v12** — xem [`mat-bang-dac-ta.md`](./mat-bang-dac-ta.md).
-> Giữ file này lại để đối chiếu, không dùng làm số liệu thi công.
+> **Bắt đầu từ đâu:** mở `index.html` — bản vẽ tương tác, chọn được cả 12 phiên bản.
 
-> Nguồn: `banve.png`. Kích thước phòng lấy từ nhãn trên bản vẽ (chính xác).
-> Toạ độ và vị trí cửa là **ước lượng** đọc từ ảnh raster — dùng làm mốc, cần xác nhận lại với bản vẽ gốc.
+## Cấu trúc
 
-## 1. Thông số lô đất
+| Đường dẫn | Nội dung |
+|---|---|
+| `index.html` | Phần dùng chung: giao diện, bộ vẽ, bộ kiểm tra, hàm sinh đặc tả |
+| `versions/v1.js` … `v12.js` | **Nguồn sự thật của số liệu.** Mỗi file một phiên bản, tự đăng ký qua `definePlan()` |
+| [`spec/v12.md`](./spec/v12.md) | **Đặc tả bản hiện hành** — phòng, tường, cửa, cửa sổ, lấy sáng mái, nội thất |
+| `spec/v1.md` … `spec/v11.md` | Đặc tả các bản cũ, để đối chiếu |
+| File này | Hiện trạng gốc (v1) và đánh giá — **lý do** dẫn tới chuỗi thay đổi |
+| `banve.png` | Bản vẽ gốc của chủ nhà |
+
+Mỗi `spec/v<n>.md` **sinh tự động** từ `versions/v<n>.js`, không sửa tay — quy trình trong `CLAUDE.md`.
+
+### Lịch sử phiên bản
+
+| Bản | Nội dung | DT kín | Bộ kiểm tra |
+|---|---|---:|---|
+| [v1](./spec/v1.md) | Hiện trạng (banve.png) | 127.0 | 1 lỗi |
+| [v2](./spec/v2.md) | Khuyến nghị lần 1 | 129.0 | 4 lỗi |
+| [v3](./spec/v3.md) | Sau 7 điểm chỉnh | 121.5 | 4 lỗi |
+| [v4](./spec/v4.md) | Sân sau thu nhỏ, lưu thông qua sân chính | 134.0 | 3 lỗi |
+| [v5](./spec/v5.md) | Thu gọn phòng, ghi số thông thủy | 124.5 | 4 lỗi |
+| [v6](./spec/v6.md) | Kho mở từ master, WC thu bề rộng | 124.5 | 4 lỗi |
+| [v7](./spec/v7.md) | WC khách thu nhỏ, chỉnh cửa | 122.7 | 4 lỗi |
+| [v8](./spec/v8.md) | Nhà chính rút còn 16 m | 102.7 | 5 lỗi |
+| [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 2 lỗi |
+| [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 1 lỗi |
+| [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 1 lỗi |
+| **[v12](./spec/v12.md)** ← | **Ban công 2 m, bếp chữ L** | **107.70** | **sạch 13/13** |
+
+Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
+thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.
+
+---
+
+# Hiện trạng gốc (v1) và đánh giá
+
+
+> Phần này số hoá bản vẽ gốc `banve.png` và ghi lại đánh giá ban đầu — **lý do** sinh ra
+> chuỗi thay đổi v2 → v12. Số liệu ở đây **không dùng để thi công**; bản chốt là `spec/v12.md`.
+> Kích thước phòng lấy từ nhãn trên bản vẽ (chính xác); toạ độ và vị trí cửa là **ước lượng**
+> đọc từ ảnh raster.
+
+## A. Thông số lô đất
 
 | Mục | Giá trị |
 |---|---|
@@ -19,13 +57,10 @@
 | Diện tích sân | ~151 m² (53% lô đất) |
 | Số phòng ngủ | 2 |
 
-## 2. Hệ toạ độ
+Hệ toạ độ giống đặc tả: gốc `(0,0)` = góc **trên-trái** lô, `X` tăng sang phải (0 → 9.5),
+`Y` tăng xuống dưới (0 → 30). Hướng "trên" của bản vẽ = mặt tiền.
 
-Gốc `(0,0)` = góc **trên-trái** của lô.
-`X` tăng sang phải (0 → 9.5). `Y` tăng xuống dưới (0 → 30).
-Hướng "trên" của bản vẽ = mặt tiền (phía có sân chính/sân phụ).
-
-## 3. Danh sách phòng
+## B. Danh sách phòng — v1
 
 ### Cột trái — lô chính (x: 0 → 5.0)
 
@@ -58,9 +93,10 @@ Kiểm tra chiều ngang: 4.1 (phòng) + 0.9 (hành lang) = **5.0** ✔
 Kiểm tra chiều sâu: 18.0 + 7.0 + 5.0 = **30.0** ✔
 Kiểm tra chiều ngang: 3.5 (bếp) + 1.0 (hành lang ngoài) = **4.5** ✔
 
-> ⚠️ Nhãn "SÂN PHƠI / GIẶT 4.5 × 5.0m" trên bản vẽ **ghi sai**: WC khách (5.0 m²) nằm chồng lên góc dưới-phải. Diện tích sân phơi thực = **17.5 m²**.
+> ⚠️ Nhãn "SÂN PHƠI / GIẶT 4.5 × 5.0m" trên bản vẽ gốc **ghi sai**: WC khách (5.0 m²) nằm
+> chồng lên góc dưới-phải. Diện tích sân phơi thực = **17.5 m²**.
 
-## 4. Cửa hiện trạng (ước lượng)
+## C. Cửa hiện trạng (ước lượng)
 
 | ID | Nối | Tường | Vị trí ước | Ghi chú |
 |---|---|---|---|---|
@@ -76,9 +112,10 @@ Kiểm tra chiều ngang: 3.5 (bếp) + 1.0 (hành lang ngoài) = **4.5** ✔
 | D10 | Sân phơi ↔ WC khách | x = 7.0 | y ≈ 29.0 | |
 | — | Sân chính ↔ Sân phơi | qua R3 | x 8.5–9.5 | Lối đi ngoài trời, có mái |
 
-## 5. Đánh giá kích thước
+## D. Đánh giá kích thước v1
 
 ### Đạt
+
 | Phòng | Kích thước | Ghi chú |
 |---|---|---|
 | Phòng khách | 5.0 × 6.0 = 30.0 m² | Rộng rãi, tỉ lệ tốt |
@@ -88,6 +125,7 @@ Kiểm tra chiều ngang: 3.5 (bếp) + 1.0 (hành lang ngoài) = **4.5** ✔
 | Hành lang ngoài | 1.0 × 7.0 | Hẹp nhưng đúng chức năng lối phụ |
 
 ### Cần chỉnh
+
 | # | Phòng | Vấn đề | Đề xuất |
 |---|---|---|---|
 | S1 | **Phòng thờ** 4.1 × 2.0 | Sâu 2.0m quá cạn. Tủ thờ sâu 0.6–0.87m → còn ~1.2m đứng lễ, không lùi đủ để vái. | Tăng sâu ≥ 2.4m |
@@ -98,9 +136,7 @@ Kiểm tra chiều ngang: 3.5 (bếp) + 1.0 (hành lang ngoài) = **4.5** ✔
 | S6 | **Sân chính** 4.5 × 18.0 = 81 m² | Chiếm 28% lô đất chỉ để 1 xe + bộ bàn ngoài trời | Nguồn dự trữ nếu cần thêm phòng ngủ 3 |
 | S7 | **Tổng thể** | 285 m² đất chỉ có **2 phòng ngủ** — mật độ rất thấp | Lô cỡ này thường bố trí được 3–4 phòng ngủ |
 
-## 6. Đề xuất chỉnh vị trí cửa
-
-Ràng buộc: **không đổi vị trí phòng**, chỉ chỉnh cửa.
+## E. Đề xuất chỉnh vị trí cửa (ràng buộc: không đổi vị trí phòng)
 
 | # | Đề xuất | Lý do | Ưu tiên |
 |---|---|---|---|
@@ -110,11 +146,12 @@ Ràng buộc: **không đổi vị trí phòng**, chỉ chỉnh cửa.
 | C4 | **Mở cửa/cửa sổ lớn: Master → Sân sau** tại tường `y = 27.5` | Sân sau 12.5 m² hiện chỉ để thoáng, không có lối vào lau dọn/bảo trì. | Trung bình |
 | C5 | Giữ nguyên D8, D9 | Đúng luồng công năng: nấu → giặt → phơi. | — |
 
-## 7. Nếu áp dụng cả S1–S3 + C1–C4 (tham khảo)
+## F. Phác thảo v2 (đã bị v4 → v12 thay thế)
 
-Cột trái, chiều sâu vẫn giữ tổng 30.0:
+Giữ lại để thấy bước trung gian: nếu chỉ áp S1–S3 + C1–C4 mà **không** rút ngắn nhà chính,
+cột trái sẽ thành như dưới đây — tổng chiều sâu vẫn 30.0.
 
-| Phòng | Kích thước mới | DT |
+| Phòng | Kích thước | DT |
 |---|---|---|
 | Phòng thờ | 4.1 × 2.4 | 9.84 |
 | Phòng ngủ 1 | 4.1 × 3.5 | 14.35 |
@@ -123,4 +160,7 @@ Cột trái, chiều sâu vẫn giữ tổng 30.0:
 | Master | 5.0 × 3.5 | 17.50 |
 | WC master + tủ áo | 5.0 × 2.2 | 11.00 |
 
-*(Cần cân lại 0.4m chênh do phòng thờ tăng sâu — lấy từ sân phụ 8.0 → 7.6 hoặc sân sau 2.5 → 2.1.)*
+*(Còn lệch 0.4m do phòng thờ tăng sâu — lấy từ sân phụ 8.0 → 7.6 hoặc sân sau 2.5 → 2.1.)*
+
+Từ v4 trở đi hướng đi đổi hẳn: rút ngắn khối nhà chính (22.4 → 18.0 m) và trả diện tích
+cho sân, thay vì nhồi thêm phòng. Chi tiết từng bước xem dropdown phiên bản trong `index.html`, hoặc `spec/v<n>.md`.
