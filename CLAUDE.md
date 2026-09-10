@@ -82,7 +82,7 @@ Một thay đổi thiết kế = một commit gồm đủ: `lib/versions/current
 Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào từng file mặt bằng; phương
 án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay. Cốt sàn từng phòng, bậc tam cấp và mái
-hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai mã cửa có bậc (`steps`), phòng có cốt sàn
+hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
 riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
 đọc trước khi sửa.
 

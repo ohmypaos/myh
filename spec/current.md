@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
 
-> Sinh tự động từ `lib/versions/current.js` lúc 00:36:01 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 00:48:32 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -88,13 +88,13 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
 ### Bậc tam cấp
 
-Vị trí suy từ cửa, đặt phía sân. Toạ độ tính từ tim tường. Số bậc không tính nấc trên cùng — nấc đó chính là sàn nhà.
+Vị trí suy từ cửa, đặt phía thấp, bắt đầu từ mặt tường. Số bậc không tính nấc trên cùng — nấc đó chính là ngưỡng cửa.
 
-| Cửa | Xuống | x₁ | y₁ | x₂ | y₂ | Số bậc | Cao bậc | Mặt bậc |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| D1 | SÂN PHỤ | 0.60 | 11.40 | 4.40 | 12.00 | 2 | 0.15 | 0.30 |
-| D2 | SÂN CHÍNH | 5.00 | 15.20 | 5.60 | 16.80 | 2 | 0.15 | 0.30 |
-| D13 | SÂN PHƠI / GIẶT | 5.00 | 28.30 | 5.60 | 29.70 | 2 | 0.15 | 0.30 |
+| Cửa | Xuống | x₁ | y₁ | x₂ | y₂ | Dư mỗi bên | Số bậc | Cao bậc | Mặt bậc |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| D1 | SÂN PHỤ | 0.60 | 11.29 | 4.40 | 11.89 | 0.30 | 2 | 0.15 | 0.30 |
+| D2 | SÂN CHÍNH | 5.11 | 15.30 | 5.61 | 16.70 | 0.20 | 2 | 0.15 | 0.25 |
+| D13 | SÂN PHƠI / GIẶT | 5.11 | 28.40 | 5.61 | 29.60 | 0.20 | 2 | 0.15 | 0.25 |
 
 ### Mái hiên
 
@@ -217,7 +217,7 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - WC khách 1.6 → **2.0 × 2.0 m**, hai tường trong xuống 100 mm
 - W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 1.90 — không nhìn ra được
 - D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
-- **Bậc tam cấp** cho D1, D2, D13 — 2 bậc ngoài, nấc trên là sàn nhà; mỗi nấc 15 cm, mặt 30 cm
+- **Bậc tam cấp** cho D1, D2, D13 — 2 bậc ngoài, nấc trên là sàn nhà; mỗi nấc 15 cm, tính từ mặt tường. D1 mặt bậc 30 cm, rộng hơn cửa 0.3 m mỗi bên; cửa phụ D2, D13 gọn hơn — mặt bậc 25 cm, dư 0.2 m mỗi bên
 - Sàn bếp **hạ còn +0.15 so với sân** — D9, D10 chỉ còn một nấc ở ngưỡng, khỏi dựng bậc; mái bếp giữ cốt nên trần cách sàn 3.60 m
 - **Mái hiên bê tông** đua 1.2 m trước cửa chính, thay cho mái che xe đã bỏ
 - Sàn WC khách **hạ còn +0.15 so với sân**, cùng cốt với bếp — D11 khỏi dựng bậc

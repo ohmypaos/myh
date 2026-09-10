@@ -104,8 +104,8 @@ export function init(){
     }
   }
 
-  /* Bậc tam cấp — vị trí suy từ cửa (lib/envelope.js). Vạch ngang là mép từng bậc. Vẽ dưới lớp
-     tường nên phần bậc lấn vào bề dày tường bị che đi. */
+  /* Bậc tam cấp — vị trí suy từ cửa (lib/envelope.js), bắt đầu từ mặt tường. Vạch ngang là mép
+     từng bậc. */
   function drawSteps(){
     for(const s of stepsOf(V)){
       if(s.error) continue;
@@ -113,7 +113,7 @@ export function init(){
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'#ebe6d8',
         stroke:'#8d8778',stroke_width:1.4},gStep);
       for(let k=1;k<s.count;k++){
-        const t = s.pos + s.dir*k*s.tread;
+        const t = s.face + s.dir*k*s.tread;
         const d = s.ax==='h' ? {x1:M(s.a),y1:M(t),x2:M(s.b),y2:M(t)}
                              : {x1:M(t),y1:M(s.a),x2:M(t),y2:M(s.b)};
         el('line',{...d,stroke:'#8d8778',stroke_width:1.2},gStep);

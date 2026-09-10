@@ -31,7 +31,7 @@ const CHECKS = [
   'Diện tích mái bằng phòng kín trừ đúng phần giếng trời',
   'Các mảnh mái không chồng lên nhau',
   'Kính giếng trời nằm đúng cao độ trần',
-  'Bậc cần có đều dựng được, bậc cao nhất áp vào tường cửa và thấp hơn ngưỡng cửa đúng một nấc',
+  'Bậc cần có đều dựng được, đều nhau, bậc cao nhất áp mặt tường cửa và thấp hơn ngưỡng đúng một nấc',
 ];
 
 function check(plan){
@@ -155,10 +155,22 @@ function check(plan){
     const gap = sill - top.y1;
     if (!(gap > STEP.rise * 0.5 && gap < STEP.rise * 1.5))
       e.push(`bậc ${id} cao nhất ở ${n(top.y1)}, ngưỡng cửa ${n(sill)} — phải thấp hơn đúng một nấc`);
+    /* Áp vào mặt tường: đường tim ± nửa bề dày tường dưới cửa, tra thẳng từ danh sách tường. */
+    const t = d ? Math.max(0, ...plan.walls
+      .filter(w => w[0] === d[1] && Math.abs(w[1] - d[2]) < EPS && w[2] < d[4] && w[3] > d[3])
+      .map(w => w[4])) : 0;
+    const faces = d ? [d[2] - t / 2, d[2] + t / 2] : [];
+    const near = v => faces.some(f => Math.abs(v - f) < EPS);
     const touches = d && (d[1] === 'h'
-      ? Math.abs(top.z - d[2]) < EPS || Math.abs(top.z + top.d - d[2]) < EPS
-      : Math.abs(top.x - d[2]) < EPS || Math.abs(top.x + top.w - d[2]) < EPS);
-    if (!touches) e.push(`bậc cao nhất của ${id} không áp vào tường cửa`);
+      ? near(top.z) || near(top.z + top.d)
+      : near(top.x) || near(top.x + top.w));
+    if (!touches) e.push(`bậc cao nhất của ${id} không áp vào mặt tường cửa`);
+
+    /* Các bậc phải đều: mọi mặt bậc cùng một bề sâu. (Lỗi đo từ tim tường — bậc trên bị tường
+       nuốt mất nửa bề dày — thì điều kiện "áp mặt tường" ở trên bắt, không phải điều kiện này.) */
+    const depths = list.map(b => (d && d[1] === 'h' ? b.d : b.w));
+    if (Math.max(...depths) - Math.min(...depths) > EPS)
+      e.push(`bậc ${id} không đều: mặt bậc ${depths.map(n).join(' / ')}`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

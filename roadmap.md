@@ -218,7 +218,7 @@ của A4** — làm trước được.
 
 - [x] D13 đổi chiều mở vào ban công — đã vào `current.js`
 - [x] Bậc cho D1, D2, D13 (D9, D10 bỏ — sàn bếp hạ còn +0.15): khai trong `current.js` theo mã cửa; kích thước (3 nấc 0.15 tính cả sàn nhà → 2 bậc ngoài,
-      mặt 0.30, dư 0.3 m mỗi bên) là hằng số ở `lib/lot.js`. Vị trí **suy từ cửa và phía sân** chứ
+      mặt 0.30) là hằng số ở `lib/lot.js`, phần dư mỗi bên khai theo từng cửa. Vị trí **suy từ cửa và phía sân** chứ
       không khai toạ độ — dịch tường thì bậc đi theo cửa
 - [x] `lib/massing.js` dựng một hộp mỗi bậc; `lib/plan.js` thêm phép kiểm bậc nằm gọn trong sân,
       không chồng nội thất và vùng quét cánh
@@ -250,6 +250,17 @@ tường ở thanh trượt là cả hai đi theo.
 > bếp và sàn WC khách 3.60 m; hạ mái bếp theo sàn thì mép mái thấp hơn mép cao mái sân phơi. Góc bàn
 > trà hết bậc D9, còn 2.9 × 3.0 m. Phần trời cửa bếp tính lại: W2 42%, D9 52%, D10 37%, cả bếp vẫn
 > 55%.
+
+> **Chủ nhà chỉnh tiếp (11/9/2026): bậc không đều, bậc cửa phụ hẹp lại.** Bậc đo từ tim tường nên
+> nửa bề dày tường (0.11 m) nuốt mất phần bậc trên — bậc trên lộ ra 0.19 m, bậc dưới 0.30 m. Nay
+> bậc và mái hiên **đo từ mặt ngoài tường**; `check-3d` phép kiểm 9 đòi bậc cao nhất áp đúng mặt
+> tường và các mặt bậc đều nhau. Phần dư mỗi bên khai theo từng cửa, bỏ `STEP.margin` chung:
+> `steps:{D1:0.30, D2:0.20, D13:0.20}` — thử 0.10 cho cửa phụ thì chủ nhà thấy quá hẹp, dễ hụt chân.
+> Góc bàn trà còn 2.8 × 3.0 m.
+
+> **Chủ nhà chỉnh tiếp (11/9/2026): mặt bậc cửa phụ D2, D13 còn 0.25 m** (cửa chính giữ 0.30),
+> nhô 0.5 m thay vì 0.6 m. `steps` đổi sang `{ mã cửa: { margin, tread } }`, bỏ trống `tread` thì
+> lấy `STEP.tread`. Góc bàn trà còn 2.9 × 3.0 m.
 
 > **Vấp khi thử dịch lưới:** kéo `x = 5` sang 5.4 làm cửa D10 vắt qua đường `x = 8.5`, bậc nhận
 > nhầm hành lang ngoài là "phía sân" và quay vào trong bếp. Đã sửa: phía bậc lấy **ngược phía
