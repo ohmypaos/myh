@@ -13,7 +13,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { LOT, frontAzimuth, setFrontAzimuth } from '../lib/lot.js';
+import { LOT, HEIGHTS, CARPORT_ROOF, frontAzimuth, setFrontAzimuth } from '../lib/lot.js';
+import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { PLACES, KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
@@ -47,7 +48,7 @@ export function init(){
 
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
      dọn thì canvas và mấy danh sách tự đổ (phương án, nơi xây, mốc ngày) dựng chồng nhau. */
-  for (const id of ['canvas3d', 'plan3', 'place', 'keyDates'])
+  for (const id of ['canvas3d', 'plan3', 'place', 'keyDates', 'heightSliders', 'carportSliders'])
     document.getElementById(id)?.replaceChildren();
 
   /* ═══════════ RENDERER · CẢNH ═══════════ */
@@ -334,13 +335,94 @@ export function init(){
     planSel.appendChild(o);
   });
 
-  let plan = PLANS[PLANS.length - 1];
+  let plan = PLANS[PLANS.length - 1], CFG = null;
+
   function openPlan(id){
     plan = PLANS.find(p => p.id === id) || plan;
     planSel.value = plan.id;
     setHtml('planTitle', plan.label);
     setHtml('planNote', plan.note || '');
-    build(plan);
+
+    /* Cấu hình dùng chung với bản vẽ 2D (lib/config.js). Phần `lines` chỉ đúng với mặt bằng
+       đã sinh ra nó nên bỏ khi đổi mặt bằng; cao độ và mái che thì giữ. */
+    const saved = readConfig();
+    CFG = emptyConfig(plan.id);
+    CFG.heights = saved?.heights || {};
+    CFG.carport = saved?.carport || {};
+    if (saved && saved.planId === plan.id) CFG.lines = saved.lines || CFG.lines;
+
+    rebuild();
+    buildHeightSliders();
+    buildCarportSliders();
+  }
+
+  /* Dựng lại khối từ mặt bằng đã áp cấu hình. Camera và mặt trời giữ nguyên. */
+  function rebuild(){
+    build(applyConfig(plan, CFG));
+    const saved = readConfig();
+    setHtml('cfgState3', isEmpty(CFG)
+      ? 'Đang xem đúng kích thước gốc.'
+      : '<b>Đang xem bản tuỳ chỉnh.</b> Kích thước phòng kéo ở trang bản vẽ 2D.');
+    if (saved !== null || !isEmpty(CFG)) writeConfig(CFG);
+  }
+
+  /* ═══════════ THANH TRƯỢT CAO ĐỘ VÀ MÁI CHE ═══════════ */
+  const HEIGHT_ROWS = [
+    { key:'ceiling', name:'Cao trần',            min:2.4, max:5.0 },
+    { key:'floor',   name:'Cốt nền so với sân',  min:0.0, max:1.2 },
+    { key:'door',    name:'Cao cửa',             min:1.9, max:3.0 },
+    { key:'sill',    name:'Bệ cửa sổ',           min:0.0, max:1.6 },
+    { key:'head',    name:'Mép trên cửa sổ',     min:1.4, max:3.2 },
+    { key:'slab',    name:'Dày bản mái',         min:0.1, max:0.6 },
+    { key:'fence',   name:'Tường rào',           min:1.2, max:3.0 },
+    { key:'alley',   name:'Mái hiên hành lang ngoài', min:2.0, max:4.0 },
+  ];
+
+  function slider(host, { name, value, min, max, step, onInput, hint }){
+    const row = document.createElement('div');
+    row.className = 'cfgrow';
+    const lab = document.createElement('label');
+    const sl = document.createElement('input');
+    sl.type = 'range'; sl.min = min; sl.max = max; sl.step = step; sl.value = value;
+    const show = () => { lab.innerHTML = `${name} — <b>${(+sl.value).toFixed(2)} m</b>`; };
+    show();
+    sl.oninput = () => { show(); onInput(+sl.value); if (hint) hint(); };
+    row.append(lab, sl);
+    host.appendChild(row);
+    return row;
+  }
+
+  function buildHeightSliders(){
+    const host = document.getElementById('heightSliders');
+    if (!host) return;
+    host.replaceChildren();
+    const eff = { ...HEIGHTS, ...CFG.heights };
+    for (const r of HEIGHT_ROWS)
+      slider(host, { name: r.name, value: eff[r.key], min: r.min, max: r.max, step: 0.05,
+        onInput: v => { CFG.heights[r.key] = v; rebuild(); } });
+  }
+
+  function carportInfo(){
+    const c = { ...CARPORT_ROOF, ...CFG.carport };
+    const yard = applyConfig(plan, CFG).rooms.find(r => /SÂN PHỤ/.test(r[1]));
+    const open = yard ? yard[5] - c.length : null;
+    setHtml('carportInfo', open === null
+      ? `Phủ <b>${c.length.toFixed(1)} m</b>`
+      : `Phủ <b>${c.length.toFixed(1)} m</b> / sân phụ ${yard[5].toFixed(1)} m —`
+        + ` hở <b>${open.toFixed(1)} m</b> phía cổng.`
+        + ` Phủ càng dài càng đỡ mưa nhưng càng bịt nguồn sáng Đông Bắc qua cửa chính.`);
+  }
+
+  function buildCarportSliders(){
+    const host = document.getElementById('carportSliders');
+    if (!host) return;
+    host.replaceChildren();
+    const c = { ...CARPORT_ROOF, ...CFG.carport };
+    slider(host, { name:'Phủ dài', value:c.length, min:0, max:12, step:0.1,
+      onInput: v => { CFG.carport.length = v; rebuild(); }, hint: carportInfo });
+    slider(host, { name:'Cao', value:c.height, min:2.2, max:3.8, step:0.05,
+      onInput: v => { CFG.carport.height = v; rebuild(); }, hint: carportInfo });
+    carportInfo();
   }
 
   const placeSel = document.getElementById('place');
@@ -379,6 +461,13 @@ export function init(){
 
   on('azimuth', 'input', e => { setFrontAzimuth(+e.target.value); updateAzimuth(); });
   on('azReset', 'click', () => { setFrontAzimuth(null); updateAzimuth(); });
+
+  on('cfg3Reset', 'click', () => {
+    CFG.heights = {}; CFG.carport = {};
+    rebuild();
+    buildHeightSliders();
+    buildCarportSliders();
+  });
 
   on('vRoof', 'click', e => {
     roofHidden = !roofHidden;

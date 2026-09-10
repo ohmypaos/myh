@@ -42,6 +42,7 @@ export default function Plan3D() {
           <section>
             <h2 id="planTitle">Phiên bản</h2>
             <div id="planNote" />
+            <p className="vmeta" id="cfgState3" />
           </section>
 
           <section>
@@ -58,6 +59,20 @@ export default function Plan3D() {
               Chỉ đổi đường đi của nắng và mũi tên bắc — hình khối giữ nguyên. Bản vẽ 2D đọc
               cùng giá trị này nên hai trang không nói hai đằng.
             </p>
+          </section>
+
+          <section>
+            <h2>Cao độ</h2>
+            <div id="heightSliders" />
+          </section>
+
+          <section>
+            <h2>Mái che sân phụ</h2>
+            <div id="carportSliders" />
+            <p className="sun" id="carportInfo" />
+            <div className="mocs">
+              <button id="cfg3Reset">Về cao độ và mái che gốc</button>
+            </div>
           </section>
 
           <section>

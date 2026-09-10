@@ -33,3 +33,9 @@
   .sheet{flex:none;height:66vh;min-height:320px;border-bottom:1px solid #c9c6bd}
   .side{width:auto;border-left:none;overflow:visible}
 }
+
+/* ═══ thanh trượt tuỳ chỉnh (roadmap E2) ═══ */
+.cfgrow{margin:0 0 10px}
+.cfgrow:last-child{margin-bottom:0}
+.cfgrow label{display:block;font-size:12.5px;color:#555;margin-bottom:3px}
+.cfgrow input[type=range]{width:100%;accent-color:#8a1c1c;margin:0}

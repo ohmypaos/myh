@@ -5,6 +5,9 @@ import { LOT, frontAzimuth } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
+import { MIN_CLEAR } from '../lib/lot.js';
+import { toGrid, movableLines } from '../lib/grid.js';
+import { applyConfig, readConfig, writeConfig, emptyConfig } from '../lib/config.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -599,14 +602,137 @@ export function init(){
   });
   sel.value = PLANS.length-1;                 // mặc định mở bản mới nhất
 
+  let BASE, CFG, GRID;
+
   function loadVersion(i){
-    V = PLANS[i];
+    BASE = PLANS[i];
+    GRID = toGrid(BASE);
+
+    /* Chỉ số đường lưới chỉ có nghĩa trong đúng một mặt bằng, nên đổi mặt bằng là bỏ phần
+       `lines`. Cao độ và mái che không dính lưới nên giữ nguyên. */
+    const saved = readConfig();
+    CFG = emptyConfig(BASE.id);
+    CFG.heights = saved?.heights || {};
+    CFG.carport = saved?.carport || {};
+    if (saved && saved.planId === BASE.id) CFG.lines = saved.lines || CFG.lines;
+
+    draw(true);
+    buildSizePanel();
+  }
+  sel.onchange = () => loadVersion(+sel.value);
+
+  /* ═══════════ TUỲ CHỈNH KÍCH THƯỚC ═══════════
+     Kéo một thanh = dịch một đường lưới. Mọi thứ bám vào đường đó tự đi theo (lib/grid.js),
+     nên ở đây chỉ còn việc dựng lại và vẽ. `refit` chỉ đúng khi mới mở mặt bằng — kéo thanh
+     mà nhảy về vừa khung thì mất chỗ đang nhìn. */
+  function draw(refit){
+    V = applyConfig(BASE, CFG);
     ROOMS=V.rooms; WALLS=V.walls; DOORS=V.doors; WINDOWS=V.windows;
     SKYLIGHTS=V.skylights; FURN=V.furn; GATES=V.gates; STRIPS=V.strips; DIMS=V.dims;
     buildPlan(); buildTables();
-    mode='fit'; fit();
+    if(refit){ mode='fit'; fit(); }
   }
-  sel.onchange = () => loadVersion(+sel.value);
+
+  const movedLines = () =>
+    Object.keys(CFG.lines.x).length + Object.keys(CFG.lines.y).length;
+
+  /* Giá trị hiện hành của từng đường: giá trị gốc, đè bằng phần đã kéo. */
+  function liveLines(){
+    return {
+      x: GRID.xs.map((v,i)=> CFG.lines.x[i] ?? v),
+      y: GRID.ys.map((v,i)=> CFG.lines.y[i] ?? v),
+    };
+  }
+
+  /* Kích thước lọt lòng theo chiều vuông góc với đường — đây mới là số người dùng quan tâm. */
+  function clearAcross(room, axis){
+    const c = clearOf(room, WALLS);
+    return axis==='x' ? c.w : c.h;
+  }
+
+  function buildSizePanel(){
+    const box = document.getElementById('cfgSliders');
+    if(!box) return;
+    box.replaceChildren();
+
+    for(const line of movableLines(GRID)){
+      const row = document.createElement('div');
+      row.className = 'cfgrow';
+
+      const lab = document.createElement('label');
+      const sides = [line.before.join(' · ') || 'cạnh lô', line.after.join(' · ') || 'cạnh lô'];
+      lab.textContent = `${sides[0]}  ↕  ${sides[1]}`;
+
+      const sl = document.createElement('input');
+      sl.type='range'; sl.step='0.1';
+      sl.oninput = () => {
+        CFG.lines[line.axis][line.index] = +(+sl.value).toFixed(2);
+        writeConfig(CFG);
+        draw(false);
+        refreshSizePanel();
+      };
+
+      const sizes = document.createElement('div');
+      sizes.className = 'cfgsizes';
+
+      row.append(lab, sl, sizes);
+      row._line = line; row._sl = sl; row._sizes = sizes; row._lab = lab;
+      box.appendChild(row);
+    }
+    refreshSizePanel();
+  }
+
+  function refreshSizePanel(){
+    const box = document.getElementById('cfgSliders');
+    if(!box) return;
+    const live = liveLines();
+
+    for(const row of box.children){
+      const { axis, index } = row._line;
+      const lines = live[axis];
+
+      /* Khoảng kéo là hai đường kề — chừa 0.1 m để hai đường không trùng nhau, vì trùng là
+         phòng bẹp bằng 0 và mọi thứ dựa trên nó thành vô nghĩa. Đây không phải "chặn khi
+         chật": chật thì vẫn kéo được, chỉ tô đỏ. */
+      row._sl.min = (lines[index-1] + 0.1).toFixed(1);
+      row._sl.max = (lines[index+1] - 0.1).toFixed(1);
+      row._sl.value = lines[index];
+
+      const moved = CFG.lines[axis][index] !== undefined;
+      row.classList.toggle('moved', moved);
+
+      const touching = V.rooms.filter(r => {
+        const lo = axis==='x' ? r[2] : r[3], hi = lo + (axis==='x' ? r[4] : r[5]);
+        return Math.abs(lo - lines[index]) < 1e-6 || Math.abs(hi - lines[index]) < 1e-6;
+      });
+
+      row._sizes.replaceChildren();
+      for(const r of touching){
+        const size = clearAcross(r, axis);
+        const min = MIN_CLEAR[r[6]] ?? 0;
+        const span = document.createElement('span');
+        if(size < min - 1e-9) span.className = 'tight';
+        span.innerHTML = `${r[1]} <b>${size.toFixed(2)}</b>`;
+        row._sizes.appendChild(span);
+      }
+    }
+
+    const n = movedLines();
+    const st = document.getElementById('cfgState');
+    if(st) st.innerHTML = n
+      ? `<b>Đang xem bản tuỳ chỉnh</b> — ${n} tường đã dịch. Số đỏ là phòng hẹp hơn ngưỡng tạm.`
+      : 'Đang xem đúng kích thước gốc.';
+    const rs = document.getElementById('cfgReset');
+    if(rs) rs.disabled = !n;
+  }
+
+  const cfgReset = document.getElementById('cfgReset');
+  if(cfgReset) cfgReset.onclick = () => {
+    CFG.lines = { x:{}, y:{} };
+    writeConfig(CFG);
+    draw(false);
+    refreshSizePanel();
+  };
 
   /* ═══════════ PAN / ZOOM ═══════════ */
   const view  = svg.parentNode;

@@ -39,7 +39,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
 | E1 | Đổi hướng nhà được | ✅ xong | |
-| E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ⬜ chưa làm | E0 |
+| E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ✅ xong | |
 | E3 | Lưu cấu hình đặt tên trong `localStorage` | ⬜ chưa làm | E2 |
 | **Hạ tầng** ||||
 | D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
@@ -253,7 +253,7 @@ học nên `validate()` và `spec/` không phụ thuộc nó.
 
 > **E3 sẽ gom khoá này vào cấu hình đặt tên.** Giờ để riêng một khoá `myh.frontAzimuth` cho gọn.
 
-### ⬜ E2 · Advanced config — ranh phòng và cao độ
+### ✅ E2 · Advanced config — ranh phòng và cao độ
 
 **Phạm vi: ranh giới phòng + cao độ + mái che sân phụ.** Cụ thể là vị trí các bức tường ngăn
 (đường lưới), `HEIGHTS` và `CARPORT_ROOF` trong `lib/lot.js`.
@@ -309,21 +309,25 @@ Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. 
 - [x] **E2b · Lan truyền tới phòng kề.** Hoá ra **không cần mã riêng**: mọi thứ đã neo vào lưới
       nên `withLine()` chỉ đổi một con số rồi dựng lại, phòng / tường / cửa / giếng trời / nội
       thất / `dims` / `areas` tự đi theo. Đúng luật: chỉ thứ bám vào đúng đường đó mới đổi.
-- [ ] **E2c · Kích thước tối thiểu.** Dữ liệu mới, chưa có ở đâu. Để ở `lib/lot.js` cạnh
-      `HEIGHTS`. Dùng để **tô đỏ**, không dùng để chặn.
-      **Số cụ thể chưa chốt** — cần chủ nhà cho con số thật, đừng bịa. Lưu ý hành lang hiện đã
-      là 0.84 m lọt lòng, tức gần như không co được nữa; ngưỡng đặt sai thì nó đỏ ngay từ đầu.
-- [ ] **E2d · Sidebar kéo thả — một thanh trượt cho mỗi bức tường.** Không phải mỗi phòng một
-      thanh: **tường chung tính là một**, nên kéo nó là thấy ngay cả hai phòng hai bên đổi cùng
-      lúc, không có chỗ mập mờ "nới master thì mép nào dịch". Nhãn ghi tên hai phòng nó ngăn
-      cách, bên cạnh là kích thước hiện tại của cả hai — **số nào bị ép quá thì đỏ lên**.
-      Dùng thanh trượt chứ không phải ô nhập số: gõ tay dễ ra số vô lý và không thấy hệ quả
-      trong lúc gõ.
-- [ ] **E2e · Thanh trượt cao độ.** `HEIGHTS`: cao trần, cao cửa, bệ cửa sổ, dày mái. Không dính
-      lưới nên làm độc lập được, và là thứ đổi hẳn cảm giác tỉ lệ đứng trong 3D.
-- [ ] **E2f · Thanh trượt mái che sân phụ.** Xem khung dưới — chỉ hai con số là thanh trượt
-      thật, ba con số còn lại phải suy ra.
-- [ ] 13 phép kiểm chạy sau mỗi lần sửa, hiện lỗi ngay tại chỗ — lưới an toàn
+- [x] **E2c · Kích thước tối thiểu.** `MIN_CLEAR` trong `lib/lot.js`, dùng để **tô đỏ**, không
+      chặn. **Số vẫn là tạm, chờ chủ nhà chốt** — đặt bằng chỗ chật nhất mà chính thiết kế hiện
+      tại đã chấp nhận rồi lùi xuống chút, để không tô đỏ oan ngay từ đầu: hành lang 0.84,
+      WC khách 1.38, phòng thờ 1.90, ban công 1.78 → ngưỡng `circ 0.80 · wet 1.30 · room 1.80 ·
+      yard 1.00`.
+- [x] **E2d · Sidebar kéo thả — một thanh trượt cho mỗi bức tường**, ở trang bản vẽ 2D (chỗ
+      nhìn thấy kích thước và kết quả 13 phép kiểm). 13 thanh: nhãn ghi tên các phòng hai bên,
+      dưới là kích thước lọt lòng của từng phòng, **số nào hẹp hơn ngưỡng thì đỏ**.
+- [x] **E2e · Thanh trượt cao độ**, ở trang 3D (chỗ nhìn thấy hệ quả). 8 thanh.
+- [x] **E2f · Thanh trượt mái che sân phụ**, ở trang 3D. Đúng hai thanh — `length` và `height`;
+      `x`, `w`, `fromY` suy từ phòng sân phụ. Thanh `length` hiện kèm số **hở bao nhiêu mét phía
+      cổng** theo thời gian thực.
+- [x] 13 phép kiểm chạy sau mỗi lần kéo, hiện lỗi ngay ở cột phải — lưới an toàn
+- [x] Cấu hình dùng chung ở `lib/config.js` (`localStorage`), 2D và 3D đọc cùng một chỗ
+
+> **Đường lưới kéo được: 13 trên 17.** Bốn cạnh lô cố định. Khoảng kéo của mỗi thanh là hai
+> đường kề, chừa 0.1 m để hai đường không trùng nhau — trùng là phòng bẹp bằng 0 và mọi thứ dựa
+> trên nó thành vô nghĩa. Đó là giữ hình học hợp lệ, không phải "chặn khi chật": chật thì vẫn
+> kéo được, chỉ tô đỏ.
 
 #### Mái che sân phụ: chỉ hai con số là tự do
 

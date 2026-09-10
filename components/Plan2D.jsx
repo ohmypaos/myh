@@ -59,6 +59,17 @@ export default function Plan2D() {
             <div id="vCheck" />
           </section>
           <section>
+            <h2>Tuỳ chỉnh kích thước</h2>
+            <p className="vmeta">
+              Mỗi thanh là <b>một bức tường</b> — tường chung tính là một, nên kéo nó là thấy
+              ngay cả hai bên đổi cùng lúc. Cửa, giếng trời và nội thất đi theo.
+            </p>
+            <div id="cfgSliders" />
+            <p className="vmeta" id="cfgState" />
+            <button id="cfgReset">Về kích thước gốc</button>
+          </section>
+
+          <section>
             <h2>Bảng thống kê phòng</h2>
             <table id="sched" />
           </section>

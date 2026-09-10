@@ -44,3 +44,18 @@
   .sheet{flex:none;height:68vh;min-height:320px;border-bottom:1px solid #c9c6bd}
   .side{width:auto;border-left:none;overflow:visible}
 }
+
+/* ═══ tuỳ chỉnh kích thước (roadmap E2) ═══ */
+.cfgrow{margin:0 0 11px;padding-bottom:9px;border-bottom:1px dashed #e3e0d8}
+.cfgrow:last-child{border-bottom:0}
+.cfgrow label{display:block;font-size:12px;color:#555;margin-bottom:3px;line-height:1.35}
+.cfgrow input[type=range]{width:100%;accent-color:#8a1c1c;margin:0}
+.cfgsizes{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:4px;
+  font-size:11.5px;font-variant-numeric:tabular-nums;color:#555}
+.cfgsizes b{font-weight:600;color:#222}
+.cfgsizes .tight b, .cfgsizes .tight{color:#c0392b}
+.cfgrow.moved label{color:#8a1c1c;font-weight:600}
+#cfgReset{font:inherit;font-size:12.5px;padding:6px 10px;margin-top:4px;cursor:pointer;
+  border:1px solid #b9b4a8;background:#fbfaf7;border-radius:4px;color:#222}
+#cfgReset:hover{background:#fff;border-color:#8d8778}
+#cfgReset[disabled]{opacity:.45;cursor:default}
