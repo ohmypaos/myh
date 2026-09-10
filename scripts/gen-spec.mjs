@@ -26,8 +26,9 @@ if (!targets.length) {
   process.exit(1);
 }
 
-/* Dòng "Sinh tự động ... lúc <thời gian>" đổi mỗi lần chạy nên bỏ qua khi so sánh. */
-const boQuaThoiGian = s => s.replace(/^> Sinh tự động.*$/m, '');
+/* Thời gian đổi mỗi lần chạy nên bỏ qua khi so sánh — nhưng chỉ đúng phần thời gian.
+   Bỏ qua cả dòng thì đổi đường dẫn hay chữ nghĩa trong đó sẽ lọt lưới --check. */
+const boQuaThoiGian = s => s.replace(/^(> Sinh tự động từ .* lúc ).*$/m, '$1');
 
 let lech = 0;
 for (const v of targets) {
