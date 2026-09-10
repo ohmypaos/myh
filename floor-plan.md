@@ -7,23 +7,24 @@
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `lib/versions/v1.js` … `v12.js` | **Nguồn sự thật của số liệu.** Mỗi file một phiên bản |
+| `lib/versions/current.js` | **Nguồn sự thật của số liệu** — bản hiện hành, sửa thẳng vào đây |
+| `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, đóng băng — mạch suy nghĩ dẫn tới bản hiện hành |
 | `lib/`, `components/`, `app/` | Bộ vẽ 2D, bộ dựng 3D, bộ kiểm tra, hàm sinh đặc tả |
-| [`spec/v12.md`](./spec/v12.md) | **Đặc tả bản hiện hành** — phòng, tường, cửa, cửa sổ, lấy sáng mái, nội thất |
-| `spec/v1.md` … `spec/v11.md` | Đặc tả các bản cũ, để đối chiếu |
+| [`spec/current.md`](./spec/current.md) | **Đặc tả bản hiện hành** — phòng, tường, cửa, cửa sổ, lấy sáng mái, nội thất |
+| `spec/v1.md` … `spec/v11.md` | Đặc tả các bản trong kho đối chiếu |
 | File này | Hiện trạng gốc (v1) và đánh giá — **lý do** dẫn tới chuỗi thay đổi |
 | [`3d.md`](./3d.md) | Ghi chú thiết kế mô hình 3D: hướng nắng, cao độ, mái che sân phụ |
-| [`ke-hoach.md`](./ke-hoach.md) | Việc còn dang dở, trạng thái từng task — trong đó có những gì đang chờ chủ nhà quyết |
-| `banve.png` | Bản vẽ gốc của chủ nhà |
+| [`roadmap.md`](./roadmap.md) | Việc còn dang dở, trạng thái từng task — trong đó có những gì đang chờ chủ nhà quyết |
+| `original-drawing.png` | Bản vẽ gốc của chủ nhà |
 
-Mỗi `spec/v<n>.md` **sinh tự động** từ `lib/versions/v<n>.js` bằng `npm run spec`, không sửa
-tay — quy trình trong `CLAUDE.md`.
+Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không sửa tay — quy trình trong
+`CLAUDE.md`.
 
 ### Lịch sử phiên bản
 
 | Bản | Nội dung | DT kín | Bộ kiểm tra |
 |---|---|---:|---|
-| [v1](./spec/v1.md) | Hiện trạng (banve.png) | 127.0 | 1 lỗi |
+| [v1](./spec/v1.md) | Hiện trạng (original-drawing.png) | 127.0 | 1 lỗi |
 | [v2](./spec/v2.md) | Khuyến nghị lần 1 | 129.0 | 4 lỗi |
 | [v3](./spec/v3.md) | Sau 7 điểm chỉnh | 121.5 | 4 lỗi |
 | [v4](./spec/v4.md) | Sân sau thu nhỏ, lưu thông qua sân chính | 134.0 | 3 lỗi |
@@ -34,18 +35,21 @@ tay — quy trình trong `CLAUDE.md`.
 | [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 2 lỗi |
 | [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 1 lỗi |
 | [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 1 lỗi |
-| **[v12](./spec/v12.md)** ← | **Ban công 2 m, bếp chữ L** | **107.70** | **sạch 13/13** |
+| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L** (nguyên v12) | **107.70** | **sạch 13/13** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.
+
+Bảng dừng ở đây: **không thêm v13, v14… nữa.** Từ nay thay đổi thiết kế sửa thẳng vào bản hiện
+hành, git giữ lịch sử — `git log -p lib/versions/current.js`. Xem `CLAUDE.md`.
 
 ---
 
 # Hiện trạng gốc (v1) và đánh giá
 
 
-> Phần này số hoá bản vẽ gốc `banve.png` và ghi lại đánh giá ban đầu — **lý do** sinh ra
-> chuỗi thay đổi v2 → v12. Số liệu ở đây **không dùng để thi công**; bản chốt là `spec/v12.md`.
+> Phần này số hoá bản vẽ gốc `original-drawing.png` và ghi lại đánh giá ban đầu — **lý do** sinh ra
+> chuỗi thay đổi v2 → v12. Số liệu ở đây **không dùng để thi công**; bản chốt là `spec/current.md`.
 > Kích thước phòng lấy từ nhãn trên bản vẽ (chính xác); toạ độ và vị trí cửa là **ước lượng**
 > đọc từ ảnh raster.
 

@@ -1,4 +1,4 @@
-import './chung.css';
+import './common.css';
 
 export const metadata = {
   title: 'Mặt bằng 9.5 × 30',

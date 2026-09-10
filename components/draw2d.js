@@ -1,11 +1,11 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua 13 phép kiểm và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
-   React chỉ dựng khung DOM rỗng rồi gọi khoiTao() một lần sau khi mount. */
+   React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
 import { LOT } from '../lib/lot.js';
-import { VERSIONS } from '../lib/versions/index.js';
+import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 
-export function khoiTao(){
+export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
      dọn thì SVG và dropdown bị dựng chồng lên nhau. */
   document.getElementById('plan').replaceChildren();
@@ -413,7 +413,7 @@ export function khoiTao(){
     tt(M(6.4)+16, ty+40, 'TỈ LỆ 1:100', 25, 700);
     tt(M(6.4)+16, ty+96, V.date, 19, 400, '#555');
     tt(M(6.4)+16, ty+130,'Mặt tiền hướng ĐÔNG BẮC', 19, 400, '#555');
-    tt(M(6.4)+16, ty+164,'Nguồn: banve.png', 19, 400, '#555');
+    tt(M(6.4)+16, ty+164,'Nguồn: original-drawing.png', 19, 400, '#555');
 
     const sy = M(30)+110;
     for(let i=0;i<5;i++)
@@ -593,13 +593,13 @@ export function khoiTao(){
 
   /* ═══════════ CHỌN PHIÊN BẢN ═══════════ */
   const sel = document.getElementById('ver');
-  VERSIONS.forEach((v,i)=>{
+  PLANS.forEach((v,i)=>{
     const o=document.createElement('option'); o.value=i; o.textContent=v.label; sel.appendChild(o);
   });
-  sel.value = VERSIONS.length-1;                 // mặc định mở bản mới nhất
+  sel.value = PLANS.length-1;                 // mặc định mở bản mới nhất
 
   function loadVersion(i){
-    V = VERSIONS[i];
+    V = PLANS[i];
     ROOMS=V.rooms; WALLS=V.walls; DOORS=V.doors; WINDOWS=V.windows;
     SKYLIGHTS=V.skylights; FURN=V.furn; GATES=V.gates; STRIPS=V.strips; DIMS=V.dims;
     buildPlan(); buildTables();
@@ -755,7 +755,7 @@ export function khoiTao(){
   addEventListener('keydown', onKey);
 
   const ro = new ResizeObserver(relayout); ro.observe(view);
-  loadVersion(VERSIONS.length-1);
+  loadVersion(PLANS.length-1);
   return function donDep(){
     ro.disconnect();
     removeEventListener('keydown', onKey);

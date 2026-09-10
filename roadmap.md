@@ -25,12 +25,13 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C2 | Chặng 2 — trang bản vẽ 2D | ✅ xong | |
 | C3 | Chặng 3 — trang 3D, khối nhà và đường đi của nắng | ✅ xong | |
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
-| **Thiết kế → gộp thành v13** ||||
+| C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
+| **Thiết kế — sửa vào bản hiện hành** ||||
 | A0 | Chốt nơi xây (vĩ độ) | ⏸ chờ quyết | |
 | A1 | Che nắng tây cho master | ⏸ chờ quyết | A0 |
 | A2 | Mái che sân phụ vào dữ liệu phiên bản | ⏸ chờ quyết | |
 | A3 | Tường bao trái Tây Bắc — trễ pha nhiệt | ⏸ chờ quyết | |
-| A4 | Dựng `lib/versions/v13.js` từ A1–A3 | ⬜ chưa làm | A1, A2, A3 |
+| A4 | Đưa A1–A3 vào `lib/versions/current.js` | ⬜ chưa làm | A1, A2, A3 |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ⬜ chưa làm | A0 |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
@@ -51,12 +52,12 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
   - [x] `npm run spec` / `spec:check` thay cho việc gọi console rồi dán tay
 
 - [x] **C2 · Trang bản vẽ 2D** — `6511c56`
-  - [x] Bộ vẽ SVG chuyển nguyên văn sang `components/ve2d.js`, cố ý không viết lại theo lối React
+  - [x] Bộ vẽ SVG chuyển nguyên văn sang `components/draw2d.js`, cố ý không viết lại theo lối React
   - [x] Dọn `#plan` và `#ver` trước khi dựng (StrictMode gọi effect hai lần)
   - [x] Ra đúng bản cũ: 100 nhãn, 13/13 phép kiểm, khung tên có hướng Đông Bắc
 
 - [x] **C3 · Trang 3D** — `f9bd8cf` `251bdc7`
-  - [x] `lib/khoi3d.js` — hình học thuần, không dính three.js, chạy được trong node
+  - [x] `lib/massing.js` — hình học thuần, không dính three.js, chạy được trong node
   - [x] Ba bậc chiều cao tường tự suy từ phòng áp vào, không khai tay
   - [x] `lib/sun.js` — vị trí mặt trời NOAA, đổi sang hệ toạ độ cảnh qua `LOT.huongMatTien`
   - [x] Ẩn mái, toàn cảnh, từ trên xuống, đi bộ trong nhà
@@ -65,15 +66,23 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 - [x] **C4 · Xoá bản HTML cũ** — `777f969` `02a74a2` `872c86c`
   - [x] Xoá `index.html`, `lo-dat.js`, `versions/*.js`
   - [x] Sửa `--check` của `gen-spec` (đang bỏ qua cả dòng "Sinh tự động" nên thay đổi lọt lưới)
-  - [x] Viết lại `CLAUDE.md` và `mat-bang.md` theo bố cục Next
+  - [x] Viết lại `CLAUDE.md` và `floor-plan.md` theo bố cục Next
+
+- [x] **C5 · Bỏ quy ước phiên bản, đổi định danh sang tiếng Anh**
+  - [x] `v12.js` → `current.js` (bản sống), `v1`…`v11` thành kho đối chiếu đóng băng
+  - [x] `CLAUDE.md`: thay quy trình "thêm `v<n+1>`" bằng "sửa `current.js`, git giữ lịch sử"
+  - [x] Định danh (file, hàm, biến, khoá, `id` DOM) chuyển hết sang tiếng Anh
+  - [x] Chú thích và tài liệu giữ tiếng Việt
 
 ---
 
-## A · Thiết kế → gộp thành v13
+## A · Thiết kế — sửa vào bản hiện hành
 
-Cả nhóm này sửa vào **một** `lib/versions/v13.js`, không phải mỗi việc một bản. Quy trình bắt
-buộc ở `CLAUDE.md` mục "Thêm phiên bản mới": không sửa v12, thêm dòng vào
-`lib/versions/index.js`, chạy `npm run spec`, thêm dòng vào bảng lịch sử trong `mat-bang.md`.
+Cả nhóm này sửa thẳng vào `lib/versions/current.js`; **không đẻ ra phiên bản mới** — git giữ
+lịch sử, commit message phải nói rõ đổi gì và vì sao. Quy trình bắt buộc ở `CLAUDE.md` mục
+"Đổi thiết kế": 13 phép kiểm phải sạch, rồi `npm run spec`.
+
+Ba việc A1–A3 độc lập nhau nên cứ chốt được cái nào thì làm cái đó, mỗi cái một commit.
 
 ### ⏸ A0 · Chốt nơi xây (vĩ độ)
 
@@ -84,7 +93,7 @@ toàn bộ phần nắng sai theo, nên phải chốt trước khi dùng mô hì
 
 ### ⏸ A1 · Che nắng tây cho master
 
-Nhiều khả năng là **nội dung chính của v13**. Master chỉ có một nguồn sáng: cửa lùa D12 rộng
+Nhiều khả năng là **thay đổi lớn tiếp theo**. Master chỉ có một nguồn sáng: cửa lùa D12 rộng
 3.2 m quay **Tây Nam**, mà ban công sau là loại `yard` nên không có mái — hiện D12 không có gì
 che.
 
@@ -94,23 +103,24 @@ trên ban công**. Xem `3d.md` mục 2a.
 
 - [ ] Mở `/3d`, chọn đúng nơi xây (A0), kéo giờ tới 15h–16h30 ngày hạ chí **và** đông chí
 - [ ] Chốt cách che: lam đứng / rèm ngoài / giàn cây
-- [ ] Nếu cách che đổi hình khối (giàn, mái ban công) thì phải vào dữ liệu v13
+- [ ] Nếu cách che đổi hình khối (giàn, mái ban công) thì phải vào `current.js`
 
 > Đọc vệt nắng thì tin được, đọc độ sáng thì không — mô hình không có ánh sáng gián tiếp.
 > Xem `3d.md` mục 6.
 
 ### ⏸ A2 · Mái che sân phụ vào dữ liệu phiên bản
 
-Đang khai tạm ở `MAI_CHE` trong `lib/lot.js` (`x:0, w:5.0, tuY:12.0, dai:5.5, cao:2.80`) để 3D
-dựng được. Nó là **thay đổi thiết kế** nên đúng quy trình phải vào v13.
+Đang khai tạm ở `CARPORT_ROOF` trong `lib/lot.js`
+(`x:0, w:5.0, fromY:12.0, length:5.5, height:2.80`) để 3D
+dựng được. Nó là **thay đổi thiết kế** nên đúng quy trình phải vào `current.js`.
 
 Đánh đổi (`3d.md` mục 3): được cái đi từ xe vào nhà không dính mưa, nhưng nó nằm ngay trước
 cửa chính D1 và che mất đúng nguồn sáng Đông Bắc dịu nhất nhà. Chốt **không phủ quá ~5.5 m**,
 chừa hơn 6 m hở trời phía cổng.
 
 - [ ] Chủ nhà chốt chiều dài phủ
-- [ ] Chuyển `MAI_CHE` từ `lib/lot.js` vào `lib/versions/v13.js`
-- [ ] `lib/khoi3d.js` đang đọc thẳng `MAI_CHE` — sửa để đọc từ phiên bản
+- [ ] Chuyển `CARPORT_ROOF` từ `lib/lot.js` vào `lib/versions/current.js`
+- [ ] `lib/massing.js` đang đọc thẳng `CARPORT_ROOF` — sửa để đọc từ dữ liệu mặt bằng
 - [ ] Bỏ đoạn "khai tạm" trong `3d.md` mục 3 và `CLAUDE.md` mục "Chưa xác định"
 
 ### ⏸ A3 · Tường bao trái Tây Bắc — trễ pha nhiệt
@@ -124,15 +134,14 @@ Mới là suy luận từ hướng, **chưa tính toán gì**. Xem `3d.md` mục
 - [ ] Quyết có xử lý hay không
 - [ ] Nếu có: tường hai lớp hay cây leo, và chỉ đoạn giáp hai phòng ngủ hay cả 18 m
 
-### ⬜ A4 · Dựng `lib/versions/v13.js`
+### ⬜ A4 · Đưa A1–A3 vào `lib/versions/current.js`
 
-Chỉ làm khi A1–A3 đã chốt. Theo đúng 5 bước ở `CLAUDE.md`.
+Theo đúng 4 bước ở `CLAUDE.md` mục "Đổi thiết kế".
 
-- [ ] Chép `v12.js` → `v13.js`, sửa theo A1–A3
-- [ ] Thêm `import` và phần tử cuối mảng trong `lib/versions/index.js`
+- [ ] Sửa `current.js`, cập nhật luôn `note` và `changes`
 - [ ] 13 phép kiểm phải **sạch** — không commit bản hiện hành còn lỗi
 - [ ] `npm run spec`
-- [ ] Thêm dòng vào bảng "Lịch sử phiên bản" trong `mat-bang.md`
+- [ ] Cập nhật `floor-plan.md` nếu đổi phần đánh giá
 
 ---
 
@@ -144,26 +153,26 @@ Chặn bởi A0. Khi đã chốt nơi xây thì dropdown ba thành phố chỉ c
 đổi là đọc sai toàn bộ phần nắng.
 
 - [ ] Đưa `lat` / `lon` thật vào `LOT` trong `lib/lot.js`
-- [ ] Bỏ `<select id="noi">` khỏi `Plan3D.jsx` và phần xử lý trong `ve3d.js`
-- [ ] Giữ `NOI` trong `lib/sun.js` hay bỏ — tuỳ còn dùng để đối chiếu không
+- [ ] Bỏ `<select id="place">` khỏi `Plan3D.jsx` và phần xử lý trong `scene3d.js`
+- [ ] Giữ `PLACES` trong `lib/sun.js` hay bỏ — tuỳ còn dùng để đối chiếu không
 
 ### 💤 B2 · Đi bộ: va chạm và cao độ mắt
 
-`components/ve3d.js`, hàm `diChuyen()`: đi xuyên tường được, và cao độ mắt luôn tính từ cốt nền
+`components/scene3d.js`, hàm `moveWalk()`: đi xuyên tường được, và cao độ mắt luôn tính từ cốt nền
 nhà (`MUC.nen + 1.60`) nên bước ra sân thì lửng lơ 45 cm.
 
 **Cố ý hoãn** — đủ dùng để soi tỉ lệ đứng, vốn là mục đích chính của mô hình.
 
-- [ ] Cao độ mắt tra theo phòng đang đứng (`lib/khoi3d.js` đã biết qua `oCotNha`)
+- [ ] Cao độ mắt tra theo phòng đang đứng (`lib/massing.js` đã biết qua `atFloorLevel`)
 - [ ] Chặn va chạm theo danh sách hộp tường
 
 ### 💤 B3 · Nội thất dạng khối trong 3D
 
-Mới có khối tường, sàn, mái. Dữ liệu đã có sẵn ở `v.furn` của từng phiên bản (2D đang vẽ), chỉ
+Mới có khối tường, sàn, mái. Dữ liệu đã có sẵn ở `furn` của từng mặt bằng (2D đang vẽ), chỉ
 thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận tỉ lệ kỹ hơn. Xem `3d.md` mục 8.
 
-- [ ] Thêm chiều cao cho từng loại nội thất vào `CAO` trong `lib/lot.js`
-- [ ] Dựng hộp trong `lib/khoi3d.js`
+- [ ] Thêm chiều cao cho từng loại nội thất vào `HEIGHTS` trong `lib/lot.js`
+- [ ] Dựng hộp trong `lib/massing.js`
 
 ---
 
@@ -171,11 +180,11 @@ thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận 
 
 ### ⬜ D1 · Bộ kiểm tra cho hình học 3D
 
-13 phép kiểm của `validate()` chỉ soi mặt bằng 2D. `lib/khoi3d.js` cố ý viết thuần hình học,
+13 phép kiểm của `validate()` chỉ soi mặt bằng 2D. `lib/massing.js` cố ý viết thuần hình học,
 không dính three.js, nên **chạy được trong node** — thêm `scripts/check-3d.mjs` theo đúng lối
 `gen-spec.mjs`.
 
-- [ ] Mọi hộp có `w`, `d`, `y1-y0` dương và hữu hạn, ở cả 12 phiên bản
+- [ ] Mọi hộp có `w`, `d`, `y1-y0` dương và hữu hạn, ở cả kho đối chiếu lẫn bản hiện hành
 - [ ] Diện tích mái phủ đúng các phòng kín, trừ đúng phần giếng trời
 - [ ] Không lỗ mở nào vượt đỉnh đoạn tường chứa nó
 - [ ] Thêm `npm run check:3d` vào `package.json`

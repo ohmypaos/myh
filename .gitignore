@@ -14,9 +14,6 @@ ver*.png
 next-*.png
 spec-*.md
 
-# Đặc tả xuất từ nút "Xuất đặc tả" — chỉ là bản nháp để dán vào Phần I của mat-bang.md
-mat-bang-dac-ta*.md
-
 # Log server xem thử
 *.log
 

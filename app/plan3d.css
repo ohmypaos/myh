@@ -1,4 +1,4 @@
-/* Phần riêng của trang 3D. Khung ngoài (header, .bar, bảng, .note) dùng chung ở chung.css. */
+/* Phần riêng của trang 3D. Khung ngoài (header, .bar, bảng, .note) dùng chung ở common.css. */
 
 .app{flex:1;min-height:0;display:flex;align-items:stretch}
 .side{width:360px;flex:none;min-width:0;overflow-y:auto;overscroll-behavior:contain;

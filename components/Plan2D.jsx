@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import '../app/plan2d.css';
-import { khoiTao } from './ve2d.js';
+import { init } from './draw2d.js';
 
-/* React chỉ dựng khung DOM rỗng với đúng các id mà ve2d.js trông đợi, rồi gọi khoiTao()
-   một lần sau khi mount. Toàn bộ việc vẽ do mã cũ đảm nhiệm — xem đầu file ve2d.js. */
+/* React chỉ dựng khung DOM rỗng với đúng các id mà draw2d.js trông đợi, rồi gọi init()
+   một lần sau khi mount. Toàn bộ việc vẽ do mã cũ đảm nhiệm — xem đầu file draw2d.js. */
 export default function Plan2D() {
-  useEffect(() => khoiTao(), []);
+  useEffect(() => init(), []);
 
   return (
     <>
