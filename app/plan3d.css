@@ -1,0 +1,35 @@
+/* Phần riêng của trang 3D. Khung ngoài (header, .bar, bảng, .note) dùng chung ở chung.css. */
+
+.app{flex:1;min-height:0;display:flex;align-items:stretch}
+.side{width:360px;flex:none;min-width:0;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--side);border-left:1px solid #c9c6bd}
+.side>section{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:12px 14px;margin:14px}
+
+.sheet{flex:1;min-width:0;background:#dce6ee;overflow:hidden}
+#canvas3d{width:100%;height:100%}
+#canvas3d canvas{display:block;width:100%;height:100%}
+
+/* điều khiển mặt trời */
+.sl{display:block;font-size:12.5px;color:#555;margin:12px 0 5px}
+.side select{font:inherit;font-size:13px;padding:6px 8px;width:100%;
+  border:1px solid #8d8778;border-radius:4px;background:#fff;color:#222;cursor:pointer}
+.side input[type=range]{width:100%;accent-color:#8a1c1c;margin:0}
+
+.mocs{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.mocs button{font:inherit;font-size:11.5px;line-height:1;padding:5px 7px;cursor:pointer;
+  border:1px solid #c3bdb0;border-radius:3px;background:#fbfaf7;color:#333}
+.mocs button:hover{background:#fff;border-color:#8d8778}
+
+.sun{font-size:12.5px;color:#333;background:#f3f6f8;border-left:3px solid #7fa8c0;
+  padding:9px 11px;border-radius:2px;margin:14px 0 0}
+.doc{font-size:12.5px;color:#444;margin:0 0 10px}
+.doc:last-child{margin-bottom:0}
+
+@media (max-width:900px){
+  html,body{height:auto}
+  body{overflow:auto}
+  .app{flex-direction:column}
+  .sheet{flex:none;height:66vh;min-height:320px;border-bottom:1px solid #c9c6bd}
+  .side{width:auto;border-left:none;overflow:visible}
+}
