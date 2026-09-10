@@ -42,8 +42,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ✅ xong | |
 | E3 | Lưu cấu hình đặt tên trong `localStorage` | ✅ xong | |
 | **Hạ tầng** ||||
-| D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
-| D2 | Gắn CI chạy build + spec:check + kiểm 3D | ⬜ chưa làm | D1 |
+| D1 | Bộ kiểm tra cho hình học 3D | ✅ xong | |
+| D2 | Gắn CI chạy build + ba lệnh kiểm | ✅ xong | |
 
 ---
 
@@ -395,19 +395,41 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 
 ## D · Hạ tầng
 
-### ⬜ D1 · Bộ kiểm tra cho hình học 3D
+### ✅ D1 · Bộ kiểm tra cho hình học 3D
 
-13 phép kiểm của `validate()` chỉ soi mặt bằng 2D. `lib/massing.js` cố ý viết thuần hình học,
-không dính three.js, nên **chạy được trong node** — thêm `scripts/check-3d.mjs` theo đúng lối
-`gen-spec.mjs`.
+13 phép kiểm của `validate()` chỉ soi mặt bằng 2D. `lib/massing.js` cắt tường theo lỗ mở và
+khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
+mảnh thì ảnh vẫn trông bình thường.
 
-- [ ] Mọi hộp có `w`, `d`, `y1-y0` dương và hữu hạn, ở cả kho đối chiếu lẫn bản hiện hành
-- [ ] Diện tích mái phủ đúng các phòng kín, trừ đúng phần giếng trời
-- [ ] Không lỗ mở nào vượt đỉnh đoạn tường chứa nó
-- [ ] Thêm `npm run check:3d` vào `package.json`
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Tám phép kiểm, cả 12 phương án qua sạch:
 
-### ⬜ D2 · Gắn CI
+1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
+2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường
+3. Không hộp nào cao quá đỉnh mái nhà
+4. Mảnh tường trên cùng một đường tim không chồng nhau
+5. **Mỗi lỗ mở thật sự thủng** — chọc một điểm vào giữa lỗ, không mảnh tường nào được chứa nó
+6. Diện tích mái bằng phòng kín trừ đúng phần giếng trời
+7. Các mảnh mái không chồng lên nhau
+8. Kính giếng trời nằm đúng cao độ trần
 
-`npm run spec:check` và `npm run build` đều đã thoát khác 0 khi hỏng, chưa có workflow nào gọi.
+> **Phép kiểm 5 là cái đáng giá nhất.** Bảy phép còn lại ít nhiều tính lại theo cùng lối với
+> `massing.js` nên có nguy cơ cùng sai một kiểu. Phép 5 thì không: nó chỉ hỏi một câu hình
+> học — chọc một điểm vào giữa lỗ mở, có đụng tường không.
 
-- [ ] Workflow chạy `npm run build`, `npm run spec:check`, `npm run check:3d`
+> **Bộ kiểm tra qua ngay lần đầu là chuyện đáng ngờ**, nên đã phá `massing.js` ba kiểu để xem
+> nó có thật sự bắt được: bỏ khoét giếng trời (phép 6 báo `121.5 ≠ 112.66`), không cắt lỗ mở
+> (phép 5 báo `D1 bị mảnh houseWall bịt`), nhân đôi mảnh mái (phép 6 và 7 cùng báo). Cả ba đều
+> bị bắt.
+
+### ✅ D2 · Gắn CI
+
+`.github/workflows/ci.yml` chạy trên mọi push và pull request. `npm run check` chạy đúng bốn
+lệnh ấy ở máy, cùng thứ tự.
+
+- [x] `npm run build`
+- [x] `npm run spec:check`
+- [x] `npm run check:grid`
+- [x] `npm run check:3d`
+
+Thứ tự cố ý: build gãy thì ba lệnh sau chạy cũng vô nghĩa. Cả ba lệnh kiểm đều thoát khác 0
+khi có lỗi — đã thử làm lệch một file `spec/` để xác nhận `spec:check` thoát `1`.

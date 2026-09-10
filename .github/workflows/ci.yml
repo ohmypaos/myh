@@ -1,0 +1,35 @@
+# Bốn lệnh kiểm chạy trên mọi push và pull request.
+#
+# Thứ tự cố ý: build gãy thì ba lệnh sau chạy cũng vô nghĩa. Ba lệnh kiểm đều thoát khác 0
+# khi có lỗi nên không cần bọc thêm gì.
+name: Kiểm tra
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Dựng bản build
+        run: npm run build
+
+      - name: Đặc tả khớp dữ liệu mặt bằng
+        run: npm run spec:check
+
+      - name: Mô hình lưới dựng ngược khớp khít
+        run: npm run check:grid
+
+      - name: Hình học 3D
+        run: npm run check:3d

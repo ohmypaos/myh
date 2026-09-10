@@ -7,9 +7,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "check": "npm run build && npm run spec:check && npm run check:grid && npm run check:3d",
     "spec": "node scripts/gen-spec.mjs",
     "spec:check": "node scripts/gen-spec.mjs --check",
-    "check:grid": "node scripts/check-grid.mjs"
+    "check:grid": "node scripts/check-grid.mjs",
+    "check:3d": "node scripts/check-3d.mjs"
   },
   "dependencies": {
     "next": "^16.3.4",
