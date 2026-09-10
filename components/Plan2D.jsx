@@ -70,6 +70,15 @@ export default function Plan2D() {
           </section>
 
           <section>
+            <h2>Cấu hình đã lưu</h2>
+            <div id="cfgSaved" />
+            <p className="vmeta">
+              Lưu ở máy anh, không nằm trong dự án. Chốt được phương án nào thì vẫn phải sửa
+              vào <code>lib/versions/current.js</code> rồi <code>npm run spec</code>.
+            </p>
+          </section>
+
+          <section>
             <h2>Bảng thống kê phòng</h2>
             <table id="sched" />
           </section>

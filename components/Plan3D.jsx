@@ -46,6 +46,11 @@ export default function Plan3D() {
           </section>
 
           <section>
+            <h2>Cấu hình đã lưu</h2>
+            <div id="cfgSaved3" />
+          </section>
+
+          <section>
             <h2>Hướng nhà</h2>
 
             <label className="sl" htmlFor="azimuth">

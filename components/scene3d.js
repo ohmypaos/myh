@@ -13,8 +13,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { LOT, HEIGHTS, CARPORT_ROOF, frontAzimuth, setFrontAzimuth } from '../lib/lot.js';
+import { LOT, HEIGHTS, CARPORT_ROOF } from '../lib/lot.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
+import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { PLACES, KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
@@ -202,7 +203,7 @@ export function init(){
   /* Hướng không đụng hình khối — chỉ đường đi của nắng và mũi tên bắc. Giá trị nằm ở
      localStorage (lib/lot.js) nên bản vẽ 2D đọc cùng một chỗ. */
   function updateAzimuth(){
-    const deg = frontAzimuth();
+    const deg = Number.isFinite(CFG?.azimuth) ? CFG.azimuth : LOT.frontAzimuth;
     setHtml('lblAzimuth', `<b>${deg.toFixed(0)}°</b> · ${compassName(deg)}`);
     setHtml('subAzimuth', `Mặt tiền quay ${compassName(deg)}`);
     const slider = document.getElementById('azimuth');
@@ -336,6 +337,8 @@ export function init(){
   });
 
   let plan = PLANS[PLANS.length - 1], CFG = null;
+  /* Gán sau khi dựng phần "Cấu hình đã lưu"; để hàm rỗng trước đó cho những chỗ gọi sớm. */
+  let refreshSaved = () => {};
 
   function openPlan(id){
     plan = PLANS.find(p => p.id === id) || plan;
@@ -354,6 +357,8 @@ export function init(){
     rebuild();
     buildHeightSliders();
     buildCarportSliders();
+    updateAzimuth();
+    refreshSaved();
   }
 
   /* Dựng lại khối từ mặt bằng đã áp cấu hình. Camera và mặt trời giữ nguyên. */
@@ -364,6 +369,7 @@ export function init(){
       ? 'Đang xem đúng kích thước gốc.'
       : '<b>Đang xem bản tuỳ chỉnh.</b> Kích thước phòng kéo ở trang bản vẽ 2D.');
     if (saved !== null || !isEmpty(CFG)) writeConfig(CFG);
+    refreshSaved();
   }
 
   /* ═══════════ THANH TRƯỢT CAO ĐỘ VÀ MÁI CHE ═══════════ */
@@ -459,14 +465,32 @@ export function init(){
   on('day',   'input',  e => { state.day   = +e.target.value; updateSun(); });
   on('hour',  'input',  e => { state.hour  = +e.target.value; updateSun(); });
 
-  on('azimuth', 'input', e => { setFrontAzimuth(+e.target.value); updateAzimuth(); });
-  on('azReset', 'click', () => { setFrontAzimuth(null); updateAzimuth(); });
+  on('azimuth', 'input', e => { CFG.azimuth = +e.target.value; writeConfig(CFG); updateAzimuth(); refreshSaved(); });
+  on('azReset', 'click', () => { CFG.azimuth = null; writeConfig(CFG); updateAzimuth(); refreshSaved(); });
 
   on('cfg3Reset', 'click', () => {
     CFG.heights = {}; CFG.carport = {};
     rebuild();
     buildHeightSliders();
     buildCarportSliders();
+    updateAzimuth();
+    refreshSaved();
+  });
+
+  /* Cấu hình đặt tên — cùng thành phần với trang 2D (components/savedConfigs.js). */
+  refreshSaved = mountSavedConfigs('cfgSaved3', {
+    getCfg: () => CFG,
+    setCfg: cfg => {
+      /* Mở cấu hình lưu cho mặt bằng khác thì bỏ phần `lines` — chỉ số đường không chuyển
+         được sang mặt bằng này. Cao độ, mái che và hướng thì vẫn dùng được. */
+      CFG = { ...cfg, planId: plan.id };
+      if (cfg.planId !== plan.id) CFG.lines = { x: {}, y: {} };
+      writeConfig(CFG);
+      rebuild();
+      buildHeightSliders();
+      buildCarportSliders();
+      updateAzimuth();
+    },
   });
 
   on('vRoof', 'click', e => {

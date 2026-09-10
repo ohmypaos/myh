@@ -40,7 +40,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
 | E1 | Đổi hướng nhà được | ✅ xong | |
 | E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ✅ xong | |
-| E3 | Lưu cấu hình đặt tên trong `localStorage` | ⬜ chưa làm | E2 |
+| E3 | Lưu cấu hình đặt tên trong `localStorage` | ✅ xong | |
 | **Hạ tầng** ||||
 | D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
 | D2 | Gắn CI chạy build + spec:check + kiểm 3D | ⬜ chưa làm | D1 |
@@ -366,15 +366,22 @@ Hai thanh trượt thật:
 > bị đụng tới. Phải neo vào **gốc phòng chứa nó**. Đã sửa; nay nới master thì giường master đi
 > theo còn bếp đứng yên.
 
-### ⬜ E3 · Lưu cấu hình đặt tên
+### ✅ E3 · Lưu cấu hình đặt tên
 
 Cấu hình lưu vào `localStorage` **kèm tên người dùng tự đặt**, mở lại chọn được — để so
 "phương án hành lang rộng" với "phương án master sâu" mà không phải kéo lại từ đầu.
 
-- [ ] Lưu cấu hình hiện tại kèm tên
-- [ ] Danh sách cấu hình đã lưu, chọn để xem, xoá được
-- [ ] Nhãn luôn hiện đang xem cấu hình nào, và nút về mặc định
-- [ ] Cả 2D và 3D cùng đọc một cấu hình — chuyển trang không mất
+- [x] Lưu cấu hình hiện tại kèm tên
+- [x] Danh sách cấu hình đã lưu, chọn để xem, xoá được
+- [x] Nhãn nói rõ đang xem cấu hình nào, hay là **bản tuỳ chỉnh chưa lưu** — so bằng nội dung
+      chứ không phải cờ, nên sửa tiếp một chút là nhãn đổi ngay
+- [x] Cả 2D và 3D cùng đọc một cấu hình — `components/savedConfigs.js` dựng một lần, gắn vào
+      cả hai trang
+- [x] Gom hướng mặt tiền vào cấu hình chung (E1 để tạm ở khoá riêng) — lưu một cấu hình là lưu
+      luôn cả hướng
+
+Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` — chỉ số đường lưới không chuyển
+được sang mặt bằng khác. Cao độ, mái che và hướng thì vẫn dùng được nên giữ.
 
 > **`current.js` vẫn là nguồn sự thật.** Cấu hình trong `localStorage` chỉ nằm ở máy người xem;
 > `spec/` vẫn sinh từ `current.js`. Chốt được phương án nào thì vẫn phải sửa tay vào

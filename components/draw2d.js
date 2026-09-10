@@ -1,13 +1,14 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua 13 phép kiểm và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
-import { LOT, frontAzimuth } from '../lib/lot.js';
+import { LOT } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
 import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
-import { applyConfig, readConfig, writeConfig, emptyConfig } from '../lib/config.js';
+import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
+import { mountSavedConfigs } from './savedConfigs.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -603,6 +604,8 @@ export function init(){
   sel.value = PLANS.length-1;                 // mặc định mở bản mới nhất
 
   let BASE, CFG, GRID;
+  /* Gán sau khi dựng phần "Cấu hình đã lưu"; để hàm rỗng trước đó cho những chỗ gọi sớm. */
+  let refreshSaved = () => {};
 
   function loadVersion(i){
     BASE = PLANS[i];
@@ -618,6 +621,7 @@ export function init(){
 
     draw(true);
     buildSizePanel();
+    refreshSaved();
   }
   sel.onchange = () => loadVersion(+sel.value);
 
@@ -670,6 +674,7 @@ export function init(){
         writeConfig(CFG);
         draw(false);
         refreshSizePanel();
+        refreshSaved();
       };
 
       const sizes = document.createElement('div');
@@ -732,7 +737,22 @@ export function init(){
     writeConfig(CFG);
     draw(false);
     refreshSizePanel();
+    refreshSaved();
   };
+
+  /* Cấu hình đặt tên — dùng chung với trang 3D (components/savedConfigs.js). */
+  refreshSaved = mountSavedConfigs('cfgSaved', {
+    getCfg: () => CFG,
+    setCfg: cfg => {
+      /* Mở một cấu hình lưu cho mặt bằng khác thì bỏ phần `lines` — chỉ số đường không
+         chuyển được sang mặt bằng này. Cao độ, mái che và hướng thì vẫn dùng được. */
+      CFG = { ...cfg, planId: BASE.id };
+      if (cfg.planId !== BASE.id) CFG.lines = { x:{}, y:{} };
+      writeConfig(CFG);
+      draw(false);
+      refreshSizePanel();
+    },
+  });
 
   /* ═══════════ PAN / ZOOM ═══════════ */
   const view  = svg.parentNode;
