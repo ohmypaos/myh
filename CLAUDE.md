@@ -63,8 +63,15 @@ diện tích kín, kết quả bộ kiểm tra.
 Một phiên bản = một commit gồm đủ: `versions/v<n>.js` + thẻ script trong `index.html` +
 `spec/v<n>.md` + dòng mới trong `mat-bang.md`.
 
+## Hướng
+
+**Mặt tiền quay Đông Bắc** (`LOT.huongMatTien = 45`, phương vị độ, 0 = bắc, thuận kim đồng hồ).
+Suy ra: cạnh sau lô (ban công sau, sân phơi) quay **Tây Nam** — nắng chiều gắt;
+cạnh phải (bếp, hành lang ngoài) quay **Đông Nam**; tường bao trái quay **Tây Bắc**.
+
 ## Chưa xác định
 
-- **Hướng bắc thật của lô đất** — bản vẽ mới chỉ có mũi tên "MẶT TIỀN". Cần biết trước khi mô phỏng nắng.
 - **Cao độ** — dữ liệu phiên bản chưa có chiều cao nào (cao trần, cao cửa, bệ cửa sổ, mái).
   Khi dựng 3D, thêm cao độ vào chính `versions/v<n>.js` để 3D và 2D dùng chung một nguồn.
+- **Mái che sân phụ** — chỗ để xe, mái nối thẳng từ nhà chính ra. Chưa có trong dữ liệu
+  phiên bản, cần thêm khi dựng 3D vì nó đổi khối nhìn từ ngoài và che sáng cửa chính D1.
