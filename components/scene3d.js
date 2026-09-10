@@ -56,7 +56,11 @@ export function init(){
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  /* PCFSoftShadowMap bị bỏ ở three r186 — đúng bản đang dùng — và engine âm thầm hạ xuống
+     PCFShadowMap kèm một dòng cảnh báo. Khai thẳng cho khớp thực tế: không đổi hình ảnh, chỉ
+     hết cảnh báo. Không dùng VSMShadowMap: nó đổi cả ngữ nghĩa (mọi mặt nhận bóng cũng đổ
+     bóng) và hay rò sáng ở tường mỏng, không đáng cho cảnh dài 30 m này. */
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   host.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
