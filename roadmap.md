@@ -36,6 +36,11 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ⬜ chưa làm | A0 |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
+| **Cấu hình tuỳ chỉnh** ||||
+| E0 | Bỏ hằng số ghim trong `validate()` | ⬜ chưa làm | |
+| E1 | Đổi hướng nhà được | ⬜ chưa làm | |
+| E2 | Advanced config — sửa mọi kích thước | ⬜ chưa làm | E0 |
+| E3 | Xuất cấu hình để dán lại vào `current.js` | ⬜ chưa làm | E2 |
 | **Hạ tầng** ||||
 | D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
 | D2 | Gắn CI chạy build + spec:check + kiểm 3D | ⬜ chưa làm | D1 |
@@ -173,6 +178,87 @@ thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận 
 
 - [ ] Thêm chiều cao cho từng loại nội thất vào `HEIGHTS` trong `lib/lot.js`
 - [ ] Dựng hộp trong `lib/massing.js`
+
+---
+
+## E · Cấu hình tuỳ chỉnh
+
+Cho phép người xem sửa **mọi kích thước** và **hướng nhà** ngay trên trang, mặc định lấy từ
+bản hiện hành. Mục đích: thử "nếu hành lang rộng 1.2 m thì sao", "nếu xoay nhà 15° thì nắng
+đổi thế nào" mà không phải sửa mã.
+
+### Quyết định phải chốt trước khi code
+
+**Bản tuỳ chỉnh là tạm hay ghi đè dữ liệu?** Đề xuất: **tạm**. `lib/versions/current.js` vẫn
+là nguồn sự thật duy nhất, `spec/` vẫn sinh từ nó. Cấu hình tuỳ chỉnh chỉ sống trong trình
+duyệt, có nhãn "đang xem bản tuỳ chỉnh" và nút trả về mặc định; muốn giữ thì E3 xuất ra đoạn
+mã để dán vào `current.js`.
+
+Lý do: trang là tĩnh, không có backend để ghi. Nếu cho ghi đè mà không xuất được thì sẽ có
+người chỉnh cả buổi rồi mất sạch, hoặc tệ hơn — tưởng mình đã đổi thiết kế thật.
+
+### ⬜ E0 · Bỏ hằng số ghim trong `validate()`
+
+**Chặn E2.** Ba phép kiểm đầu đang ghim số cứng:
+
+```
+Math.abs(L-150)   cột trái  = 5.0 × 30
+Math.abs(R-135)   cột phải  = 4.5 × 30
+Math.abs(span-30) chuỗi dọc = chiều sâu lô
+```
+
+Chúng suy ra được từ `LOT` và `dims.bottom` (ranh cột ở `x = 5.0`). Để nguyên thì **đổi bất kỳ
+kích thước lô nào cũng làm ba phép kiểm đỏ ngay**, dù mặt bằng không sai gì.
+
+- [ ] Suy `150` / `135` từ `LOT.d` và ranh cột trong `dims.bottom`
+- [ ] Suy `30` từ `LOT.d`
+- [ ] Sửa luôn chuỗi mô tả trong `CHECKS` cho khỏi ghim số
+- [ ] Chạy lại cả kho đối chiếu: v1…v11 phải giữ **nguyên số lỗi cũ**, không nhiều hơn không ít hơn
+
+### ⬜ E1 · Đổi hướng nhà được
+
+Rẻ nhất nhóm, làm riêng được. `LOT.frontAzimuth` hiện chỉ chảy vào `toSceneVector()` trong
+`lib/sun.js` — đổi nó **không đụng gì tới hình học**, chỉ đổi đường đi của nắng và mũi tên bắc.
+
+Nhưng có một chỗ đang nói dối: `components/draw2d.js` ghi **cứng** chuỗi
+`"Mặt tiền quay hướng Đông Bắc (phương vị 45°)"` trong bảng ký hiệu, không đọc `LOT`. Đổi
+hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
+
+- [ ] Thanh trượt / ô nhập phương vị mặt tiền trên trang 3D
+- [ ] `draw2d.js` đọc `LOT.frontAzimuth` và `compassName()` thay vì chuỗi ghim cứng
+- [ ] Mũi tên bắc trong 3D đã tự xoay theo — chỉ cần kiểm lại
+
+### ⬜ E2 · Advanced config — sửa mọi kích thước
+
+Phạm vi: phòng (`x, y, w, h`), tường (vị trí, đầu, cuối, bề dày), cửa và cửa sổ, giếng trời,
+cao độ (`HEIGHTS`), kích thước lô (`LOT`).
+
+**Cạm bẫy chính: các số không độc lập nhau.** Dời một bức tường thì cửa nằm trên nó phải dời
+theo; đổi chiều sâu lô thì chuỗi `dims.left` phải cộng lại đủ. Một bảng "sửa mọi con số" ngây
+thơ sẽ đẻ ra mặt bằng sai liên tục.
+
+Hai hướng, phải chọn:
+
+- **Cho sửa tự do, 13 phép kiểm báo lỗi ngay bên cạnh.** Ít việc, thành thật — người dùng thấy
+  ngay mình vừa làm hỏng cái gì. Đề xuất bắt đầu từ đây.
+- **Ràng buộc liên đới, tự dời cửa theo tường.** Dùng sướng hơn nhiều nhưng là một dự án riêng.
+
+- [ ] Chốt một trong hai hướng trên
+- [ ] Panel cấu hình, mặc định lấy từ `CURRENT`
+- [ ] 13 phép kiểm chạy trên bản tuỳ chỉnh, hiện lỗi ngay tại chỗ
+- [ ] Nhãn "đang xem bản tuỳ chỉnh" + nút trả về mặc định
+- [ ] Cả 2D và 3D cùng đọc một bản tuỳ chỉnh — không để hai trang lệch nhau
+- [ ] Lưu vào `localStorage` để F5 không mất
+
+### ⬜ E3 · Xuất cấu hình để dán lại vào `current.js`
+
+Không có backend nên đây là cầu nối duy nhất giữa bản tuỳ chỉnh và dữ liệu thật.
+
+- [ ] Nút xuất ra đoạn mã đúng định dạng `current.js`
+- [ ] Ghi rõ trong giao diện: dán vào file, chạy `npm run spec`, rồi commit
+
+> **Liên đới với B1.** B1 định bỏ dropdown nơi xây khi đã chốt vĩ độ. Nếu làm E2 trước thì nơi
+> xây nên chuyển hẳn vào panel cấu hình chứ không nằm rời trên thanh công cụ — cân nhắc gộp.
 
 ---
 
