@@ -39,8 +39,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ⬜ chưa làm | |
 | E1 | Đổi hướng nhà được | ⬜ chưa làm | |
-| E2 | Advanced config — sửa có ràng buộc, lan truyền tự động | ⬜ chưa làm | E0 |
-| E3 | Xuất cấu hình để dán lại vào `current.js` | ⬜ chưa làm | E2 |
+| E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ⬜ chưa làm | E0 |
+| E3 | Lưu cấu hình đặt tên trong `localStorage` | ⬜ chưa làm | E2 |
 | **Hạ tầng** ||||
 | D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
 | D2 | Gắn CI chạy build + spec:check + kiểm 3D | ⬜ chưa làm | D1 |
@@ -192,13 +192,12 @@ thì có: đó là quay lô chứ không phải đổi kích thước lô.
 
 ### Quyết định phải chốt trước khi code
 
-**Bản tuỳ chỉnh là tạm hay ghi đè dữ liệu?** Đề xuất: **tạm**. `lib/versions/current.js` vẫn
-là nguồn sự thật duy nhất, `spec/` vẫn sinh từ nó. Cấu hình tuỳ chỉnh chỉ sống trong trình
-duyệt, có nhãn "đang xem bản tuỳ chỉnh" và nút trả về mặc định; muốn giữ thì E3 xuất ra đoạn
-mã để dán vào `current.js`.
+**Đã chốt.** Cấu hình tuỳ chỉnh sống trong `localStorage` của người xem, đặt tên được và mở
+lại được (E3). `lib/versions/current.js` **vẫn là nguồn sự thật duy nhất** và `spec/` vẫn sinh
+từ nó — trang là tĩnh, không có backend để ghi ngược.
 
-Lý do: trang là tĩnh, không có backend để ghi. Nếu cho ghi đè mà không xuất được thì sẽ có
-người chỉnh cả buổi rồi mất sạch, hoặc tệ hơn — tưởng mình đã đổi thiết kế thật.
+Hệ quả phải nói rõ trên giao diện: chỉnh trong trình duyệt **không phải là đổi thiết kế thật**.
+Nhãn luôn hiện đang xem cấu hình nào để không ai nhầm.
 
 ### ⬜ E0 · Bỏ hằng số ghim trong `validate()`
 
@@ -233,14 +232,20 @@ Nhưng có một chỗ đang nói dối: `components/draw2d.js` ghi **cứng** c
 `"Mặt tiền quay hướng Đông Bắc (phương vị 45°)"` trong bảng ký hiệu, không đọc `LOT`. Đổi
 hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
 
-- [ ] Thanh trượt / ô nhập phương vị mặt tiền trên trang 3D
+- [ ] Thanh trượt phương vị mặt tiền trên trang 3D
 - [ ] `draw2d.js` đọc `LOT.frontAzimuth` và `compassName()` thay vì chuỗi ghim cứng
 - [ ] Mũi tên bắc trong 3D đã tự xoay theo — chỉ cần kiểm lại
 
-### ⬜ E2 · Advanced config — sửa mọi kích thước
+### ⬜ E2 · Advanced config — ranh phòng và cao độ
 
-Phạm vi: phòng (`x, y, w, h`), tường (vị trí, đầu, cuối, bề dày), cửa và cửa sổ, giếng trời,
-cao độ (`HEIGHTS`). **Không gồm `LOT.w` / `LOT.d`** — lô cố định.
+**Phạm vi: ranh giới phòng + cao độ.** Cụ thể là vị trí các bức tường ngăn (đường lưới) và
+`HEIGHTS` trong `lib/lot.js`.
+
+Nằm **ngoài** phạm vi: `LOT.w` / `LOT.d` (lô cố định), bề dày tường, vị trí và chiều rộng từng
+cửa / cửa sổ, kích thước giếng trời. Mô hình lưới không phủ mấy thứ đó — chúng cần ràng buộc
+riêng cho từng loại (cửa phải nằm gọn trong đoạn tường, hai lỗ mở không được chồng nhau), là
+một dự án khác. Cửa và cửa sổ vẫn **đi theo** tường khi tường dịch, chỉ là không sửa trực tiếp
+được.
 
 **Đã chốt: sửa có ràng buộc, lan truyền tự động.** Nới master lên thì phòng kề co lại tương
 ứng, không để người dùng tự cân số rồi đọc lỗi. Bộ 13 phép kiểm vẫn chạy sau mỗi lần sửa,
@@ -266,8 +271,10 @@ Mô hình đúng là **lưới toạ độ**: tập các đường `y` (và `x`)
 vào đường nào. Dịch một đường → mọi thứ bám vào nó đi theo, phòng nào có hai mép ở hai đường
 khác nhau thì tự co giãn. L9 vắt qua ba băng vẫn đúng vì nó chỉ bám vào đường `17` và `24`.
 
-**Chỉ đụng liền kề, không lan xa hơn.** Dịch một đường thì chỉ hai phòng kề ngay hai bên đường
-đó co giãn; các đường khác đứng yên. Nếu phòng kề bị ép xuống dưới kích thước tối thiểu thì
+**Chỉ đụng liền kề, không lan xa hơn.** Dịch một đường thì **mọi phòng có mép bám vào đúng
+đường đó** co giãn — có thể là ba bốn phòng chứ không phải hai, xem bảng trên: dịch `y = 24`
+đụng cả KHO, WC CHUNG lẫn HÀNH LANG. Cái *không* xảy ra là dây chuyền: các đường khác đứng
+yên, phòng không bám vào đường đang dịch thì không suy suyển. Nếu phòng kề bị ép xuống dưới kích thước tối thiểu thì
 **không chặn thao tác, không đẩy tiếp** — con số của phòng đó **hiện đỏ** để người dùng thấy
 mình vừa lấn quá và tự lùi lại.
 
@@ -285,26 +292,38 @@ Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. 
 - [ ] **E2b · Lan truyền tới phòng kề.** Mọi phòng, tường, cửa, cửa sổ, giếng trời và nội thất
       bám vào đường đó đi theo; `dims` tính lại. **Dừng ở phòng kề** — không đẩy dây chuyền,
       không chặn thao tác.
-- [ ] **E2c · Kích thước tối thiểu.** Dữ liệu mới, chưa có ở đâu — WC không hẹp hơn ~1.5 m,
-      hành lang không dưới ~0.8 m lọt lòng. Để ở `lib/lot.js` cạnh `HEIGHTS`. Dùng để **tô đỏ**,
-      không dùng để chặn.
-- [ ] **E2d · Sidebar kéo thả.** Mỗi kích thước sửa được là một **thanh trượt**, không phải ô
-      nhập số — gõ tay dễ ra số vô lý và không thấy được hệ quả trong lúc gõ. Kéo tới đâu bản vẽ
-      đổi tới đó, số của phòng kề đỏ lên ngay khi bị ép quá. Kèm nhãn "đang xem bản tuỳ chỉnh",
-      nút trả về mặc định, lưu `localStorage`.
+- [ ] **E2c · Kích thước tối thiểu.** Dữ liệu mới, chưa có ở đâu. Để ở `lib/lot.js` cạnh
+      `HEIGHTS`. Dùng để **tô đỏ**, không dùng để chặn.
+      **Số cụ thể chưa chốt** — cần chủ nhà cho con số thật, đừng bịa. Lưu ý hành lang hiện đã
+      là 0.84 m lọt lòng, tức gần như không co được nữa; ngưỡng đặt sai thì nó đỏ ngay từ đầu.
+- [ ] **E2d · Sidebar kéo thả — một thanh trượt cho mỗi bức tường.** Không phải mỗi phòng một
+      thanh: **tường chung tính là một**, nên kéo nó là thấy ngay cả hai phòng hai bên đổi cùng
+      lúc, không có chỗ mập mờ "nới master thì mép nào dịch". Nhãn ghi tên hai phòng nó ngăn
+      cách, bên cạnh là kích thước hiện tại của cả hai — **số nào bị ép quá thì đỏ lên**.
+      Dùng thanh trượt chứ không phải ô nhập số: gõ tay dễ ra số vô lý và không thấy hệ quả
+      trong lúc gõ.
+- [ ] **E2e · Thanh trượt cao độ.** `HEIGHTS`: cao trần, cao cửa, bệ cửa sổ, dày mái. Không dính
+      lưới nên làm độc lập được, và là thứ đổi hẳn cảm giác tỉ lệ đứng trong 3D.
 - [ ] 13 phép kiểm chạy sau mỗi lần sửa, hiện lỗi ngay tại chỗ — lưới an toàn
-- [ ] Cả 2D và 3D cùng đọc một bản tuỳ chỉnh, không để hai trang lệch nhau
 
 > **Nội thất là chỗ dễ vỡ.** Phép kiểm 12 và 13 đòi nội thất nằm gọn trong phòng và không nằm
 > trong vùng quét cánh cửa. Co phòng lại mà nội thất đứng yên là đỏ ngay. Lúc nạp phải neo mỗi
 > món vào phòng chứa nó để nó đi theo.
 
-### ⬜ E3 · Xuất cấu hình để dán lại vào `current.js`
+### ⬜ E3 · Lưu cấu hình đặt tên
 
-Không có backend nên đây là cầu nối duy nhất giữa bản tuỳ chỉnh và dữ liệu thật.
+Cấu hình lưu vào `localStorage` **kèm tên người dùng tự đặt**, mở lại chọn được — để so
+"phương án hành lang rộng" với "phương án master sâu" mà không phải kéo lại từ đầu.
 
-- [ ] Nút xuất ra đoạn mã đúng định dạng `current.js`
-- [ ] Ghi rõ trong giao diện: dán vào file, chạy `npm run spec`, rồi commit
+- [ ] Lưu cấu hình hiện tại kèm tên
+- [ ] Danh sách cấu hình đã lưu, chọn để xem, xoá được
+- [ ] Nhãn luôn hiện đang xem cấu hình nào, và nút về mặc định
+- [ ] Cả 2D và 3D cùng đọc một cấu hình — chuyển trang không mất
+
+> **`current.js` vẫn là nguồn sự thật.** Cấu hình trong `localStorage` chỉ nằm ở máy người xem;
+> `spec/` vẫn sinh từ `current.js`. Chốt được phương án nào thì vẫn phải sửa tay vào
+> `current.js` rồi `npm run spec` — đúng quy trình ở `CLAUDE.md`. Muốn đỡ chép tay thì thêm nút
+> xuất ra đoạn mã đúng định dạng `current.js`, nhưng đó là việc phụ, chưa cần ngay.
 
 > **Liên đới với B1.** B1 định bỏ dropdown nơi xây khi đã chốt vĩ độ. Nếu làm E2 trước thì nơi
 > xây nên chuyển hẳn vào panel cấu hình chứ không nằm rời trên thanh công cụ — cân nhắc gộp.
