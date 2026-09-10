@@ -28,14 +28,20 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
 | A0 | Chốt nơi xây — **Bắc Giang** | ✅ xong | |
-| A1 | Che nắng tây cho master | ⏸ chờ quyết | |
-| A2 | Mái che sân phụ vào dữ liệu phiên bản | ⏸ chờ quyết | |
-| A3 | Tường bao trái Tây Bắc — trễ pha nhiệt | ⏸ chờ quyết | |
-| A4 | Đưa A1–A3 vào `lib/versions/current.js` | ⬜ chưa làm | A1, A2, A3 |
+| A1 | Che nắng tây cho master — chốt **lam đứng** | ✅ xong | |
+| A2 | Mái phụ — chốt **mái bàn trà sân chính**, bỏ mái che xe | ✅ xong | |
+| A3 | Tường trái Tây Bắc — chốt **sơn chống nóng lúc xây** | ✅ xong | |
+| A5 | Chống nóng mái — chốt **lát lớp chống nóng** | ✅ xong | |
+| A6 | Bếp — chốt **lợp tôn hai mái + trần tôn**, không đổ mái bê tông | ✅ xong | |
+| A7 | Mái sân phơi — chốt **tôn dốc một mái**, chừa dải hở thẳng hàng ban công | ✅ xong | |
+| A8 | WC khách 2 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
+| A9 | Bậc tam cấp, mái hiên cửa chính, nền WC khách hạ cốt sân | ⬜ chưa làm | |
+| A4 | Đưa lam D12 và mái bàn trà vào `lib/versions/current.js` | ⬜ chưa làm | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
+| B4 | Tường bao dọc hành lang ngoài hạ về cao rào | ✅ xong | |
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
 | E1 | Đổi hướng nhà được | ✅ xong | |
@@ -87,7 +93,9 @@ Cả nhóm này sửa thẳng vào `lib/versions/current.js`; **không đẻ ra 
 lịch sử, commit message phải nói rõ đổi gì và vì sao. Quy trình bắt buộc ở `CLAUDE.md` mục
 "Đổi thiết kế": 13 phép kiểm phải sạch, rồi `npm run spec`.
 
-Ba việc A1–A3 độc lập nhau nên cứ chốt được cái nào thì làm cái đó, mỗi cái một commit.
+A1–A3, A5–A7 là **quyết định**, chủ nhà chốt hết ngày 10/9/2026. Số liệu và lý do nằm ở
+`3d.md` mục 2a, 2c, 3, 3a, 3b — ở đây chỉ ghi kết quả. A3 và A5 không đổi hình khối, nên A4 gồm
+bốn thứ: lam D12 (A1), mái bàn trà (A2), mái tôn bếp (A6), mái sân phơi (A7).
 
 ### ✅ A0 · Chốt nơi xây — Bắc Giang
 
@@ -117,57 +125,164 @@ lạnh nhiều mây, nên nắng lọt vào nhà mùa đông là thứ *đáng m
 
 51 ngày mỗi năm trưa mặt trời ở phía Bắc.
 
-### ⏸ A1 · Che nắng tây cho master
+### ✅ A1 · Che nắng tây cho master — lam đứng
 
-Nhiều khả năng là **thay đổi lớn tiếp theo**. Master chỉ có một nguồn sáng: cửa lùa D12 rộng
-3.2 m quay **Tây Nam**, mà ban công sau là loại `yard` nên không có mái — hiện D12 không có gì
-che.
+**Chốt: lam đứng sâu 0.4 m, bước 0.6 m, vuông góc mặt kính D12.** Nắng hè tới D12 xiên từ
+Tây–Tây Bắc nên lam chặn gần sạch (9.6 → 0.1 kWh/ngày ngày 21/6); nắng đông gần chính diện nên
+lọt qua phần lớn (21.0 → 13.5). Tháng 9 còn 12.3 — cần thêm rèm trong nhà. `3d.md` mục 2a.
 
-**Che bằng hình khối ngang là bất khả**, đã tính: 15h cao độ ~45°, che hết cửa cao 2.4 m cần
-mái đua 2.4 m; 16h30 cao độ ~25° thì cần hơn 5 m. Phải là **lam đứng, rèm ngoài, hoặc giàn cây
-trên ban công**. Xem `3d.md` mục 2a.
+- [x] Tính nắng lên D12 theo giờ, ba mốc hạ chí / thu phân / đông chí
+- [x] So năm cách: lam dày, lam thưa, nâng tường trái ban công, mái kín ban công, rèm ngoài
+- [x] Chủ nhà chốt lam thưa
+- [ ] Vào `current.js` — A4
 
-- [ ] Mở `/3d`, chọn đúng nơi xây (A0), kéo giờ tới 15h–16h30 ngày hạ chí **và** đông chí
-- [ ] Chốt cách che: lam đứng / rèm ngoài / giàn cây
-- [ ] Nếu cách che đổi hình khối (giàn, mái ban công) thì phải vào `current.js`
+### ✅ A2 · Mái phụ — mái bàn trà ở sân chính
 
-> Đọc vệt nắng thì tin được, đọc độ sáng thì không — mô hình không có ánh sáng gián tiếp.
-> Xem `3d.md` mục 6.
+Hoá ra mái phụ **không phải để che xe** mà để kê bàn trà ngoài sân chính, cạnh bếp và phòng
+khách. **Mái che xe ở sân phụ bỏ hẳn** — nó cắt phần trời cửa chính D1 nhìn thấy còn 40%.
 
-### ⏸ A2 · Mái che sân phụ vào dữ liệu phiên bản
+**Chốt:** `x` 5.0–8.5, `y` 15.0–18.0 (3.5 × 3.0 m, sát góc trong chữ L), cao **3.20 m**, **tôn
+cách nhiệt**. Che được cả D2 lẫn cửa bếp D9, vẫn chừa W1 (93% trời). Cái giá: W2 bếp còn 36%
+trời, nắng sáng mùa đông vào phòng khách 13.9 → 8.6 kWh/ngày. `3d.md` mục 3.
 
-Đang khai tạm ở `CARPORT_ROOF` trong `lib/lot.js`
-(`x:0, w:5.0, fromY:12.0, length:5.5, height:2.80`) để 3D
-dựng được. Nó là **thay đổi thiết kế** nên đúng quy trình phải vào `current.js`.
+- [x] So năm vùng phủ: không mái, chòi rời, sát góc, dọc tường nhà chính, chữ L
+- [x] Chủ nhà chốt vùng, cao độ, vật liệu, và bỏ mái che xe
+- [ ] Vào `current.js` — A4
 
-Đánh đổi (`3d.md` mục 3): được cái đi từ xe vào nhà không dính mưa, nhưng nó nằm ngay trước
-cửa chính D1 và che mất đúng nguồn sáng Đông Bắc dịu nhất nhà. Chốt **không phủ quá ~5.5 m**,
-chừa hơn 6 m hở trời phía cổng.
+### ✅ A3 · Tường trái Tây Bắc — sơn chống nóng lúc xây
 
-- [ ] Chủ nhà chốt chiều dài phủ
-- [ ] Chuyển `CARPORT_ROOF` từ `lib/lot.js` vào `lib/versions/current.js`
-- [ ] `lib/massing.js` đang đọc thẳng `CARPORT_ROOF` — sửa để đọc từ dữ liệu mặt bằng
-- [ ] Bỏ đoạn "khai tạm" trong `3d.md` mục 3 và `CLAUDE.md` mục "Chưa xác định"
+Tường nhà bên trái dài **16 m** (trước ghi 18 m là tính cả tường rào ban công). Hè mỗi m² nhận
+2.47 kWh/ngày, **ít hơn mái 3 lần**; đông gần như 0. Lô bên trái rộng 4.5 m, đang trống, khoảng
+5 năm nữa có thể xây nhà ống sát ranh rồi che luôn bức tường này.
 
-### ⏸ A3 · Tường bao trái Tây Bắc — trễ pha nhiệt
+**Chốt: sơn chống nóng mặt ngoài ngay lúc xây**, khi đất bên cạnh còn trống. Không tường hai
+lớp, không cây leo. Không đổi hình khối. `3d.md` mục 2c.
 
-Mùa hè mặt trời lặn chếch lên phía bắc (~293°) nên bức tường đặc 18 m này ăn nắng muộn suốt
-chiều. Gạch 220 đặc trễ pha nhiệt 4–5 tiếng → nhả nhiệt vào **buổi tối**, đúng lúc đi ngủ, mà
-sau nó là phòng ngủ 1 và master, không có cửa sổ nào để xả.
+- [x] Tính nắng lên từng mặt nhà và mái
+- [x] Chủ nhà chốt
 
-Mới là suy luận từ hướng, **chưa tính toán gì**. Xem `3d.md` mục 2c.
+### ✅ A5 · Chống nóng mái — lát lớp chống nóng
 
-- [ ] Quyết có xử lý hay không
-- [ ] Nếu có: tường hai lớp hay cây leo, và chỉ đoạn giáp hai phòng ngủ hay cả 18 m
+Việc **lộ ra khi tính A3**: mái bằng bê tông ~85 m² (không tính bếp — A6) nhận tổng nhiệt hè
+gấp ~4 lần tường trái.
 
-### ⬜ A4 · Đưa A1–A3 vào `lib/versions/current.js`
+**Chốt: lát lớp chống nóng trên sàn mái bê tông nhà chính** (tấm cách nhiệt hoặc gạch chống
+nóng). Không làm mái tôn thông gió phía trên vì phải khoét theo SK1–SK4. Không đổi hình khối.
+`3d.md` mục 2c.
 
-Theo đúng 4 bước ở `CLAUDE.md` mục "Đổi thiết kế".
+- [x] Chủ nhà chốt
 
-- [ ] Sửa `current.js`, cập nhật luôn `note` và `changes`
-- [ ] 13 phép kiểm phải **sạch** — không commit bản hiện hành còn lỗi
+### ✅ A6 · Bếp lợp tôn hai mái + trần tôn
+
+Bếp **không đổ mái bê tông** như nhà chính. **Chốt:** nóc chạy ngang ở `y = 21.5`, hai mái đổ về
+sân chính và sân phơi, dốc 30%; trần tôn chống nóng cao 3.30 m so với sàn (cốt 3.75 m), đỉnh
+nóc cốt 4.80 m — nhô 0.80 m trên mái nhà chính. Máng xối mép bắc bếp, mái bàn trà gá thấp bên
+dưới. `3d.md` mục 3a.
+
+- [x] Chủ nhà chốt hướng nóc, cao trần, độ dốc, chỗ nối với mái bàn trà
+- [ ] Vào `current.js` — A4
+
+### ✅ A7 · Mái sân phơi / giặt
+
+**Chốt:** phủ `x` 5–9.5, `y` 25–28, chừa hở dải `x` 5–7.5, `y` 28–30 thẳng hàng ban công chạy tới
+WC khách. Tôn cách nhiệt, dốc một mái 3.50 m sát bếp → 3.00 m ở mép `y = 28`, gá dưới máng mép
+nam mái bếp. Đoạn mép thấp `x` 7.5–9.5 áp tường WC khách, cần viền chống thấm. `3d.md` mục 3b.
+
+Cái giá: bếp bị mái che ba phía, các cửa bếp còn ~55% trời (D10 còn 38%). Mái bàn trà được xem
+lại cùng lúc và giữ tôn.
+
+- [x] Tính phần trời các cửa bếp còn nhìn thấy
+- [x] Chủ nhà chốt vùng phủ, dạng mái, vật liệu
+- [ ] Vào `current.js` — A4
+
+### ✅ A8 · WC khách 2 × 2 m, ô thoáng W4
+
+Thay đổi thuần mặt bằng, không cần loại khối mới, nên **sửa thẳng vào `current.js`** chứ không
+chờ A4.
+
+- [x] WC khách 1.6 × 2.0 → **2.0 × 2.0 m** tim tường, nới sang trái: `x` 7.5–9.5. Dải hở sân
+      phơi (A7) còn 2.5 × 2.0 m
+- [x] Hai tường trong (bắc, tây) 220 → **100 mm** vì phòng nhỏ; hai tường ranh lô giữ 220
+- [x] Trần giữ 3.30 m — đã tính hạ xuống 2.60 rồi bỏ
+- [x] W4 rộng 0.8 m, bệ 0.90 → **ô thoáng 0.6 × 0.4 m, bệ 1.90 → mép trên 2.30**, kính mờ lật, kèm
+      quạt hút. Khai ở `heights.only.W4`; `lib/massing.js` nay đọc bệ / mép trên riêng cho từng
+      cửa sổ, trước chỉ cửa đi làm được
+- [x] 13 phép kiểm sạch, `npm run spec`, `npm run check` sạch (build + spec + lưới + 3D)
+- [x] `scripts/check-3d.mjs` phép kiểm 5 chọc lỗ cửa sổ theo bệ riêng — trước chọc ở bệ mặc định
+      0.90 nên báo oan "W4 bị tường bịt"
+
+### ⬜ A9 · Bậc tam cấp, mái hiên cửa chính, nền WC khách
+
+Chốt ngày 10/9/2026, `3d.md` mục 3c. Toàn hộp thẳng trục nên **không phải chờ loại khối mặt dốc
+của A4** — làm trước được.
+
+- [x] D13 đổi chiều mở vào ban công — đã vào `current.js`
+- [ ] Bậc cho D1, D2, D9, D10, D13: khai trong `current.js` theo mã cửa; kích thước (3 × 0.15 cao,
+      mặt 0.30, dư 0.3 m mỗi bên) là hằng số ở `lib/lot.js`. Vị trí **suy từ cửa và phía sân** chứ
+      không khai toạ độ — dịch tường thì bậc đi theo cửa
+- [ ] `lib/massing.js` dựng 3 hộp mỗi bậc; `lib/plan.js` thêm phép kiểm bậc nằm gọn trong sân,
+      không chồng nội thất và vùng quét cánh
+- [ ] Mái hiên cửa chính: khai trong `current.js` bám tường `y = 12`, `x` 0–5, đua 1.2 m; `massing.js`
+      dựng thành loại riêng để phép kiểm 6 (diện tích mái) không tính nhầm
+- [ ] Gỡ `CARPORT_ROOF` khỏi `lib/lot.js` cùng hai thanh trượt mái che xe của E2f (`lib/config.js`,
+      `components/scene3d.js`, `components/Plan3D.jsx`, `components/draw2d.js`); cấu hình đã lưu
+      còn khoá `carport` phải được bỏ qua êm
+- [ ] Nền WC khách ở cốt sân: đánh dấu trong `current.js`; `massing.js` lấy cốt sàn theo phòng thay
+      cho một `L.floor` chung — cửa D11 và bệ W4 tính từ cốt đó; `check-3d` phép kiểm 5 chọc theo
+      cùng cốt
+- [ ] Vẽ bậc và mái hiên lên bản 2D, `specMarkdown()` in ra
+- [ ] `npm run check` sạch, `npm run spec`, cập nhật `floor-plan.md`
+
+### ⬜ A4 · Đưa lam D12 và ba mái mới vào `lib/versions/current.js`
+
+Không còn bị chặn. Theo đúng 4 bước ở `CLAUDE.md` mục "Đổi thiết kế", nhưng **không chỉ là sửa
+số**: lam, mái bàn trà, mái tôn bếp, mái sân phơi đều là loại khối mà dữ liệu mặt bằng chưa có
+chỗ khai. Mái tôn bếp và mái sân phơi cùng cần **mặt dốc** — làm một loại khối dùng chung.
+
+**Mái sân phơi**
+
+- [ ] Khai trong `current.js` cùng kiểu với mái bàn trà, thêm độ dốc: `x` 5–9.5, `y` 25–28,
+      3.50 → 3.00, tôn
+- [ ] `lib/massing.js` dựng bằng loại khối mặt dốc của mái tôn bếp
+- [ ] Vẽ lên bản 2D
+- [ ] `check-3d`: mép cao mái sân phơi thấp hơn mép nam mái bếp; mép thấp cao hơn đầu cửa D11
+
+**Mái tôn bếp**
+
+- [ ] Khai loại mái của bếp trong `current.js`: tôn hai mái, nóc chạy ngang, dốc 30%. Kho đối
+      chiếu v1…v11 giữ mái bằng như cũ
+- [ ] `lib/massing.js`: bỏ bản mái bê tông trên R2; sinh hai mặt dốc, trần tôn cốt 3.75, hai đầu
+      hồi tam giác; tường bắc và nam bếp dừng ở mép mái 3.75 thay vì 4.00
+- [ ] `components/scene3d.js` dựng được khối không phải hộp thẳng trục
+- [ ] `scripts/check-3d.mjs`: sửa phép kiểm 3 và 6; thêm phép kiểm mái bàn trà thấp hơn mép mái bếp
+
+**Mái bàn trà — thay `CARPORT_ROOF`**
+
+- [ ] Khoá mới trong `current.js` cho mái phụ: `x` 5.0–8.5, `y` 15.0–18.0, cao 3.20, tôn
+- [ ] `lib/massing.js` dựng mái bàn trà từ dữ liệu mặt bằng (gỡ `CARPORT_ROOF` đã chuyển sang A9)
+- [ ] Neo mái vào lưới (`lib/grid.js`) để dịch tường `x = 5` hay `y = 18` thì mái đi theo — bài
+      học ở E2f: để rời là mái lơ lửng tách khỏi nhà. Mép `x = 8.5` và `y = 18` trùng đường lưới,
+      mép `y = 15` thì chưa
+- [ ] Có làm thanh trượt cho mái bàn trà không — thanh trượt mái che xe đã gỡ ở A9
+- [ ] Dời bàn tròn từ `(6.4, 11.6)` vào dưới mái, tránh vùng quét cánh D2, D9 và bậc của chúng
+      (A9) — góc còn ~2.6 × 2.1 m nên cân bàn 1.0–1.2 m
+- [ ] Vẽ mái lên bản 2D
+
+**Lam D12**
+
+- [ ] Khoá mới cho lam, bám vào lỗ mở D12: sâu 0.4, bước 0.6, cao theo cửa
+- [ ] `lib/massing.js` dựng lam; `npm run check:3d` vẫn sạch
+- [ ] Vẽ lam lên bản 2D
+
+**Chung**
+
+- [ ] `specMarkdown()` in được hai loại khối mới
+- [ ] Ghi sơn chống nóng tường trái (A3) và lớp chống nóng mái (A5) vào `warn` để đặc tả có
+- [ ] Cập nhật `note` và `changes`
+- [ ] 13 phép kiểm **sạch**, `npm run check` sạch
 - [ ] `npm run spec`
-- [ ] Cập nhật `floor-plan.md` nếu đổi phần đánh giá
+- [ ] Cập nhật `floor-plan.md`
+- [ ] Bỏ mục "Đã chốt, chưa vào dữ liệu" trong `CLAUDE.md` và dòng tương ứng ở `3d.md` mục 8
 
 ---
 
@@ -188,7 +303,8 @@ phần nắng.
 `components/scene3d.js`, hàm `moveWalk()`: đi xuyên tường được, và cao độ mắt luôn tính từ cốt nền
 nhà (`MUC.nen + 1.60`) nên bước ra sân thì lửng lơ 45 cm.
 
-**Cố ý hoãn** — đủ dùng để soi tỉ lệ đứng, vốn là mục đích chính của mô hình.
+**Cố ý hoãn** — đủ dùng để soi tỉ lệ đứng, vốn là mục đích chính của mô hình. Chủ nhà xác nhận
+giữ hoãn ngày 10/9/2026.
 
 - [ ] Cao độ mắt tra theo phòng đang đứng (`lib/massing.js` đã biết qua `atFloorLevel`)
 - [ ] Chặn va chạm theo danh sách hộp tường
@@ -197,9 +313,20 @@ nhà (`MUC.nen + 1.60`) nên bước ra sân thì lửng lơ 45 cm.
 
 Mới có khối tường, sàn, mái. Dữ liệu đã có sẵn ở `furn` của từng mặt bằng (2D đang vẽ), chỉ
 thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận tỉ lệ kỹ hơn. Xem `3d.md` mục 8.
+Chủ nhà xác nhận giữ hoãn ngày 10/9/2026.
 
 - [ ] Thêm chiều cao cho từng loại nội thất vào `HEIGHTS` trong `lib/lot.js`
 - [ ] Dựng hộp trong `lib/massing.js`
+
+### ✅ B4 · Tường bao dọc hành lang ngoài hạ về cao rào
+
+`lib/massing.js` từng có bậc tường thứ ba, "tường hiên": tường nào chỉ áp vào hành lang ngoài
+(R3) thì cao 2.80 m, bằng mái hiên. Thực tế chỉ có một đoạn — tường bao phải `x = 9.5`,
+`y` 18–25 — và nó không cần cao thế: mái hiên đua 1 m ra từ tường bếp, không gác lên tường bao.
+
+- [x] Bỏ bậc tường hiên, còn hai bậc: tường nhà và tường rào
+- [x] Mái hiên giữ 2.80 m; giữa rào 2.20 m và mái hở 0.6 m
+- [x] `npm run check:3d` sạch
 
 ---
 
@@ -332,8 +459,8 @@ Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. 
       nên `withLine()` chỉ đổi một con số rồi dựng lại, phòng / tường / cửa / giếng trời / nội
       thất / `dims` / `areas` tự đi theo. Đúng luật: chỉ thứ bám vào đúng đường đó mới đổi.
 - [x] **E2c · Kích thước tối thiểu.** `MIN_CLEAR` trong `lib/lot.js`, dùng để **tô đỏ**, không
-      chặn. **Số vẫn là tạm, chờ chủ nhà chốt** — đặt bằng chỗ chật nhất mà chính thiết kế hiện
-      tại đã chấp nhận rồi lùi xuống chút, để không tô đỏ oan ngay từ đầu: hành lang 0.84,
+      chặn. **Chủ nhà chốt giữ nguyên ngày 10/9/2026** — đặt bằng chỗ chật nhất mà chính thiết kế
+      hiện tại đã chấp nhận rồi lùi xuống chút, để không tô đỏ oan: hành lang 0.84,
       WC khách 1.38, phòng thờ 1.90, ban công 1.78 → ngưỡng `circ 0.80 · wet 1.30 · room 1.80 ·
       yard 1.00`.
 - [x] **E2d · Sidebar kéo thả — một thanh trượt cho mỗi bức tường**, ở trang bản vẽ 2D (chỗ
@@ -378,8 +505,9 @@ Hai thanh trượt thật:
 > Nếu cho `w` kéo được để làm mái hẹp hơn sân phụ thì phải neo mép nào — trái, phải, hay giữa.
 > Chưa cần; mặc định bằng đúng bề rộng sân phụ.
 
-> **Liên đới với A2.** A2 sẽ chuyển `CARPORT_ROOF` từ `lib/lot.js` vào `current.js`. Làm E2f
-> trước thì phần đọc dữ liệu phải sửa lại sau — không lớn, nhưng biết trước thì viết cho dễ đổi.
+> **Liên đới với A2 — nay đã lỗi thời.** Chủ nhà chốt bỏ mái che xe, thay bằng mái bàn trà ở
+> sân chính (A2). Hai thanh trượt của E2f đang chỉnh một mái không còn trong thiết kế; A4 quyết
+> bỏ hay đổi chúng.
 
 > **Nội thất là chỗ dễ vỡ — đã vấp đúng chỗ này.** Neo vào đường lưới gần nhất là sai, và sai
 > lặng lẽ: chậu rửa ở `y = 24.3` nằm trong BẾP (gốc `y = 18`) lại bám đường `24` của master,
@@ -408,7 +536,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 > **`current.js` vẫn là nguồn sự thật.** Cấu hình trong `localStorage` chỉ nằm ở máy người xem;
 > `spec/` vẫn sinh từ `current.js`. Chốt được phương án nào thì vẫn phải sửa tay vào
 > `current.js` rồi `npm run spec` — đúng quy trình ở `CLAUDE.md`. Muốn đỡ chép tay thì thêm nút
-> xuất ra đoạn mã đúng định dạng `current.js`, nhưng đó là việc phụ, chưa cần ngay.
+> xuất ra đoạn mã đúng định dạng `current.js`, nhưng đó là việc phụ. **Chủ nhà chốt hoãn ngày
+> 10/9/2026** — đợt A4 toàn khối mới mà thanh trượt không chạm tới, nút xuất không giúp gì.
 
 > **Liên đới với B1.** B1 định bỏ dropdown nơi xây khi đã chốt vĩ độ. Nếu làm E2 trước thì nơi
 > xây nên chuyển hẳn vào panel cấu hình chứ không nằm rời trên thanh công cụ — cân nhắc gộp.

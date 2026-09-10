@@ -89,13 +89,22 @@ suy chiều cao tường từ phòng áp vào, không khai tay. Lý do của t�
 Suy ra: cạnh sau lô (ban công sau, sân phơi) quay **Tây Nam** — nắng chiều gắt;
 cạnh phải (bếp, hành lang ngoài) quay **Đông Nam**; tường bao trái quay **Tây Bắc**.
 
-## Chưa xác định
+## Đã chốt, chưa vào dữ liệu
 
-- **Mái che sân phụ** — chỗ để xe, mái nối thẳng từ nhà chính ra. Đang khai tạm ở
-  `CARPORT_ROOF` trong `lib/lot.js` để 3D dựng được, **chưa vào dữ liệu mặt bằng**. Chốt xong
-  thì chuyển vào `lib/versions/current.js`. Xem `3d.md` mục 3.
-- **Che nắng tây cho master** — cửa lùa D12 quay Tây Nam, ban công sau không mái, mái đua
-  không cứu được. Xem `3d.md` mục 2a.
+Chủ nhà chốt ngày 10/9/2026, việc đưa vào `lib/versions/current.js` là A4 trong `roadmap.md`.
+
+- **Mái bàn trà ở sân chính** thay cho mái che xe ở sân phụ — mái che xe **bỏ hẳn**.
+  `CARPORT_ROOF` trong `lib/lot.js` là số của mái che xe cũ, còn nằm đó cho tới khi làm A9.
+  Xem `3d.md` mục 3.
+- **Lam đứng cho D12** — che nắng tây cho master. Xem `3d.md` mục 2a.
+- **Sơn chống nóng tường trái** lúc xây và **lát lớp chống nóng mái** — không đổi hình khối,
+  không phải sửa mô hình. Xem `3d.md` mục 2c.
+- **Bếp lợp tôn hai mái + trần tôn**, không đổ mái bê tông. `lib/massing.js` hiện chỉ sinh hộp
+  thẳng trục nên chưa dựng được mái dốc. Xem `3d.md` mục 3a.
+- **Mái sân phơi** — tôn dốc một mái phủ `y` 25–28, chừa dải hở thẳng hàng ban công. Xem `3d.md`
+  mục 3b.
+- **Bậc tam cấp** cho D1, D2, D9, D10, D13; **mái hiên bê tông** đua 1.2 m trước cửa chính thay
+  mái che xe; **nền WC khách** hạ xuống cốt sân. Xem `3d.md` mục 3c.
 
 Chi tiết và trạng thái từng việc: `roadmap.md`.
 
