@@ -238,8 +238,8 @@ hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
 
 ### ⬜ E2 · Advanced config — ranh phòng và cao độ
 
-**Phạm vi: ranh giới phòng + cao độ.** Cụ thể là vị trí các bức tường ngăn (đường lưới) và
-`HEIGHTS` trong `lib/lot.js`.
+**Phạm vi: ranh giới phòng + cao độ + mái che sân phụ.** Cụ thể là vị trí các bức tường ngăn
+(đường lưới), `HEIGHTS` và `CARPORT_ROOF` trong `lib/lot.js`.
 
 Nằm **ngoài** phạm vi: `LOT.w` / `LOT.d` (lô cố định), bề dày tường, vị trí và chiều rộng từng
 cửa / cửa sổ, kích thước giếng trời. Mô hình lưới không phủ mấy thứ đó — chúng cần ràng buộc
@@ -304,7 +304,39 @@ Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. 
       trong lúc gõ.
 - [ ] **E2e · Thanh trượt cao độ.** `HEIGHTS`: cao trần, cao cửa, bệ cửa sổ, dày mái. Không dính
       lưới nên làm độc lập được, và là thứ đổi hẳn cảm giác tỉ lệ đứng trong 3D.
+- [ ] **E2f · Thanh trượt mái che sân phụ.** Xem khung dưới — chỉ hai con số là thanh trượt
+      thật, ba con số còn lại phải suy ra.
 - [ ] 13 phép kiểm chạy sau mỗi lần sửa, hiện lỗi ngay tại chỗ — lưới an toàn
+
+#### Mái che sân phụ: chỉ hai con số là tự do
+
+`CARPORT_ROOF` có năm trường, nhưng đo trên bản hiện hành thì **ba trong số đó đang bám vào
+sân phụ**, không phải số độc lập:
+
+| Trường | Giá trị | Thực chất |
+|---|---:|---|
+| `x` | 0.0 | mép trái lô |
+| `w` | 5.0 | **= bề rộng sân phụ** — bám ranh cột `x = 5.0` |
+| `fromY` | 12.0 | **= mép sau sân phụ** — bám đường lưới `y = 12` |
+| `length` | 5.5 | tự do |
+| `height` | 2.80 | tự do |
+
+Nên `x`, `w`, `fromY` phải **suy từ phòng sân phụ**, không cho kéo. Nếu để rời thì dịch tường
+nhà ở `y = 12` sẽ làm mái che lơ lửng tách khỏi nhà — đúng kiểu lỗi không ai để ý cho tới lúc
+nhìn 3D thấy sai.
+
+Hai thanh trượt thật:
+
+- **`length` — phủ dài bao nhiêu.** Kèm số **"hở bao nhiêu mét phía cổng"** đổi theo thời gian
+  thực. Đây là đánh đổi chính của cả hạng mục (`3d.md` mục 3): phủ càng dài càng đỡ mưa nhưng
+  càng bịt nguồn sáng Đông Bắc dịu nhất nhà qua cửa chính D1. Hiện phủ 5.5 / 12 m, hở 6.5 m.
+- **`height` — cao bao nhiêu.** Trần trên là chiều cao tường nhà (`4.00 m`) vì nó gá vào đó.
+
+> Nếu cho `w` kéo được để làm mái hẹp hơn sân phụ thì phải neo mép nào — trái, phải, hay giữa.
+> Chưa cần; mặc định bằng đúng bề rộng sân phụ.
+
+> **Liên đới với A2.** A2 sẽ chuyển `CARPORT_ROOF` từ `lib/lot.js` vào `current.js`. Làm E2f
+> trước thì phần đọc dữ liệu phải sửa lại sau — không lớn, nhưng biết trước thì viết cho dễ đổi.
 
 > **Nội thất là chỗ dễ vỡ.** Phép kiểm 12 và 13 đòi nội thất nằm gọn trong phòng và không nằm
 > trong vùng quét cánh cửa. Co phòng lại mà nội thất đứng yên là đỏ ngay. Lúc nạp phải neo mỗi
