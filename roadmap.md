@@ -37,7 +37,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
 | **Cấu hình tuỳ chỉnh** ||||
-| E0 | Bỏ hằng số ghim trong `validate()` | ⬜ chưa làm | |
+| E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
 | E1 | Đổi hướng nhà được | ⬜ chưa làm | |
 | E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ⬜ chưa làm | E0 |
 | E3 | Lưu cấu hình đặt tên trong `localStorage` | ⬜ chưa làm | E2 |
@@ -199,7 +199,7 @@ từ nó — trang là tĩnh, không có backend để ghi ngược.
 Hệ quả phải nói rõ trên giao diện: chỉnh trong trình duyệt **không phải là đổi thiết kế thật**.
 Nhãn luôn hiện đang xem cấu hình nào để không ai nhầm.
 
-### ⬜ E0 · Bỏ hằng số ghim trong `validate()`
+### ✅ E0 · Bỏ hằng số ghim trong `validate()`
 
 **Chặn E2.** Ba phép kiểm đầu ghim số cứng `150`, `135`, `30`. Vì lô cố định nên `30` không sao
 — nó chính là `LOT.d`, chỉ cần thay tên cho khỏi lặp số.
@@ -219,9 +219,13 @@ L = ranh × LOT.d          R = (LOT.w − ranh) × LOT.d
 > **Đừng dùng `dims.bottom[1]`.** Trông thì giống ranh cột nhưng không phải: v2 có
 > `dims.bottom[1] = 2.4` trong khi ranh cột vẫn ở `5.0`. Suy từ `dims` là sai ngay ở bản thứ hai.
 
-- [ ] Suy `150` / `135` theo công thức trên, `30` lấy từ `LOT.d`
-- [ ] Sửa luôn chuỗi mô tả trong `CHECKS` cho khỏi ghim số
-- [ ] Chạy lại cả kho đối chiếu: v1…v11 phải giữ **nguyên số lỗi cũ**, không nhiều hơn không ít hơn
+- [x] Suy `150` / `135` theo công thức trên, `30` lấy từ `LOT.d`
+- [x] Sửa luôn chuỗi mô tả trong `CHECKS` cho khỏi ghim số
+- [x] Chạy lại cả kho đối chiếu: v1…v11 giữ **nguyên số lỗi cũ** — giống hệt cả nội dung thông báo
+- [x] Giả lập dịch ranh cột `5.0 → 5.5`: hai phép kiểm không còn đỏ (trước là 165 m² → đỏ ngay)
+
+> Phép kiểm còn **mạnh nguyên**: nó chuyển từ "cột trái phải đúng 150 m²" sang "cột trái phải
+> lấp kín đúng phần lô của mình" — hở hay chồng đều lộ, và `L + R = 285` vẫn suy ra được.
 
 ### ⬜ E1 · Đổi hướng nhà được
 
