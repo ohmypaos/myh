@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Playwright MCP — ảnh chụp và file tải về khi kiểm thử bản vẽ
+.playwright-mcp/
+
+# Ảnh render tạm của bản vẽ (bản vẽ gốc là mat-bang.html, không commit ảnh render)
+plan*.png
+v[0-9]*.png
+ver*.png
+spec-*.md
+
+# Đặc tả xuất từ nút "Xuất đặc tả" — bản chốt là mat-bang-dac-ta.md
+mat-bang-dac-ta-v*.md
+
+# Log server xem thử
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
