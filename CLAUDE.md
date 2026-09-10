@@ -26,6 +26,7 @@ npm run dev
 | `spec/v<n>.md` | Đặc tả sinh tự động từ `lib/versions/v<n>.js`. **Không sửa tay** |
 | `mat-bang.md` | Trang chỉ mục + hiện trạng gốc v1 và đánh giá (viết tay) |
 | `3d.md` | Ghi chú thiết kế mô hình 3D — **vì sao** dựng như đang dựng |
+| `ke-hoach.md` | **Việc còn dang dở**, có trạng thái từng task. Đọc trước khi nhận việc mới; làm xong thì cập nhật |
 | `banve.png` | Bản vẽ gốc của chủ nhà, chỉ để đối chiếu |
 
 Ba thứ phải luôn khớp nhau: **sửa `lib/versions/` → sinh lại `spec/` → cập nhật bảng lịch sử trong `mat-bang.md`**.

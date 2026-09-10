@@ -13,6 +13,7 @@
 | `spec/v1.md` … `spec/v11.md` | Đặc tả các bản cũ, để đối chiếu |
 | File này | Hiện trạng gốc (v1) và đánh giá — **lý do** dẫn tới chuỗi thay đổi |
 | [`3d.md`](./3d.md) | Ghi chú thiết kế mô hình 3D: hướng nắng, cao độ, mái che sân phụ |
+| [`ke-hoach.md`](./ke-hoach.md) | Việc còn dang dở, trạng thái từng task — trong đó có những gì đang chờ chủ nhà quyết |
 | `banve.png` | Bản vẽ gốc của chủ nhà |
 
 Mỗi `spec/v<n>.md` **sinh tự động** từ `lib/versions/v<n>.js` bằng `npm run spec`, không sửa
