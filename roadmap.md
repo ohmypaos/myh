@@ -183,9 +183,12 @@ thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận 
 
 ## E · Cấu hình tuỳ chỉnh
 
-Cho phép người xem sửa **mọi kích thước** và **hướng nhà** ngay trên trang, mặc định lấy từ
-bản hiện hành. Mục đích: thử "nếu hành lang rộng 1.2 m thì sao", "nếu xoay nhà 15° thì nắng
-đổi thế nào" mà không phải sửa mã.
+Cho phép người xem sửa **mọi kích thước bên trong** và **hướng nhà** ngay trên trang, mặc định
+lấy từ bản hiện hành. Mục đích: thử "nếu hành lang rộng 1.2 m thì sao", "nếu xoay nhà 15° thì
+nắng đổi thế nào" mà không phải sửa mã.
+
+**Lô đất giữ cố định 9.5 × 30 m** — `LOT.w` và `LOT.d` không nằm trong phạm vi sửa. Hướng nhà
+thì có: đó là quay lô chứ không phải đổi kích thước lô.
 
 ### Quyết định phải chốt trước khi code
 
@@ -199,19 +202,25 @@ người chỉnh cả buổi rồi mất sạch, hoặc tệ hơn — tưởng m
 
 ### ⬜ E0 · Bỏ hằng số ghim trong `validate()`
 
-**Chặn E2.** Ba phép kiểm đầu đang ghim số cứng:
+**Chặn E2.** Ba phép kiểm đầu ghim số cứng `150`, `135`, `30`. Vì lô cố định nên `30` không sao
+— nó chính là `LOT.d`, chỉ cần thay tên cho khỏi lặp số.
+
+Hai số kia thì **có vấn đề**: `150 = 5.0 × 30` và `135 = 4.5 × 30` phụ thuộc vào **ranh cột
+trái/phải ở `x = 5.0`**. Bức tường ấy là thứ người ta sẽ muốn thử dịch đầu tiên — nó quyết định
+nhà rộng bao nhiêu so với sân bên hông. Dịch nó là hai phép kiểm đỏ ngay dù mặt bằng đúng.
+
+Cách suy: **`ranh = max(x + w)` trên các phòng cột trái**, rồi
 
 ```
-Math.abs(L-150)   cột trái  = 5.0 × 30
-Math.abs(R-135)   cột phải  = 4.5 × 30
-Math.abs(span-30) chuỗi dọc = chiều sâu lô
+L = ranh × LOT.d          R = (LOT.w − ranh) × LOT.d
 ```
 
-Chúng suy ra được từ `LOT` và `dims.bottom` (ranh cột ở `x = 5.0`). Để nguyên thì **đổi bất kỳ
-kích thước lô nào cũng làm ba phép kiểm đỏ ngay**, dù mặt bằng không sai gì.
+Đã nghiệm trên cả 12 phương án — khớp tuyệt đối.
 
-- [ ] Suy `150` / `135` từ `LOT.d` và ranh cột trong `dims.bottom`
-- [ ] Suy `30` từ `LOT.d`
+> **Đừng dùng `dims.bottom[1]`.** Trông thì giống ranh cột nhưng không phải: v2 có
+> `dims.bottom[1] = 2.4` trong khi ranh cột vẫn ở `5.0`. Suy từ `dims` là sai ngay ở bản thứ hai.
+
+- [ ] Suy `150` / `135` theo công thức trên, `30` lấy từ `LOT.d`
 - [ ] Sửa luôn chuỗi mô tả trong `CHECKS` cho khỏi ghim số
 - [ ] Chạy lại cả kho đối chiếu: v1…v11 phải giữ **nguyên số lỗi cũ**, không nhiều hơn không ít hơn
 
@@ -231,11 +240,14 @@ hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
 ### ⬜ E2 · Advanced config — sửa mọi kích thước
 
 Phạm vi: phòng (`x, y, w, h`), tường (vị trí, đầu, cuối, bề dày), cửa và cửa sổ, giếng trời,
-cao độ (`HEIGHTS`), kích thước lô (`LOT`).
+cao độ (`HEIGHTS`). **Không gồm `LOT.w` / `LOT.d`** — lô cố định.
 
 **Cạm bẫy chính: các số không độc lập nhau.** Dời một bức tường thì cửa nằm trên nó phải dời
-theo; đổi chiều sâu lô thì chuỗi `dims.left` phải cộng lại đủ. Một bảng "sửa mọi con số" ngây
-thơ sẽ đẻ ra mặt bằng sai liên tục.
+theo; nới một phòng thì chuỗi `dims.left` phải cộng lại vẫn đủ 30 m. Một bảng "sửa mọi con số"
+ngây thơ sẽ đẻ ra mặt bằng sai liên tục.
+
+Lô cố định lại là điều may: nó giữ nguyên một bất biến cứng để bấu víu — tổng diện tích luôn
+phải là 285 m², nên phép kiểm bắt được ngay mọi chỉnh sửa làm hụt hoặc thừa chỗ.
 
 Hai hướng, phải chọn:
 
