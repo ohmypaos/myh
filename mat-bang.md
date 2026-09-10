@@ -1,19 +1,22 @@
 # Mặt bằng nhà cấp 4 — 9.5 × 30 m
 
-> **Bắt đầu từ đâu:** mở `index.html` — bản vẽ tương tác, chọn được cả 12 phiên bản.
+> **Bắt đầu từ đâu:** `npm run dev`, rồi mở `/` — bản vẽ tương tác, chọn được cả 12 phiên bản.
+> Trang `/3d` là mô hình khối và đường đi của nắng.
 
 ## Cấu trúc
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `index.html` | Phần dùng chung: giao diện, bộ vẽ, bộ kiểm tra, hàm sinh đặc tả |
-| `versions/v1.js` … `v12.js` | **Nguồn sự thật của số liệu.** Mỗi file một phiên bản, tự đăng ký qua `definePlan()` |
+| `lib/versions/v1.js` … `v12.js` | **Nguồn sự thật của số liệu.** Mỗi file một phiên bản |
+| `lib/`, `components/`, `app/` | Bộ vẽ 2D, bộ dựng 3D, bộ kiểm tra, hàm sinh đặc tả |
 | [`spec/v12.md`](./spec/v12.md) | **Đặc tả bản hiện hành** — phòng, tường, cửa, cửa sổ, lấy sáng mái, nội thất |
 | `spec/v1.md` … `spec/v11.md` | Đặc tả các bản cũ, để đối chiếu |
 | File này | Hiện trạng gốc (v1) và đánh giá — **lý do** dẫn tới chuỗi thay đổi |
+| [`3d.md`](./3d.md) | Ghi chú thiết kế mô hình 3D: hướng nắng, cao độ, mái che sân phụ |
 | `banve.png` | Bản vẽ gốc của chủ nhà |
 
-Mỗi `spec/v<n>.md` **sinh tự động** từ `versions/v<n>.js`, không sửa tay — quy trình trong `CLAUDE.md`.
+Mỗi `spec/v<n>.md` **sinh tự động** từ `lib/versions/v<n>.js` bằng `npm run spec`, không sửa
+tay — quy trình trong `CLAUDE.md`.
 
 ### Lịch sử phiên bản
 
@@ -163,4 +166,5 @@ cột trái sẽ thành như dưới đây — tổng chiều sâu vẫn 30.0.
 *(Còn lệch 0.4m do phòng thờ tăng sâu — lấy từ sân phụ 8.0 → 7.6 hoặc sân sau 2.5 → 2.1.)*
 
 Từ v4 trở đi hướng đi đổi hẳn: rút ngắn khối nhà chính (22.4 → 18.0 m) và trả diện tích
-cho sân, thay vì nhồi thêm phòng. Chi tiết từng bước xem dropdown phiên bản trong `index.html`, hoặc `spec/v<n>.md`.
+cho sân, thay vì nhồi thêm phòng. Chi tiết từng bước xem dropdown phiên bản trong bản vẽ,
+hoặc `spec/v<n>.md`.
