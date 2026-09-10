@@ -303,12 +303,12 @@ KHO / WC CHUNG bị ép từ 2 m xuống 0 — số của WC chung đỏ lên ng
 Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. `current.js` vẫn giữ toạ độ tuyệt
 đối như hiện nay, nên `validate()`, `spec/`, `massing.js` không phải sửa gì.
 
-- [ ] **E2a · Dựng mô hình lưới + phép thử khứ hồi.** Suy lưới từ toạ độ tuyệt đối, rồi dựng
-      ngược lại toạ độ từ lưới và so — phải **trùng khít trên cả 12 phương án**. Đây là mốc
-      chứng minh mô hình đúng; chưa qua thì đừng viết tiếp phần lan truyền.
-- [ ] **E2b · Lan truyền tới phòng kề.** Mọi phòng, tường, cửa, cửa sổ, giếng trời và nội thất
-      bám vào đường đó đi theo; `dims` tính lại. **Dừng ở phòng kề** — không đẩy dây chuyền,
-      không chặn thao tác.
+- [x] **E2a · Dựng mô hình lưới + phép thử khứ hồi.** `lib/grid.js`, chạy bằng
+      `npm run check:grid`. Cả 12 phương án dựng ngược khớp khít. Khảo sát trước đó cho thấy
+      **mọi tường và mọi lỗ mở đều bám đúng đường lưới**, không ngoại lệ nào.
+- [x] **E2b · Lan truyền tới phòng kề.** Hoá ra **không cần mã riêng**: mọi thứ đã neo vào lưới
+      nên `withLine()` chỉ đổi một con số rồi dựng lại, phòng / tường / cửa / giếng trời / nội
+      thất / `dims` / `areas` tự đi theo. Đúng luật: chỉ thứ bám vào đúng đường đó mới đổi.
 - [ ] **E2c · Kích thước tối thiểu.** Dữ liệu mới, chưa có ở đâu. Để ở `lib/lot.js` cạnh
       `HEIGHTS`. Dùng để **tô đỏ**, không dùng để chặn.
       **Số cụ thể chưa chốt** — cần chủ nhà cho con số thật, đừng bịa. Lưu ý hành lang hiện đã
@@ -355,9 +355,12 @@ Hai thanh trượt thật:
 > **Liên đới với A2.** A2 sẽ chuyển `CARPORT_ROOF` từ `lib/lot.js` vào `current.js`. Làm E2f
 > trước thì phần đọc dữ liệu phải sửa lại sau — không lớn, nhưng biết trước thì viết cho dễ đổi.
 
-> **Nội thất là chỗ dễ vỡ.** Phép kiểm 12 và 13 đòi nội thất nằm gọn trong phòng và không nằm
-> trong vùng quét cánh cửa. Co phòng lại mà nội thất đứng yên là đỏ ngay. Lúc nạp phải neo mỗi
-> món vào phòng chứa nó để nó đi theo.
+> **Nội thất là chỗ dễ vỡ — đã vấp đúng chỗ này.** Neo vào đường lưới gần nhất là sai, và sai
+> lặng lẽ: chậu rửa ở `y = 24.3` nằm trong BẾP (gốc `y = 18`) lại bám đường `24` của master,
+> còn bếp nấu ở `y = 21.9` bám đường `19` — hai món cùng một phòng neo vào hai đường khác nhau,
+> dịch một đường là chúng trôi ra xa nhau và bếp báo "chậu rửa chồng bếp nấu" dù bếp không hề
+> bị đụng tới. Phải neo vào **gốc phòng chứa nó**. Đã sửa; nay nới master thì giường master đi
+> theo còn bếp đứng yên.
 
 ### ⬜ E3 · Lưu cấu hình đặt tên
 
