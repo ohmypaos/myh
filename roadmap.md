@@ -27,13 +27,13 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
-| A0 | Chốt nơi xây (vĩ độ) | ⏸ chờ quyết | |
-| A1 | Che nắng tây cho master | ⏸ chờ quyết | A0 |
+| A0 | Chốt nơi xây — **Bắc Giang** | ✅ xong | |
+| A1 | Che nắng tây cho master | ⏸ chờ quyết | |
 | A2 | Mái che sân phụ vào dữ liệu phiên bản | ⏸ chờ quyết | |
 | A3 | Tường bao trái Tây Bắc — trễ pha nhiệt | ⏸ chờ quyết | |
 | A4 | Đưa A1–A3 vào `lib/versions/current.js` | ⬜ chưa làm | A1, A2, A3 |
 | **Mô hình 3D** ||||
-| B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ⬜ chưa làm | A0 |
+| B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
 | **Cấu hình tuỳ chỉnh** ||||
@@ -89,12 +89,33 @@ lịch sử, commit message phải nói rõ đổi gì và vì sao. Quy trình b
 
 Ba việc A1–A3 độc lập nhau nên cứ chốt được cái nào thì làm cái đó, mỗi cái một commit.
 
-### ⏸ A0 · Chốt nơi xây (vĩ độ)
+### ✅ A0 · Chốt nơi xây — Bắc Giang
 
-Chặn A1 và B1. Đang cho chọn Hà Nội / Đà Nẵng / TP.HCM, **mặc định Hà Nội**. Sai vĩ độ thì
-toàn bộ phần nắng sai theo, nên phải chốt trước khi dùng mô hình để kết luận bất cứ điều gì.
+`21.27°B, 106.19°Đ`, ghi thẳng vào `LOT` trong `lib/lot.js`.
 
-- [ ] Chủ nhà xác nhận nơi xây
+**Không chặn A1 như đã ghi trước đây.** Tính ra thì mái đua cần để che hết cửa lùa D12 lúc 15h
+hạ chí là 1.17 m ở Hà Nội, 1.13 m ở Đà Nẵng, 0.95 m ở TP.HCM — chênh nhau 22 cm trên 10 vĩ độ.
+Mùa đông thì cả ba đều 3.7–4.8 m, tức bất khả như nhau. Kết luận của A1 không đổi theo nơi xây.
+
+Nơi xây đổi thật ở hai chỗ khác:
+
+- **Nắng mùa đông qua giếng trời hành lang.** 21/12: Hà Nội 1.0h (đỉnh 0.69 m² sàn được nắng),
+  Đà Nẵng 1.8h (1.53 m²), TP.HCM 2.0h (2.30 m²). Mùa hè thì ba nơi như nhau (~2.8h, ~4.4–5.0 m²).
+  Hành lang miền Bắc mùa đông tối hơn hẳn.
+- **Số ngày trưa mặt trời ở phía Bắc**, ăn vào A3: Hà Nội 53, Đà Nẵng 97, TP.HCM 129 ngày/năm.
+
+Và thứ mô hình **không** tính được mà lại quan trọng hơn vĩ độ: khí hậu. Bắc Giang có mùa đông
+lạnh nhiều mây, nên nắng lọt vào nhà mùa đông là thứ *đáng mong*, ngược hẳn với miền Nam.
+
+#### Số của Bắc Giang
+
+| | Mọc → lặn | Trưa | D12 ăn nắng | Mái đua cần lúc 15h |
+|---|---|---|---:|---:|
+| 21/6 hạ chí | 05:18 → 18:36 | 88° phía **Bắc** | 6.5 h | 1.19 m |
+| 23/9 thu phân | 05:48 → 17:48 | 69° Nam | 7.3 h | 2.68 m |
+| 21/12 đông chí | 06:32 → 17:15 | 45° Nam | 8.2 h | 4.86 m |
+
+51 ngày mỗi năm trưa mặt trời ở phía Bắc.
 
 ### ⏸ A1 · Che nắng tây cho master
 
@@ -152,14 +173,15 @@ Theo đúng 4 bước ở `CLAUDE.md` mục "Đổi thiết kế".
 
 ## B · Mô hình 3D
 
-### ⬜ B1 · Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT`
+### ✅ B1 · Bỏ dropdown nơi xây
 
-Chặn bởi A0. Khi đã chốt nơi xây thì dropdown ba thành phố chỉ còn là cái bẫy — người xem quên
-đổi là đọc sai toàn bộ phần nắng.
+Chốt xong nơi xây thì dropdown ba thành phố chỉ còn là cái bẫy — quên đổi là đọc sai toàn bộ
+phần nắng.
 
-- [ ] Đưa `lat` / `lon` thật vào `LOT` trong `lib/lot.js`
-- [ ] Bỏ `<select id="place">` khỏi `Plan3D.jsx` và phần xử lý trong `scene3d.js`
-- [ ] Giữ `PLACES` trong `lib/sun.js` hay bỏ — tuỳ còn dùng để đối chiếu không
+- [x] `lat` / `lon` / `place` vào `LOT` trong `lib/lot.js`
+- [x] Bỏ `<select id="place">` khỏi `Plan3D.jsx` và phần xử lý trong `scene3d.js`
+- [x] Bỏ luôn bảng `PLACES` trong `lib/sun.js` — `sunPosition()` vốn nhận `lat`/`lon` làm tham
+      số nên muốn đối chiếu nơi khác vẫn làm được, không cần bảng nào
 
 ### 💤 B2 · Đi bộ: va chạm và cao độ mắt
 

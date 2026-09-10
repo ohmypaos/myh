@@ -83,9 +83,6 @@ export default function Plan3D() {
           <section>
             <h2>Mặt trời</h2>
 
-            <label className="sl" htmlFor="place">Nơi xây</label>
-            <select id="place" defaultValue="" />
-
             <label className="sl" htmlFor="day">
               Ngày trong năm — <b id="lblDay" />
             </label>
@@ -114,7 +111,8 @@ export default function Plan3D() {
               được.
             </div>
             <div className="note">
-              <b>Chọn đúng nơi xây trước khi kết luận.</b> Lệch vĩ độ là lệch toàn bộ phần nắng.
+              <b>Nơi xây: Bắc Giang</b> (21.27°B). Đã chốt và ghi vào <code>lib/lot.js</code>,
+              không còn chọn được — quên đổi là đọc sai toàn bộ phần nắng.
             </div>
             <p className="doc">
               Mái che sân phụ (chỗ để xe) mới khai tạm ở <code>lib/lot.js</code>, chưa vào dữ liệu

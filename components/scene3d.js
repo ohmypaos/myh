@@ -18,7 +18,7 @@ import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../l
 import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
-import { PLACES, KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
+import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
   from '../lib/sun.js';
 
 /* Bảng màu giấy can, cùng tông với bản vẽ 2D. Khoá phải trùng `kind` mà massing.js sinh ra. */
@@ -49,7 +49,7 @@ export function init(){
 
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
      dọn thì canvas và mấy danh sách tự đổ (phương án, nơi xây, mốc ngày) dựng chồng nhau. */
-  for (const id of ['canvas3d', 'plan3', 'place', 'keyDates', 'heightSliders', 'carportSliders'])
+  for (const id of ['canvas3d', 'plan3', 'keyDates', 'heightSliders', 'carportSliders'])
     document.getElementById(id)?.replaceChildren();
 
   /* ═══════════ RENDERER · CẢNH ═══════════ */
@@ -167,12 +167,12 @@ export function init(){
   };
 
   /* ═══════════ MẶT TRỜI ═══════════ */
-  const state = { place: 'HN', day: 172, hour: 15 };
+  const state = { day: 172, hour: 15 };
   const hhmm = x =>
     `${String(Math.floor(x)).padStart(2, '0')}:${String(Math.round(x % 1 * 60)).padStart(2, '0')}`;
 
   function updateSun(){
-    const { lat, lon } = PLACES[state.place];
+    const { lat, lon } = LOT;
     const pos = sunPosition({ lat, lon, day: state.day, hour: state.hour });
     const dir = toSceneVector(pos.azimuth, pos.altitude);
 
@@ -431,14 +431,6 @@ export function init(){
     carportInfo();
   }
 
-  const placeSel = document.getElementById('place');
-  Object.entries(PLACES).forEach(([key, p]) => {
-    const o = document.createElement('option');
-    o.value = key; o.textContent = `${p.name} — ${p.lat}°B`;
-    placeSel.appendChild(o);
-  });
-  placeSel.value = state.place;
-
   const daySlider  = document.getElementById('day');
   const hourSlider = document.getElementById('hour');
   daySlider.value  = state.day;
@@ -461,7 +453,6 @@ export function init(){
   };
 
   on('plan3', 'change', e => openPlan(e.target.value));
-  on('place', 'change', e => { state.place = e.target.value; updateSun(); });
   on('day',   'input',  e => { state.day   = +e.target.value; updateSun(); });
   on('hour',  'input',  e => { state.hour  = +e.target.value; updateSun(); });
 
