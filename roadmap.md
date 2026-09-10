@@ -39,7 +39,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ⬜ chưa làm | |
 | E1 | Đổi hướng nhà được | ⬜ chưa làm | |
-| E2 | Advanced config — sửa mọi kích thước | ⬜ chưa làm | E0 |
+| E2 | Advanced config — sửa có ràng buộc, lan truyền tự động | ⬜ chưa làm | E0 |
 | E3 | Xuất cấu hình để dán lại vào `current.js` | ⬜ chưa làm | E2 |
 | **Hạ tầng** ||||
 | D1 | Bộ kiểm tra cho hình học 3D | ⬜ chưa làm | |
@@ -242,25 +242,62 @@ hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
 Phạm vi: phòng (`x, y, w, h`), tường (vị trí, đầu, cuối, bề dày), cửa và cửa sổ, giếng trời,
 cao độ (`HEIGHTS`). **Không gồm `LOT.w` / `LOT.d`** — lô cố định.
 
-**Cạm bẫy chính: các số không độc lập nhau.** Dời một bức tường thì cửa nằm trên nó phải dời
-theo; nới một phòng thì chuỗi `dims.left` phải cộng lại vẫn đủ 30 m. Một bảng "sửa mọi con số"
-ngây thơ sẽ đẻ ra mặt bằng sai liên tục.
+**Đã chốt: sửa có ràng buộc, lan truyền tự động.** Nới master lên thì phòng kề co lại tương
+ứng, không để người dùng tự cân số rồi đọc lỗi. Bộ 13 phép kiểm vẫn chạy sau mỗi lần sửa,
+nhưng đóng vai **lưới an toàn** chứ không phải cách chính để giữ bản vẽ đúng.
 
-Lô cố định lại là điều may: nó giữ nguyên một bất biến cứng để bấu víu — tổng diện tích luôn
-phải là 285 m², nên phép kiểm bắt được ngay mọi chỉnh sửa làm hụt hoặc thừa chỗ.
+#### Mô hình: đường lưới, không phải chồng phòng
 
-Hai hướng, phải chọn:
+Cách nghĩ hiển nhiên — "cột trái là một chồng phòng, sửa cái này thì cái dưới co lại" — **sai**.
+Đo thử trên bản hiện hành, dịch mép `y = 24` (mép trên master) kéo theo:
 
-- **Cho sửa tự do, 13 phép kiểm báo lỗi ngay bên cạnh.** Ít việc, thành thật — người dùng thấy
-  ngay mình vừa làm hỏng cái gì. Đề xuất bắt đầu từ đây.
-- **Ràng buộc liên đới, tự dời cửa theo tường.** Dùng sướng hơn nhiều nhưng là một dự án riêng.
+| Kéo theo | Cụ thể |
+|---|---|
+| 3 phòng đổi kích thước | L5 KHO, L6 WC CHUNG, **L9 HÀNH LANG** |
+| 1 tường | `['h', 24.0, …]` |
+| 2 cửa | D7, D8 |
+| chuỗi `dims.left` | `… 22 24 28 …` phải tính lại |
+| 5 món nội thất trong master | giường, 3 tủ, bàn làm việc |
 
-- [ ] Chốt một trong hai hướng trên
-- [ ] Panel cấu hình, mặc định lấy từ `CURRENT`
-- [ ] 13 phép kiểm chạy trên bản tuỳ chỉnh, hiện lỗi ngay tại chỗ
-- [ ] Nhãn "đang xem bản tuỳ chỉnh" + nút trả về mặc định
-- [ ] Cả 2D và 3D cùng đọc một bản tuỳ chỉnh — không để hai trang lệch nhau
-- [ ] Lưu vào `localStorage` để F5 không mất
+Chỗ bất ngờ là **L9 HÀNH LANG**: nó chạy dọc `y 17→24`, tức vắt qua ba băng ngang, nên không
+nằm gọn trong "chồng" nào. Mô hình chồng phòng không diễn tả được nó.
+
+Mô hình đúng là **lưới toạ độ**: tập các đường `y` (và `x`), mỗi phòng khai hai mép của nó bám
+vào đường nào. Dịch một đường → mọi thứ bám vào nó đi theo, phòng nào có hai mép ở hai đường
+khác nhau thì tự co giãn. L9 vắt qua ba băng vẫn đúng vì nó chỉ bám vào đường `17` và `24`.
+
+**Chỉ đụng liền kề, không lan xa hơn.** Dịch một đường thì chỉ hai phòng kề ngay hai bên đường
+đó co giãn; các đường khác đứng yên. Nếu phòng kề bị ép xuống dưới kích thước tối thiểu thì
+**không chặn thao tác, không đẩy tiếp** — con số của phòng đó **hiện đỏ** để người dùng thấy
+mình vừa lấn quá và tự lùi lại.
+
+Ví dụ của anh: master `4 → 6 m` là kéo đường `24` về `22`. Đường `22` đứng yên, nên băng
+KHO / WC CHUNG bị ép từ 2 m xuống 0 — số của WC chung đỏ lên ngay tại đó.
+
+#### Giữ nguyên định dạng dữ liệu
+
+Lưới là mô hình **suy ra lúc nạp**, không phải định dạng lưu. `current.js` vẫn giữ toạ độ tuyệt
+đối như hiện nay, nên `validate()`, `spec/`, `massing.js` không phải sửa gì.
+
+- [ ] **E2a · Dựng mô hình lưới + phép thử khứ hồi.** Suy lưới từ toạ độ tuyệt đối, rồi dựng
+      ngược lại toạ độ từ lưới và so — phải **trùng khít trên cả 12 phương án**. Đây là mốc
+      chứng minh mô hình đúng; chưa qua thì đừng viết tiếp phần lan truyền.
+- [ ] **E2b · Lan truyền tới phòng kề.** Mọi phòng, tường, cửa, cửa sổ, giếng trời và nội thất
+      bám vào đường đó đi theo; `dims` tính lại. **Dừng ở phòng kề** — không đẩy dây chuyền,
+      không chặn thao tác.
+- [ ] **E2c · Kích thước tối thiểu.** Dữ liệu mới, chưa có ở đâu — WC không hẹp hơn ~1.5 m,
+      hành lang không dưới ~0.8 m lọt lòng. Để ở `lib/lot.js` cạnh `HEIGHTS`. Dùng để **tô đỏ**,
+      không dùng để chặn.
+- [ ] **E2d · Sidebar kéo thả.** Mỗi kích thước sửa được là một **thanh trượt**, không phải ô
+      nhập số — gõ tay dễ ra số vô lý và không thấy được hệ quả trong lúc gõ. Kéo tới đâu bản vẽ
+      đổi tới đó, số của phòng kề đỏ lên ngay khi bị ép quá. Kèm nhãn "đang xem bản tuỳ chỉnh",
+      nút trả về mặc định, lưu `localStorage`.
+- [ ] 13 phép kiểm chạy sau mỗi lần sửa, hiện lỗi ngay tại chỗ — lưới an toàn
+- [ ] Cả 2D và 3D cùng đọc một bản tuỳ chỉnh, không để hai trang lệch nhau
+
+> **Nội thất là chỗ dễ vỡ.** Phép kiểm 12 và 13 đòi nội thất nằm gọn trong phòng và không nằm
+> trong vùng quét cánh cửa. Co phòng lại mà nội thất đứng yên là đỏ ngay. Lúc nạp phải neo mỗi
+> món vào phòng chứa nó để nó đi theo.
 
 ### ⬜ E3 · Xuất cấu hình để dán lại vào `current.js`
 
