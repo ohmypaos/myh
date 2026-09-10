@@ -9,6 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
+import { stepsOf, overhangsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -53,7 +54,7 @@ export function init(){
 
 
   // các lớp vẽ — tạo lại mỗi lần đổi phiên bản
-  let gRoom,gWall,gHole,gSky,gF,gW,gD,gDim,gL,gT,TB;
+  let gRoom,gStep,gWall,gHole,gSky,gF,gW,gD,gDim,gL,gT,TB;
 
   /* ═══════════ CÁC LỚP VẼ ═══════════ */
 
@@ -100,6 +101,33 @@ export function init(){
         stroke_dasharray:'13 9'},gSky);
       el('path',{d:`M${M(x)} ${M(y+h)}L${M(x+w)} ${M(y)}`,stroke:'#8fb9cd',
         stroke_width:1.4,fill:'none'},gSky);
+    }
+  }
+
+  /* Bậc tam cấp — vị trí suy từ cửa (lib/envelope.js). Vạch ngang là mép từng bậc. Vẽ dưới lớp
+     tường nên phần bậc lấn vào bề dày tường bị che đi. */
+  function drawSteps(){
+    for(const s of stepsOf(V)){
+      if(s.error) continue;
+      const {x,y,w,h} = s.rect;
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'#ebe6d8',
+        stroke:'#8d8778',stroke_width:1.4},gStep);
+      for(let k=1;k<s.count;k++){
+        const t = s.pos + s.dir*k*s.tread;
+        const d = s.ax==='h' ? {x1:M(s.a),y1:M(t),x2:M(s.b),y2:M(t)}
+                             : {x1:M(t),y1:M(s.a),x2:M(t),y2:M(s.b)};
+        el('line',{...d,stroke:'#8d8778',stroke_width:1.2},gStep);
+      }
+    }
+  }
+
+  /* Mái hiên — nằm phía trên đầu nên chỉ vẽ viền chấm, giống cách vẽ lấy sáng mái. */
+  function drawOverhangs(){
+    for(const o of overhangsOf(V)){
+      if(o.error) continue;
+      const {x,y,w,h} = o.rect;
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'none',
+        stroke:'#6f6a5e',stroke_width:2.4,stroke_dasharray:'3 7'},gSky);
     }
   }
 
@@ -445,7 +473,7 @@ export function init(){
   /* ── dựng toàn bộ bản vẽ cho phiên bản đang chọn ── */
   function buildPlan(){
     [...scene.children].forEach(c => { if(c !== defs) c.remove(); });
-    gRoom = g(); gWall = g(); gHole = g(); gSky = g();
+    gRoom = g(); gStep = g(); gWall = g(); gHole = g(); gSky = g();
     gF    = g({stroke:'#5c5c5c', stroke_width:1.6, fill:'#fff'});
     gW    = g(); gD = g();
     gDim  = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
@@ -454,7 +482,7 @@ export function init(){
                font_size:17,text_anchor:'middle'});
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
-    drawRooms(); drawWalls(); drawSkylights(); drawFurniture();
+    drawRooms(); drawSteps(); drawWalls(); drawSkylights(); drawOverhangs(); drawFurniture();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
   }
@@ -562,6 +590,8 @@ export function init(){
   <tr><td>Nét đứt xám ngắn</td><td>Ô mở thông, không có cánh cửa</td></tr>
   <tr><td>Ô trắng viền đen mảnh</td><td>Cửa sổ</td></tr>
   <tr><td style="color:#2f7897">Nét đứt xanh + gạch chéo</td><td>Lấy sáng trên mái (nằm phía trên đầu)</td></tr>
+  <tr><td style="color:#6f6a5e">Viền chấm xám</td><td>Mái hiên — bản mái đua ra ngoài tường (nằm phía trên đầu)</td></tr>
+  <tr><td>Ô be kẻ vạch</td><td>Bậc tam cấp phía sân — mỗi vạch là mép một bậc</td></tr>
   <tr><td>Nét đứt xám trên tường rào</td><td>Cổng — có nhãn kèm bề rộng</td></tr>
   <tr><td>Nét gạch–chấm</td><td>Ranh lô chính / lô phụ ở phần sân</td></tr>
   <tr><td style="color:#8a1c1c">Nét đỏ mảnh + gạch chéo đầu</td><td>Đường kích thước, đơn vị mét</td></tr>
@@ -612,11 +642,10 @@ export function init(){
     GRID = toGrid(BASE);
 
     /* Chỉ số đường lưới chỉ có nghĩa trong đúng một mặt bằng, nên đổi mặt bằng là bỏ phần
-       `lines`. Cao độ và mái che không dính lưới nên giữ nguyên. */
+       `lines`. Cao độ không dính lưới nên giữ nguyên. */
     const saved = readConfig();
     CFG = emptyConfig(BASE.id);
     CFG.heights = saved?.heights || {};
-    CFG.carport = saved?.carport || {};
     if (saved && saved.planId === BASE.id) CFG.lines = saved.lines || CFG.lines;
 
     draw(true);
@@ -745,7 +774,7 @@ export function init(){
     getCfg: () => CFG,
     setCfg: cfg => {
       /* Mở một cấu hình lưu cho mặt bằng khác thì bỏ phần `lines` — chỉ số đường không
-         chuyển được sang mặt bằng này. Cao độ, mái che và hướng thì vẫn dùng được. */
+         chuyển được sang mặt bằng này. Cao độ và hướng thì vẫn dùng được. */
       CFG = { ...cfg, planId: BASE.id };
       if (cfg.planId !== BASE.id) CFG.lines = { x:{}, y:{} };
       writeConfig(CFG);

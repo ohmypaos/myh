@@ -9,8 +9,9 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
+import { openingFloor, stepsOf } from '../lib/envelope.js';
 
 const EPS = 1e-6;
 const AREA_EPS = 1e-4;
@@ -30,6 +31,7 @@ const CHECKS = [
   'Diện tích mái bằng phòng kín trừ đúng phần giếng trời',
   'Các mảnh mái không chồng lên nhau',
   'Kính giếng trời nằm đúng cao độ trần',
+  'Bậc cần có đều dựng được, bậc cao nhất áp vào tường cửa và thấp hơn ngưỡng cửa đúng một nấc',
 ];
 
 function check(plan){
@@ -81,19 +83,21 @@ function check(plan){
 
   /* 5 — lỗ mở có thật sự thủng không. Đây là phép kiểm độc lập nhất: nó không tính lại theo
      lối của massing.js mà chỉ hỏi một câu — chọc một điểm vào giữa lỗ, có đụng tường không.
-     Cửa 'open' bỏ qua: chỗ đó vốn không có tường chứ không phải có cửa (xem D3). */
+     Cửa 'open' bỏ qua: chỗ đó vốn không có tường chứ không phải có cửa (xem D3).
+     Điểm chọc tính từ cốt sàn của lỗ mở — WC khách nằm ở cốt sân nên D11, W4 thấp hơn cửa khác. */
   const inside = (b, px, py, pz) =>
     px > b.x + EPS && px < b.x + b.w - EPS &&
     pz > b.z + EPS && pz < b.z + b.d - EPS &&
     py > b.y0 + EPS && py < b.y1 - EPS;
 
+  const base = o => openingFloor(plan, L, o[1], o[2], o[3], o[4]);
   const holes = [
     ...plan.doors.filter(d => d[5] !== 'open')
       .map(d => ({ id: d[0], ax: d[1], pos: d[2], a: d[3], b: d[4],
-                   y: L.floor + 0.05 })),
+                   y: base(d) + 0.05 })),
     ...plan.windows
       .map(w => ({ id: w[0], ax: w[1], pos: w[2], a: w[3], b: w[4],
-                   y: L.floor + ((H.only[w[0]] || {}).sill ?? H.sill) + 0.05 })),
+                   y: base(w) + ((H.only[w[0]] || {}).sill ?? H.sill) + 0.05 })),
     ...plan.gates
       .map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3], y: 0.05 })),
   ];
@@ -134,6 +138,27 @@ function check(plan){
     if (!g) e.push(`${id} không có kính`);
     else if (Math.abs(g.y0 - L.ceiling) > EPS)
       e.push(`${id} kính ở cao độ ${n(g.y0)}, phải là cốt trần ${n(L.ceiling)}`);
+  }
+
+  /* 9 — bậc. Nấc trên cùng của tam cấp là ngưỡng cửa, nên bậc cao nhất dựng ra phải thấp hơn
+     ngưỡng khoảng một nấc và áp vào đúng đường tim tường có cửa: sai nấc là vấp ở ngưỡng cửa,
+     tách khỏi tường là bậc lơ lửng giữa sân. Ngưỡng lấy theo cốt sàn của lỗ mở — cùng số mà
+     phép kiểm 5 dùng — chứ không lấy nấc do envelope.js tính. */
+  const byDoor = {};
+  for (const b of m.boxes.filter(b => b.kind === 'step')) (byDoor[b.id] ||= []).push(b);
+  for (const s of stepsOf(plan))
+    if (!s.error && !byDoor[s.id]) e.push(`bậc ${s.id} khai mà không dựng được`);
+  for (const [id, list] of Object.entries(byDoor)) {
+    const top = list.reduce((p, b) => (b.y1 > p.y1 ? b : p));
+    const d = plan.doors.find(x => x[0] === id);
+    const sill = d ? openingFloor(plan, L, d[1], d[2], d[3], d[4]) : NaN;
+    const gap = sill - top.y1;
+    if (!(gap > STEP.rise * 0.5 && gap < STEP.rise * 1.5))
+      e.push(`bậc ${id} cao nhất ở ${n(top.y1)}, ngưỡng cửa ${n(sill)} — phải thấp hơn đúng một nấc`);
+    const touches = d && (d[1] === 'h'
+      ? Math.abs(top.z - d[2]) < EPS || Math.abs(top.z + top.d - d[2]) < EPS
+      : Math.abs(top.x - d[2]) < EPS || Math.abs(top.x + top.w - d[2]) < EPS);
+    if (!touches) e.push(`bậc cao nhất của ${id} không áp vào tường cửa`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

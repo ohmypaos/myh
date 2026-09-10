@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { LOT, HEIGHTS, CARPORT_ROOF } from '../lib/lot.js';
+import { LOT, HEIGHTS } from '../lib/lot.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
@@ -29,7 +29,8 @@ const COLORS = {
   ground:      0xcfccc0,
   roof:        0xc9c2b2,
   alleyRoof:   0xbdb6a6,
-  carportRoof: 0xb3aa98,
+  overhang:    0xc9c2b2,
+  step:        0xe2dccd,
   glass:       0xa9cfe0,
 };
 
@@ -48,7 +49,7 @@ export function init(){
 
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
      dọn thì canvas và mấy danh sách tự đổ (phương án, nơi xây, mốc ngày) dựng chồng nhau. */
-  for (const id of ['canvas3d', 'plan3', 'keyDates', 'heightSliders', 'carportSliders'])
+  for (const id of ['canvas3d', 'plan3', 'keyDates', 'heightSliders'])
     document.getElementById(id)?.replaceChildren();
 
   /* ═══════════ RENDERER · CẢNH ═══════════ */
@@ -159,7 +160,7 @@ export function init(){
     applyRoofHidden();
   }
 
-  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'carportRoof';
+  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }
@@ -350,16 +351,14 @@ export function init(){
     setHtml('planNote', plan.note || '');
 
     /* Cấu hình dùng chung với bản vẽ 2D (lib/config.js). Phần `lines` chỉ đúng với mặt bằng
-       đã sinh ra nó nên bỏ khi đổi mặt bằng; cao độ và mái che thì giữ. */
+       đã sinh ra nó nên bỏ khi đổi mặt bằng; cao độ thì giữ. */
     const saved = readConfig();
     CFG = emptyConfig(plan.id);
     CFG.heights = saved?.heights || {};
-    CFG.carport = saved?.carport || {};
     if (saved && saved.planId === plan.id) CFG.lines = saved.lines || CFG.lines;
 
     rebuild();
     buildHeightSliders();
-    buildCarportSliders();
     updateAzimuth();
     refreshSaved();
   }
@@ -375,7 +374,7 @@ export function init(){
     refreshSaved();
   }
 
-  /* ═══════════ THANH TRƯỢT CAO ĐỘ VÀ MÁI CHE ═══════════ */
+  /* ═══════════ THANH TRƯỢT CAO ĐỘ ═══════════ */
   const HEIGHT_ROWS = [
     { key:'ceiling', name:'Cao trần',            min:2.4, max:5.0 },
     { key:'floor',   name:'Cốt nền so với sân',  min:0.0, max:1.2 },
@@ -411,29 +410,6 @@ export function init(){
         onInput: v => { CFG.heights[r.key] = v; rebuild(); } });
   }
 
-  function carportInfo(){
-    const c = { ...CARPORT_ROOF, ...CFG.carport };
-    const yard = applyConfig(plan, CFG).rooms.find(r => /SÂN PHỤ/.test(r[1]));
-    const open = yard ? yard[5] - c.length : null;
-    setHtml('carportInfo', open === null
-      ? `Phủ <b>${c.length.toFixed(1)} m</b>`
-      : `Phủ <b>${c.length.toFixed(1)} m</b> / sân phụ ${yard[5].toFixed(1)} m —`
-        + ` hở <b>${open.toFixed(1)} m</b> phía cổng.`
-        + ` Phủ càng dài càng đỡ mưa nhưng càng bịt nguồn sáng Đông Bắc qua cửa chính.`);
-  }
-
-  function buildCarportSliders(){
-    const host = document.getElementById('carportSliders');
-    if (!host) return;
-    host.replaceChildren();
-    const c = { ...CARPORT_ROOF, ...CFG.carport };
-    slider(host, { name:'Phủ dài', value:c.length, min:0, max:12, step:0.1,
-      onInput: v => { CFG.carport.length = v; rebuild(); }, hint: carportInfo });
-    slider(host, { name:'Cao', value:c.height, min:2.2, max:3.8, step:0.05,
-      onInput: v => { CFG.carport.height = v; rebuild(); }, hint: carportInfo });
-    carportInfo();
-  }
-
   const daySlider  = document.getElementById('day');
   const hourSlider = document.getElementById('hour');
   daySlider.value  = state.day;
@@ -463,10 +439,9 @@ export function init(){
   on('azReset', 'click', () => { CFG.azimuth = null; writeConfig(CFG); updateAzimuth(); refreshSaved(); });
 
   on('cfg3Reset', 'click', () => {
-    CFG.heights = {}; CFG.carport = {};
+    CFG.heights = {};
     rebuild();
     buildHeightSliders();
-    buildCarportSliders();
     updateAzimuth();
     refreshSaved();
   });
@@ -476,13 +451,12 @@ export function init(){
     getCfg: () => CFG,
     setCfg: cfg => {
       /* Mở cấu hình lưu cho mặt bằng khác thì bỏ phần `lines` — chỉ số đường không chuyển
-         được sang mặt bằng này. Cao độ, mái che và hướng thì vẫn dùng được. */
+         được sang mặt bằng này. Cao độ và hướng thì vẫn dùng được. */
       CFG = { ...cfg, planId: plan.id };
       if (cfg.planId !== plan.id) CFG.lines = { x: {}, y: {} };
       writeConfig(CFG);
       rebuild();
       buildHeightSliders();
-      buildCarportSliders();
       updateAzimuth();
     },
   });

@@ -35,7 +35,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A6 | Bếp — chốt **lợp tôn hai mái + trần tôn**, không đổ mái bê tông | ✅ xong | |
 | A7 | Mái sân phơi — chốt **tôn dốc một mái**, chừa dải hở thẳng hàng ban công | ✅ xong | |
 | A8 | WC khách 2 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
-| A9 | Bậc tam cấp, mái hiên cửa chính, nền WC khách hạ cốt sân | ⬜ chưa làm | |
+| A9 | Bậc tam cấp, mái hiên cửa chính, sàn bếp và WC khách hạ còn +0.15 — **đã vào `current.js`** | ✅ xong | |
 | A4 | Đưa lam D12 và mái bàn trà vào `lib/versions/current.js` | ⬜ chưa làm | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
@@ -142,7 +142,7 @@ Hoá ra mái phụ **không phải để che xe** mà để kê bàn trà ngoài
 khách. **Mái che xe ở sân phụ bỏ hẳn** — nó cắt phần trời cửa chính D1 nhìn thấy còn 40%.
 
 **Chốt:** `x` 5.0–8.5, `y` 15.0–18.0 (3.5 × 3.0 m, sát góc trong chữ L), cao **3.20 m**, **tôn
-cách nhiệt**. Che được cả D2 lẫn cửa bếp D9, vẫn chừa W1 (93% trời). Cái giá: W2 bếp còn 36%
+cách nhiệt**. Che được cả D2 lẫn cửa bếp D9, vẫn chừa W1 (93% trời). Cái giá: W2 bếp còn 42%
 trời, nắng sáng mùa đông vào phòng khách 13.9 → 8.6 kWh/ngày. `3d.md` mục 3.
 
 - [x] So năm vùng phủ: không mái, chòi rời, sát góc, dọc tường nhà chính, chữ L
@@ -175,7 +175,7 @@ nóng). Không làm mái tôn thông gió phía trên vì phải khoét theo SK1
 ### ✅ A6 · Bếp lợp tôn hai mái + trần tôn
 
 Bếp **không đổ mái bê tông** như nhà chính. **Chốt:** nóc chạy ngang ở `y = 21.5`, hai mái đổ về
-sân chính và sân phơi, dốc 30%; trần tôn chống nóng cao 3.30 m so với sàn (cốt 3.75 m), đỉnh
+sân chính và sân phơi, dốc 30%; trần tôn chống nóng cốt 3.75 m (sàn bếp hạ còn +0.15 ở A9 nên cách sàn 3.60 m), đỉnh
 nóc cốt 4.80 m — nhô 0.80 m trên mái nhà chính. Máng xối mép bắc bếp, mái bàn trà gá thấp bên
 dưới. `3d.md` mục 3a.
 
@@ -188,7 +188,7 @@ dưới. `3d.md` mục 3a.
 WC khách. Tôn cách nhiệt, dốc một mái 3.50 m sát bếp → 3.00 m ở mép `y = 28`, gá dưới máng mép
 nam mái bếp. Đoạn mép thấp `x` 7.5–9.5 áp tường WC khách, cần viền chống thấm. `3d.md` mục 3b.
 
-Cái giá: bếp bị mái che ba phía, các cửa bếp còn ~55% trời (D10 còn 38%). Mái bàn trà được xem
+Cái giá: bếp bị mái che ba phía, các cửa bếp còn ~55% trời (D10 còn 37%). Mái bàn trà được xem
 lại cùng lúc và giữ tôn.
 
 - [x] Tính phần trời các cửa bếp còn nhìn thấy
@@ -211,27 +211,53 @@ chờ A4.
 - [x] `scripts/check-3d.mjs` phép kiểm 5 chọc lỗ cửa sổ theo bệ riêng — trước chọc ở bệ mặc định
       0.90 nên báo oan "W4 bị tường bịt"
 
-### ⬜ A9 · Bậc tam cấp, mái hiên cửa chính, nền WC khách
+### ✅ A9 · Bậc tam cấp, mái hiên cửa chính, nền bếp và WC khách
 
 Chốt ngày 10/9/2026, `3d.md` mục 3c. Toàn hộp thẳng trục nên **không phải chờ loại khối mặt dốc
 của A4** — làm trước được.
 
 - [x] D13 đổi chiều mở vào ban công — đã vào `current.js`
-- [ ] Bậc cho D1, D2, D9, D10, D13: khai trong `current.js` theo mã cửa; kích thước (3 × 0.15 cao,
+- [x] Bậc cho D1, D2, D13 (D9, D10 bỏ — sàn bếp hạ còn +0.15): khai trong `current.js` theo mã cửa; kích thước (3 nấc 0.15 tính cả sàn nhà → 2 bậc ngoài,
       mặt 0.30, dư 0.3 m mỗi bên) là hằng số ở `lib/lot.js`. Vị trí **suy từ cửa và phía sân** chứ
       không khai toạ độ — dịch tường thì bậc đi theo cửa
-- [ ] `lib/massing.js` dựng 3 hộp mỗi bậc; `lib/plan.js` thêm phép kiểm bậc nằm gọn trong sân,
+- [x] `lib/massing.js` dựng một hộp mỗi bậc; `lib/plan.js` thêm phép kiểm bậc nằm gọn trong sân,
       không chồng nội thất và vùng quét cánh
-- [ ] Mái hiên cửa chính: khai trong `current.js` bám tường `y = 12`, `x` 0–5, đua 1.2 m; `massing.js`
+- [x] Mái hiên cửa chính: khai trong `current.js` bám tường `y = 12`, `x` 0–5, đua 1.2 m; `massing.js`
       dựng thành loại riêng để phép kiểm 6 (diện tích mái) không tính nhầm
-- [ ] Gỡ `CARPORT_ROOF` khỏi `lib/lot.js` cùng hai thanh trượt mái che xe của E2f (`lib/config.js`,
+- [x] Gỡ `CARPORT_ROOF` khỏi `lib/lot.js` cùng hai thanh trượt mái che xe của E2f (`lib/config.js`,
       `components/scene3d.js`, `components/Plan3D.jsx`, `components/draw2d.js`); cấu hình đã lưu
       còn khoá `carport` phải được bỏ qua êm
-- [ ] Nền WC khách ở cốt sân: đánh dấu trong `current.js`; `massing.js` lấy cốt sàn theo phòng thay
+- [x] Sàn WC khách (và bếp) có cốt riêng: khai `floorLevels` trong `current.js`; `massing.js` lấy cốt sàn theo phòng thay
       cho một `L.floor` chung — cửa D11 và bệ W4 tính từ cốt đó; `check-3d` phép kiểm 5 chọc theo
       cùng cốt
-- [ ] Vẽ bậc và mái hiên lên bản 2D, `specMarkdown()` in ra
-- [ ] `npm run check` sạch, `npm run spec`, cập nhật `floor-plan.md`
+- [x] Vẽ bậc và mái hiên lên bản 2D, `specMarkdown()` in ra
+- [x] `npm run check` sạch, `npm run spec`, cập nhật `floor-plan.md`
+
+Làm ra: `lib/envelope.js` gom cốt sàn từng phòng, bậc và mái hiên — `massing.js`, `validate()`,
+bản vẽ 2D, đặc tả cùng dùng. `validate()` thêm **phép kiểm 14** (bậc và mái hiên bám đúng chỗ,
+bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa); `check-3d` thêm **phép kiểm 9** (bậc
+cao nhất áp tường cửa, thấp hơn ngưỡng cửa đúng một nấc). Mái hiên neo vào lưới như tường; bậc suy từ cửa nên dịch
+tường ở thanh trượt là cả hai đi theo.
+
+> **Chủ nhà chỉnh (11/9/2026): tam cấp là 2 bậc, không phải 3** — nấc trên cùng chính là sàn nhà.
+> Bản đầu dựng thừa một bậc ngang sàn chìa ra trước cửa. Nay bậc nhô 0.6 m thay vì 0.9 m, góc bàn
+> trà nhờ đó rộng ra 2.9 × 2.4 m.
+
+> **Chủ nhà chỉnh tiếp (11/9/2026): hạ sàn bếp và WC khách còn +0.15 so với sân** — chênh đúng
+> một nấc nên D9, D10, D11 không dựng bậc, mà sàn vẫn cao hơn sân. Lần đầu làm thành ngang sân,
+> chủ nhà sửa lại. Dữ liệu vì thế đổi từ danh sách phòng ở cốt sân (`atGrade`) sang cốt sàn riêng
+> từng phòng (`floorLevels`); số bậc tính theo chênh cốt hai bên cửa. Mái giữ cốt nên trần cách sàn
+> bếp và sàn WC khách 3.60 m; hạ mái bếp theo sàn thì mép mái thấp hơn mép cao mái sân phơi. Góc bàn
+> trà hết bậc D9, còn 2.9 × 3.0 m. Phần trời cửa bếp tính lại: W2 42%, D9 52%, D10 37%, cả bếp vẫn
+> 55%.
+
+> **Vấp khi thử dịch lưới:** kéo `x = 5` sang 5.4 làm cửa D10 vắt qua đường `x = 8.5`, bậc nhận
+> nhầm hành lang ngoài là "phía sân" và quay vào trong bếp. Đã sửa: phía bậc lấy **ngược phía
+> phòng cốt nền**, rồi mới tìm sân ở phía đó.
+
+> **Bảng lịch sử trong `floor-plan.md` ghi sai số lỗi từ trước** (v5, v9, v10, v11) — đối chiếu
+> `validate()` ở commit trước A9 thì số lỗi của cả 12 bản không đổi, chỉ bảng viết tay bị lệch.
+> Đã sửa theo số thật.
 
 ### ⬜ A4 · Đưa lam D12 và ba mái mới vào `lib/versions/current.js`
 
@@ -264,8 +290,8 @@ chỗ khai. Mái tôn bếp và mái sân phơi cùng cần **mặt dốc** — 
       học ở E2f: để rời là mái lơ lửng tách khỏi nhà. Mép `x = 8.5` và `y = 18` trùng đường lưới,
       mép `y = 15` thì chưa
 - [ ] Có làm thanh trượt cho mái bàn trà không — thanh trượt mái che xe đã gỡ ở A9
-- [ ] Dời bàn tròn từ `(6.4, 11.6)` vào dưới mái, tránh vùng quét cánh D2, D9 và bậc của chúng
-      (A9) — góc còn ~2.6 × 2.1 m nên cân bàn 1.0–1.2 m
+- [ ] Dời bàn tròn từ `(6.4, 11.6)` vào dưới mái, tránh vùng quét cánh D2, D9 và bậc D2
+      (A9) — góc còn ~2.9 × 3.0 m, thừa chỗ cho bàn 1.4 m kèm ghế
 - [ ] Vẽ mái lên bản 2D
 
 **Lam D12**
@@ -306,7 +332,7 @@ nhà (`MUC.nen + 1.60`) nên bước ra sân thì lửng lơ 45 cm.
 **Cố ý hoãn** — đủ dùng để soi tỉ lệ đứng, vốn là mục đích chính của mô hình. Chủ nhà xác nhận
 giữ hoãn ngày 10/9/2026.
 
-- [ ] Cao độ mắt tra theo phòng đang đứng (`lib/massing.js` đã biết qua `atFloorLevel`)
+- [ ] Cao độ mắt tra theo phòng đang đứng (`lib/envelope.js` đã biết qua `floorOf()`)
 - [ ] Chặn va chạm theo danh sách hộp tường
 
 ### 💤 B3 · Nội thất dạng khối trong 3D

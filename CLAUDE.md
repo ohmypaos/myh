@@ -17,8 +17,9 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `CARPORT_ROOF` |
-| `lib/plan.js` | Diện tích thông thủy và **13 phép kiểm** `validate()` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `MIN_CLEAR` |
+| `lib/plan.js` | Diện tích thông thủy và **14 phép kiểm** `validate()` |
+| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
 | `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D. Hình học thuần, không dính three.js |
 | `lib/sun.js` | Vị trí mặt trời (NOAA) |
@@ -57,9 +58,9 @@ dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho k
 mới — đó là phần hiện trên cột phải của bản vẽ.
 
 **2. Chạy bộ kiểm tra — phải sạch trước khi đi tiếp.**
-`validate()` trong `lib/plan.js` có 13 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
+`validate()` trong `lib/plan.js` có 14 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
 trên tường, phòng kín có cửa, nội thất không chồng nhau và không nằm trong vùng quét cánh
-cửa…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
+cửa, bậc nằm gọn trong sân…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
 Các bản trong kho đối chiếu còn lỗi là bình thường — chúng là bước trung gian.
 
 **3. Sinh lại đặc tả — không bao giờ gõ tay.**
@@ -80,7 +81,9 @@ Một thay đổi thiết kế = một commit gồm đủ: `lib/versions/current
 
 Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào từng file mặt bằng; phương
 án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên. `lib/massing.js`
-suy chiều cao tường từ phòng áp vào, không khai tay. Lý do của từng lựa chọn nằm ở `3d.md` —
+suy chiều cao tường từ phòng áp vào, không khai tay. Cốt sàn từng phòng, bậc tam cấp và mái
+hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai mã cửa có bậc (`steps`), phòng có cốt sàn
+riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
 đọc trước khi sửa.
 
 ## Hướng
@@ -93,9 +96,8 @@ cạnh phải (bếp, hành lang ngoài) quay **Đông Nam**; tường bao trái
 
 Chủ nhà chốt ngày 10/9/2026, việc đưa vào `lib/versions/current.js` là A4 trong `roadmap.md`.
 
-- **Mái bàn trà ở sân chính** thay cho mái che xe ở sân phụ — mái che xe **bỏ hẳn**.
-  `CARPORT_ROOF` trong `lib/lot.js` là số của mái che xe cũ, còn nằm đó cho tới khi làm A9.
-  Xem `3d.md` mục 3.
+- **Mái bàn trà ở sân chính** — mái che xe ở sân phụ đã bỏ hẳn, cửa chính thay bằng mái hiên
+  bê tông (đã vào dữ liệu). Xem `3d.md` mục 3.
 - **Lam đứng cho D12** — che nắng tây cho master. Xem `3d.md` mục 2a.
 - **Sơn chống nóng tường trái** lúc xây và **lát lớp chống nóng mái** — không đổi hình khối,
   không phải sửa mô hình. Xem `3d.md` mục 2c.
@@ -103,9 +105,6 @@ Chủ nhà chốt ngày 10/9/2026, việc đưa vào `lib/versions/current.js` l
   thẳng trục nên chưa dựng được mái dốc. Xem `3d.md` mục 3a.
 - **Mái sân phơi** — tôn dốc một mái phủ `y` 25–28, chừa dải hở thẳng hàng ban công. Xem `3d.md`
   mục 3b.
-- **Bậc tam cấp** cho D1, D2, D9, D10, D13; **mái hiên bê tông** đua 1.2 m trước cửa chính thay
-  mái che xe; **nền WC khách** hạ xuống cốt sân. Xem `3d.md` mục 3c.
-
 Chi tiết và trạng thái từng việc: `roadmap.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->

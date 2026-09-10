@@ -69,14 +69,8 @@ export default function Plan3D() {
           <section>
             <h2>Cao độ</h2>
             <div id="heightSliders" />
-          </section>
-
-          <section>
-            <h2>Mái che sân phụ</h2>
-            <div id="carportSliders" />
-            <p className="sun" id="carportInfo" />
             <div className="mocs">
-              <button id="cfg3Reset">Về cao độ và mái che gốc</button>
+              <button id="cfg3Reset">Về cao độ gốc</button>
             </div>
           </section>
 
@@ -115,9 +109,8 @@ export default function Plan3D() {
               không còn chọn được — quên đổi là đọc sai toàn bộ phần nắng.
             </div>
             <p className="doc">
-              Mái che sân phụ (chỗ để xe) mới khai tạm ở <code>lib/lot.js</code>, chưa vào dữ liệu
-              mặt bằng — chốt xong thì chuyển vào <code>lib/versions/current.js</code>. Xem{' '}
-              <code>3d.md</code> mục 3.
+              <b>Chưa dựng dù đã chốt:</b> lam đứng D12, mái bàn trà, mái tôn bếp, mái sân phơi —
+              cần loại khối mái dốc và lam mà mô hình chưa có. Xem <code>roadmap.md</code> A4.
             </p>
           </section>
         </aside>

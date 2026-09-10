@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
 
-> Sinh tự động từ `lib/versions/current.js` lúc 23:38:23 10/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 00:36:01 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -58,7 +58,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | D8 | ngang | 24.0 | 4.00 | 4.90 | 0.90 | Mở quay | bản lề đầu lớn, mở + | Hành lang ↔ Master — mở vào phòng |
 | D9 | ngang | 18.0 | 6.60 | 7.60 | 1.00 | Mở quay | bản lề đầu lớn, mở + | Sân chính ↔ Bếp |
 | D10 | ngang | 25.0 | 7.40 | 8.20 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Bếp ↔ Sân phơi — mở vào bếp |
-| D11 | ngang | 28.0 | 8.40 | 9.20 | 0.80 | Mở quay | bản lề đầu nhỏ, mở + | Sân phơi ↔ WC khách — trên trục hành lang ngoài |
+| D11 | ngang | 28.0 | 8.40 | 9.20 | 0.80 | Mở quay | bản lề đầu nhỏ, mở + | Sân phơi ↔ WC khách — trên trục hành lang ngoài; sàn WC cao hơn sân 0.15 nên chỉ bước qua ngưỡng, không có bậc |
 | D12 | ngang | 28.0 | 0.90 | 4.10 | 3.20 | Lùa 2 cánh | — | Master ↔ Ban công sau — kính lùa 3.2 m, nguồn sáng duy nhất của master |
 | D13 | dọc | 5.0 | 28.60 | 29.40 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Ban công sau ↔ Sân phơi — mở vào ban công, chừa phía sân phơi cho bậc; bản lề phía tường bao sau |
 
@@ -80,11 +80,34 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | SK3 | CỬA TRỜI | 1.60 | 17.50 | 1.0 × 1.0 | Phòng thờ — cửa trời có cánh lật, đặt trước kệ thờ |
 | SK4 | Ô THOÁNG | 2.60 | 22.60 | 0.8 × 0.7 | WC chung — ô thoáng kèm quạt hút |
 
-## 6. Cổng
+## 6. Cổng, bậc, mái hiên
 
 | Trục | Vị trí | Từ | Đến | Rộng | Tên |
 |---|---:|---:|---:|---:|---|
 | ngang | 0.0 | 1.30 | 3.70 | 2.40 | CỔNG CHÍNH 2.4m |
+
+### Bậc tam cấp
+
+Vị trí suy từ cửa, đặt phía sân. Toạ độ tính từ tim tường. Số bậc không tính nấc trên cùng — nấc đó chính là sàn nhà.
+
+| Cửa | Xuống | x₁ | y₁ | x₂ | y₂ | Số bậc | Cao bậc | Mặt bậc |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| D1 | SÂN PHỤ | 0.60 | 11.40 | 4.40 | 12.00 | 2 | 0.15 | 0.30 |
+| D2 | SÂN CHÍNH | 5.00 | 15.20 | 5.60 | 16.80 | 2 | 0.15 | 0.30 |
+| D13 | SÂN PHƠI / GIẶT | 5.00 | 28.30 | 5.60 | 29.70 | 2 | 0.15 | 0.30 |
+
+### Mái hiên
+
+| Trục | Vị trí | Từ | Đến | Đua ra | Ghi chú |
+|---|---:|---:|---:|---:|---|
+| ngang | 12.0 | 0.0 | 5.0 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
+
+### Cốt sàn riêng
+
+Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sân. Các phòng dưới đây khai riêng:
+
+- R2 BẾP + NHÀ ĂN — cao hơn sân **0.15 m**
+- R5 WC KHÁCH — cao hơn sân **0.15 m**
 
 ## 7. Tường
 
@@ -148,7 +171,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
 ## 10. Kết quả bộ kiểm tra
 
-**Sạch — qua toàn bộ 13 phép kiểm.**
+**Sạch — qua toàn bộ 14 phép kiểm.**
 
 1. Cột trái lấp kín phần lô của nó, không hở không chồng
 2. Cột phải lấp kín phần lô còn lại
@@ -163,6 +186,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 11. Hai lỗ mở trên cùng tường không chồng nhau
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
+14. Bậc, mái hiên, cốt sàn riêng khai đúng cửa, tường, phòng; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
 
 ---
 
@@ -193,3 +217,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 - WC khách 1.6 → **2.0 × 2.0 m**, hai tường trong xuống 100 mm
 - W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 1.90 — không nhìn ra được
 - D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
+- **Bậc tam cấp** cho D1, D2, D13 — 2 bậc ngoài, nấc trên là sàn nhà; mỗi nấc 15 cm, mặt 30 cm
+- Sàn bếp **hạ còn +0.15 so với sân** — D9, D10 chỉ còn một nấc ở ngưỡng, khỏi dựng bậc; mái bếp giữ cốt nên trần cách sàn 3.60 m
+- **Mái hiên bê tông** đua 1.2 m trước cửa chính, thay cho mái che xe đã bỏ
+- Sàn WC khách **hạ còn +0.15 so với sân**, cùng cốt với bếp — D11 khỏi dựng bậc

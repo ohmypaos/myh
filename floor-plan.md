@@ -28,14 +28,14 @@ Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không s�
 | [v2](./spec/v2.md) | Khuyến nghị lần 1 | 129.0 | 4 lỗi |
 | [v3](./spec/v3.md) | Sau 7 điểm chỉnh | 121.5 | 4 lỗi |
 | [v4](./spec/v4.md) | Sân sau thu nhỏ, lưu thông qua sân chính | 134.0 | 3 lỗi |
-| [v5](./spec/v5.md) | Thu gọn phòng, ghi số thông thủy | 124.5 | 4 lỗi |
+| [v5](./spec/v5.md) | Thu gọn phòng, ghi số thông thủy | 124.5 | 5 lỗi |
 | [v6](./spec/v6.md) | Kho mở từ master, WC thu bề rộng | 124.5 | 4 lỗi |
 | [v7](./spec/v7.md) | WC khách thu nhỏ, chỉnh cửa | 122.7 | 4 lỗi |
 | [v8](./spec/v8.md) | Nhà chính rút còn 16 m | 102.7 | 5 lỗi |
-| [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 2 lỗi |
-| [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 1 lỗi |
-| [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 1 lỗi |
-| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách 2 × 2 m** (v12 + sửa sau) | **108.50** | **sạch 13/13** |
+| [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 5 lỗi |
+| [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 2 lỗi |
+| [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 2 lỗi |
+| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách 2 × 2 m; bậc tam cấp, mái hiên cửa chính** (v12 + sửa sau) | **108.50** | **sạch 14/14** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.
