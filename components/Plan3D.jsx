@@ -109,8 +109,8 @@ export default function Plan3D() {
               không còn chọn được — quên đổi là đọc sai toàn bộ phần nắng.
             </div>
             <p className="doc">
-              <b>Chưa dựng dù đã chốt:</b> lam đứng D12, mái bàn trà, mái tôn bếp, mái sân phơi —
-              cần loại khối mái dốc và lam mà mô hình chưa có. Xem <code>roadmap.md</code> A4.
+              <b>Chưa dựng dù đã chốt:</b> mái bàn trà, mái tôn bếp, mái sân phơi — cần loại khối
+              mái dốc mà mô hình chưa có. Xem <code>roadmap.md</code> A4.
             </p>
           </section>
         </aside>

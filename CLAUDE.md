@@ -81,7 +81,8 @@ Một thay đổi thiết kế = một commit gồm đủ: `lib/versions/current
 
 Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào từng file mặt bằng; phương
 án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên. `lib/massing.js`
-suy chiều cao tường từ phòng áp vào, không khai tay. Cốt sàn từng phòng, bậc tam cấp và mái
+suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (tường
+trái ban công sau, đỡ trần ban công). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
 riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
 đọc trước khi sửa.
@@ -98,7 +99,6 @@ Chủ nhà chốt ngày 10/9/2026, việc đưa vào `lib/versions/current.js` l
 
 - **Mái bàn trà ở sân chính** — mái che xe ở sân phụ đã bỏ hẳn, cửa chính thay bằng mái hiên
   bê tông (đã vào dữ liệu). Xem `3d.md` mục 3.
-- **Lam đứng cho D12** — che nắng tây cho master. Xem `3d.md` mục 2a.
 - **Sơn chống nóng tường trái** lúc xây và **lát lớp chống nóng mái** — không đổi hình khối,
   không phải sửa mô hình. Xem `3d.md` mục 2c.
 - **Bếp lợp tôn hai mái + trần tôn**, không đổ mái bê tông. `lib/massing.js` hiện chỉ sinh hộp

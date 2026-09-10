@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
 
-> Sinh tự động từ `lib/versions/current.js` lúc 00:48:32 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 00:58:53 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -96,11 +96,22 @@ Vị trí suy từ cửa, đặt phía thấp, bắt đầu từ mặt tường.
 | D2 | SÂN CHÍNH | 5.11 | 15.30 | 5.61 | 16.70 | 0.20 | 2 | 0.15 | 0.25 |
 | D13 | SÂN PHƠI / GIẶT | 5.11 | 28.40 | 5.61 | 29.60 | 0.20 | 2 | 0.15 | 0.25 |
 
-### Mái hiên
+### Bản mái đổ ra ngoài tường
+
+Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính từ mặt tường.
 
 | Trục | Vị trí | Từ | Đến | Đua ra | Ghi chú |
 |---|---:|---:|---:|---:|---|
 | ngang | 12.0 | 0.0 | 5.0 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
+| ngang | 28.0 | 0.0 | 5.0 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
+
+### Tường xây lên hết chiều cao nhà
+
+Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dưới đây khai riêng dù chỉ áp vào sân.
+
+| Trục | Vị trí | Từ | Đến |
+|---|---:|---:|---:|
+| dọc | 0.0 | 28.0 | 30.0 |
 
 ### Cốt sàn riêng
 
@@ -186,7 +197,7 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 11. Hai lỗ mở trên cùng tường không chồng nhau
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
-14. Bậc, mái hiên, cốt sàn riêng khai đúng cửa, tường, phòng; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
+14. Bậc, mái hiên, tường nâng, cốt sàn riêng khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
 
 ---
 
@@ -221,3 +232,4 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - Sàn bếp **hạ còn +0.15 so với sân** — D9, D10 chỉ còn một nấc ở ngưỡng, khỏi dựng bậc; mái bếp giữ cốt nên trần cách sàn 3.60 m
 - **Mái hiên bê tông** đua 1.2 m trước cửa chính, thay cho mái che xe đã bỏ
 - Sàn WC khách **hạ còn +0.15 so với sân**, cùng cốt với bếp — D11 khỏi dựng bậc
+- **Đổ trần ban công sau**, tường trái ban công xây lên tới mái — thay cho lam đứng D12: ngang lam về sáng và nắng hè, tháng 9 nắng lên kính còn một nửa, D12 hết dính mưa

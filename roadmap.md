@@ -28,7 +28,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
 | A0 | Chốt nơi xây — **Bắc Giang** | ✅ xong | |
-| A1 | Che nắng tây cho master — chốt **lam đứng** | ✅ xong | |
+| A1 | Che nắng tây cho master — chốt **đổ trần ban công + tường trái lên mái** (thay lam đứng) | ✅ xong | |
 | A2 | Mái phụ — chốt **mái bàn trà sân chính**, bỏ mái che xe | ✅ xong | |
 | A3 | Tường trái Tây Bắc — chốt **sơn chống nóng lúc xây** | ✅ xong | |
 | A5 | Chống nóng mái — chốt **lát lớp chống nóng** | ✅ xong | |
@@ -36,7 +36,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A7 | Mái sân phơi — chốt **tôn dốc một mái**, chừa dải hở thẳng hàng ban công | ✅ xong | |
 | A8 | WC khách 2 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
 | A9 | Bậc tam cấp, mái hiên cửa chính, sàn bếp và WC khách hạ còn +0.15 — **đã vào `current.js`** | ✅ xong | |
-| A4 | Đưa lam D12 và mái bàn trà vào `lib/versions/current.js` | ⬜ chưa làm | |
+| A10 | Đổ trần ban công sau, tường trái ban công lên mái — thay lam D12, **đã vào `current.js`** | ✅ xong | |
+| A4 | Đưa mái bàn trà, mái tôn bếp, mái sân phơi vào `lib/versions/current.js` | ⬜ chưa làm | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
@@ -95,7 +96,8 @@ lịch sử, commit message phải nói rõ đổi gì và vì sao. Quy trình b
 
 A1–A3, A5–A7 là **quyết định**, chủ nhà chốt hết ngày 10/9/2026. Số liệu và lý do nằm ở
 `3d.md` mục 2a, 2c, 3, 3a, 3b — ở đây chỉ ghi kết quả. A3 và A5 không đổi hình khối, nên A4 gồm
-bốn thứ: lam D12 (A1), mái bàn trà (A2), mái tôn bếp (A6), mái sân phơi (A7).
+ba thứ: mái bàn trà (A2), mái tôn bếp (A6), mái sân phơi (A7). Che nắng D12 (A1) đổi từ lam sang
+đổ trần ban công — toàn hộp nên đã làm luôn ở A10.
 
 ### ✅ A0 · Chốt nơi xây — Bắc Giang
 
@@ -125,16 +127,18 @@ lạnh nhiều mây, nên nắng lọt vào nhà mùa đông là thứ *đáng m
 
 51 ngày mỗi năm trưa mặt trời ở phía Bắc.
 
-### ✅ A1 · Che nắng tây cho master — lam đứng
+### ✅ A1 · Che nắng tây cho master — đổ trần ban công (thay lam đứng)
 
-**Chốt: lam đứng sâu 0.4 m, bước 0.6 m, vuông góc mặt kính D12.** Nắng hè tới D12 xiên từ
+**Chốt ban đầu: lam đứng sâu 0.4 m, bước 0.6 m, vuông góc mặt kính D12** (đã thay bằng đổ trần
+ban công, xem A10). Nắng hè tới D12 xiên từ
 Tây–Tây Bắc nên lam chặn gần sạch (9.6 → 0.1 kWh/ngày ngày 21/6); nắng đông gần chính diện nên
 lọt qua phần lớn (21.0 → 13.5). Tháng 9 còn 12.3 — cần thêm rèm trong nhà. `3d.md` mục 2a.
 
 - [x] Tính nắng lên D12 theo giờ, ba mốc hạ chí / thu phân / đông chí
 - [x] So năm cách: lam dày, lam thưa, nâng tường trái ban công, mái kín ban công, rèm ngoài
 - [x] Chủ nhà chốt lam thưa
-- [ ] Vào `current.js` — A4
+- [x] **Đổi (11/9/2026): đổ trần ban công + tường trái ban công lên mái, bỏ lam** — ngang lam về sáng
+      và nắng hè, tháng 9 nắng lên kính còn một nửa, D12 hết dính mưa. Đã vào `current.js` ở A10
 
 ### ✅ A2 · Mái phụ — mái bàn trà ở sân chính
 
@@ -270,10 +274,10 @@ tường ở thanh trượt là cả hai đi theo.
 > `validate()` ở commit trước A9 thì số lỗi của cả 12 bản không đổi, chỉ bảng viết tay bị lệch.
 > Đã sửa theo số thật.
 
-### ⬜ A4 · Đưa lam D12 và ba mái mới vào `lib/versions/current.js`
+### ⬜ A4 · Đưa ba mái mới vào `lib/versions/current.js`
 
 Không còn bị chặn. Theo đúng 4 bước ở `CLAUDE.md` mục "Đổi thiết kế", nhưng **không chỉ là sửa
-số**: lam, mái bàn trà, mái tôn bếp, mái sân phơi đều là loại khối mà dữ liệu mặt bằng chưa có
+số**: mái bàn trà, mái tôn bếp, mái sân phơi đều là loại khối mà dữ liệu mặt bằng chưa có
 chỗ khai. Mái tôn bếp và mái sân phơi cùng cần **mặt dốc** — làm một loại khối dùng chung.
 
 **Mái sân phơi**
@@ -305,12 +309,6 @@ chỗ khai. Mái tôn bếp và mái sân phơi cùng cần **mặt dốc** — 
       (A9) — góc còn ~2.9 × 3.0 m, thừa chỗ cho bàn 1.4 m kèm ghế
 - [ ] Vẽ mái lên bản 2D
 
-**Lam D12**
-
-- [ ] Khoá mới cho lam, bám vào lỗ mở D12: sâu 0.4, bước 0.6, cao theo cửa
-- [ ] `lib/massing.js` dựng lam; `npm run check:3d` vẫn sạch
-- [ ] Vẽ lam lên bản 2D
-
 **Chung**
 
 - [ ] `specMarkdown()` in được hai loại khối mới
@@ -320,6 +318,23 @@ chỗ khai. Mái tôn bếp và mái sân phơi cùng cần **mặt dốc** — 
 - [ ] `npm run spec`
 - [ ] Cập nhật `floor-plan.md`
 - [ ] Bỏ mục "Đã chốt, chưa vào dữ liệu" trong `CLAUDE.md` và dòng tương ứng ở `3d.md` mục 8
+
+### ✅ A10 · Đổ trần ban công sau, tường trái lên mái — thay lam D12
+
+Chủ nhà hỏi có nên đổ trần ban công sau không (11/9/2026). Tính ra đổ trần kèm xây tường trái ban
+công lên tới mái **ngang lam đứng** về độ sáng (D12 thấy 54% trời, lam 53%), nắng hè (0.3 so với 0.1
+kWh/ngày) và nắng đông (12.4 so với 12.5), **hơn hẳn** tháng 9 (6.2 so với 11.8), lại che mưa cho D12
+và ban công. Chốt thay lam. `3d.md` mục 2a.
+
+- [x] Trần ban công: bản mái đổ ra ngoài tường `y = 28`, `x` 0–5, tới tim tường rào sau (đua 1.89 m
+      từ mặt tường) — khai ở `overhangs`, cùng loại với mái hiên cửa chính
+- [x] Tường trái ban công (`x = 0`, `y` 28–30) xây lên hết chiều cao nhà để đỡ bản và chắn nắng Tây
+      Tây Bắc — khai ở `fullHeightWalls`, ngoại lệ khai tay duy nhất cho luật "chiều cao tường suy
+      từ phòng áp vào"; neo vào lưới như tường
+- [x] `validate()` phép kiểm 14 soi thêm: tường nâng phải nằm trên một bức tường có thật
+- [x] Rào ban công ↔ sân phơi và rào sau giữ 2.2 m — dải hở 1.55 m dưới trần là chỗ lấy sáng
+- [x] Lớp chống nóng mái (A5) phủ luôn trần ban công
+- [x] Bỏ phần lam khỏi A4
 
 ---
 

@@ -590,7 +590,7 @@ export function init(){
   <tr><td>Nét đứt xám ngắn</td><td>Ô mở thông, không có cánh cửa</td></tr>
   <tr><td>Ô trắng viền đen mảnh</td><td>Cửa sổ</td></tr>
   <tr><td style="color:#2f7897">Nét đứt xanh + gạch chéo</td><td>Lấy sáng trên mái (nằm phía trên đầu)</td></tr>
-  <tr><td style="color:#6f6a5e">Viền chấm xám</td><td>Mái hiên — bản mái đua ra ngoài tường (nằm phía trên đầu)</td></tr>
+  <tr><td style="color:#6f6a5e">Viền chấm xám</td><td>Mái hiên, trần ban công — bản mái đổ ra ngoài tường (nằm phía trên đầu)</td></tr>
   <tr><td>Ô be kẻ vạch</td><td>Bậc tam cấp phía sân — mỗi vạch là mép một bậc</td></tr>
   <tr><td>Nét đứt xám trên tường rào</td><td>Cổng — có nhãn kèm bề rộng</td></tr>
   <tr><td>Nét gạch–chấm</td><td>Ranh lô chính / lô phụ ở phần sân</td></tr>
