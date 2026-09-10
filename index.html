@@ -148,19 +148,7 @@
   </aside>
 </div>
 
-<script>
-/* ═══════════ SỔ ĐĂNG KÝ PHIÊN BẢN ═══════════
-   Mỗi phiên bản là một snapshot đầy đủ của mặt bằng, nằm trong versions/v<n>.js
-   và tự đăng ký qua definePlan(). Thứ tự trong VERSIONS = thứ tự thẻ <script> dưới đây.
-   Thêm bản mới = thêm file versions/v<n+1>.js + một thẻ <script>. Không sửa bản cũ. */
-
-/* huongMatTien: góc phương vị của hướng mặt tiền, độ, 0 = bắc, tăng theo chiều kim đồng hồ.
-   45 = Đông Bắc → cạnh sau lô (ban công, sân phơi) quay Tây Nam, cạnh phải (bếp,
-   hành lang ngoài) quay Đông Nam, cạnh trái (tường bao) quay Tây Bắc. */
-const LOT = {w:9.5, d:30.0, huongMatTien:45};
-const VERSIONS = [];
-function definePlan(v){ VERSIONS.push(v); }
-</script>
+<script src="lo-dat.js"></script>
 
 <script src="versions/v1.js"></script>
 <script src="versions/v2.js"></script>
