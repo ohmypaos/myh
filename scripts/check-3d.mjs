@@ -32,6 +32,8 @@ const CHECKS = [
   'Các mảnh mái không chồng lên nhau',
   'Kính giếng trời nằm đúng cao độ trần',
   'Bậc cần có đều dựng được, đều nhau, bậc cao nhất áp mặt tường cửa và thấp hơn ngưỡng đúng một nấc',
+  'Không hai khối đặc nào chồng lên nhau — chồng là có mặt trùng, nhấp nháy khi xoay',
+  'Góc tường kín — chỗ hai tường gặp nhau không khuyết ô nửa bề dày',
 ];
 
 function check(plan){
@@ -172,6 +174,54 @@ function check(plan){
     if (Math.max(...depths) - Math.min(...depths) > EPS)
       e.push(`bậc ${id} không đều: mặt bậc ${depths.map(n).join(' / ')}`);
   }
+
+  /* 10 — hai khối đặc không được chồng lên nhau. Chồng nhau là có mặt trùng nhau, và mặt trùng
+     thì card đồ hoạ vẽ lúc mặt này lúc mặt kia — mái nhấp nháy như bị tường xuyên qua khi xoay.
+     Sàn và nền không tính: sàn lọt trong chân tường, không có mặt nào lộ ra trùng. */
+  const solid = m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground');
+  let clashes = 0;
+  for (let i = 0; i < solid.length; i++)
+    for (let j = i + 1; j < solid.length; j++) {
+      const a = solid[i], b = solid[j];
+      const ov = overlap(a.x, a.x + a.w, b.x, b.x + b.w) * overlap(a.z, a.z + a.d, b.z, b.z + b.d)
+               * overlap(a.y0, a.y1, b.y0, b.y1);
+      if (ov > 1e-6 && clashes++ < 3)
+        e.push(`${a.kind} và ${b.kind} chồng nhau ${n(ov)} m³ quanh x ${n(Math.max(a.x, b.x))}, z ${n(Math.max(a.z, b.z))}`);
+    }
+  if (clashes > 3) e.push(`… tổng cộng ${clashes} cặp khối chồng nhau`);
+
+  /* 11 — góc tường kín. Chỗ đầu một bức tường gặp tường vuông góc, ô giao nhau phải có tường:
+     dựng mỗi mảnh đúng từ tim tới tim thì góc ngoài khuyết một ô nửa bề dày. Chọc bốn điểm sát bốn
+     góc ô đó ở chân tường. Cổng và cửa ở cốt sân để trống chân tường nên bỏ qua điểm rơi vào đó. */
+  const wallBoxes = m.boxes.filter(b => /Wall$/.test(b.kind));
+  /* Tính cả điểm nằm trên mặt hộp: điểm chọc có thể rơi đúng ranh hai mảnh tường sát nhau (vệt
+     tường cắt theo mép giếng trời chẳng hạn) — nằm-hẳn-bên-trong thì không mảnh nào nhận nó. */
+  const covers = (b, px, py, pz) =>
+    px >= b.x - EPS && px <= b.x + b.w + EPS &&
+    pz >= b.z - EPS && pz <= b.z + b.d + EPS &&
+    py >= b.y0 - EPS && py <= b.y1 + EPS;
+  const groundOpenings = [
+    ...plan.doors.filter(d => d[5] !== 'open')
+      .map(d => [d[1], d[2], d[3], d[4], openingFloor(plan, L, d[1], d[2], d[3], d[4])]),
+    ...plan.gates.map(g => [g[0], g[1], g[2], g[3], 0]),
+  ].filter(o => o[4] < 0.05);
+  const inOpening = (x, z) => groundOpenings.some(([ax, pos, a, b]) => ax === 'h'
+    ? Math.abs(z - pos) < 0.2 && x > a - EPS && x < b + EPS
+    : Math.abs(x - pos) < 0.2 && z > a - EPS && z < b + EPS);
+  const gaps = new Set();
+  for (const [ax, pos, a, b, t] of plan.walls)
+    for (const end of [a, b]) {
+      const perp = plan.walls.filter(([pax, ppos, pa, pb]) =>
+        pax !== ax && Math.abs(ppos - end) < EPS && pa <= pos + EPS && pb >= pos - EPS);
+      if (!perp.length) continue;
+      const half = Math.max(...perp.map(w => w[4])) / 2, k = 0.01;
+      for (const da of [-half + k, half - k]) for (const dc of [-t / 2 + k, t / 2 - k]) {
+        const x = ax === 'h' ? end + da : pos + dc, z = ax === 'h' ? pos + dc : end + da;
+        if (inOpening(x, z)) continue;
+        if (!wallBoxes.some(bx => covers(bx, x, 0.05, z))) gaps.add(`x ${n(ax === 'h' ? end : pos)}, z ${n(ax === 'h' ? pos : end)}`);
+      }
+    }
+  if (gaps.size) e.push(`góc tường khuyết ở ${[...gaps].slice(0, 4).join('; ')}${gaps.size > 4 ? ` … (${gaps.size} góc)` : ''}`);
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

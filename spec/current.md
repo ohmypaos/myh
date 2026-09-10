@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
 
-> Sinh tự động từ `lib/versions/current.js` lúc 00:58:53 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 01:11:48 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -102,8 +102,8 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 
 | Trục | Vị trí | Từ | Đến | Đua ra | Ghi chú |
 |---|---:|---:|---:|---:|---|
-| ngang | 12.0 | 0.0 | 5.0 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
-| ngang | 28.0 | 0.0 | 5.0 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
+| ngang | 12.0 | -0.1 | 5.1 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
+| ngang | 28.0 | -0.1 | 5.1 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
 
 ### Tường xây lên hết chiều cao nhà
 

@@ -43,6 +43,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
 | B4 | Tường bao dọc hành lang ngoài hạ về cao rào | ✅ xong | |
+| B5 | Góc tường vuông, hết mái nhấp nháy | ✅ xong | |
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
 | E1 | Đổi hướng nhà được | ✅ xong | |
@@ -379,6 +380,29 @@ Chủ nhà xác nhận giữ hoãn ngày 10/9/2026.
 - [x] Bỏ bậc tường hiên, còn hai bậc: tường nhà và tường rào
 - [x] Mái hiên giữ 2.80 m; giữa rào 2.20 m và mái hở 0.6 m
 - [x] `npm run check:3d` sạch
+
+### ✅ B5 · Góc tường vuông, hết mái nhấp nháy
+
+Chủ nhà thấy (11/9/2026) góc tường không vuông mà "giao nhau ở tim tường", và mái nhấp nháy như bị
+tường xuyên qua khi xoay. Cùng một gốc: khối tường dựng đúng từ tim tới tim — góc ngoài khuyết ô
+nửa bề dày, góc trong hai khối chồng nhau, còn tường nhà cao đúng bằng đỉnh mái lọt vào dưới bản
+mái nên mặt trên trùng nhau (z-fighting). `3d.md` mục 5 và 6.
+
+- [x] Kéo hai đầu thật của bức tường thêm nửa bề dày tường vuông góc gặp nó
+- [x] `resolveOverlaps()` trong `lib/massing.js`: bản mái giữ nguyên, khoét khỏi tường; tường chồng
+      tường thì tường cao hơn giữ phần chồng. Diện tích mái không đổi — phép kiểm 6 vẫn đúng nghĩa
+- [x] `check-3d` thêm phép kiểm 10 (không hai khối đặc nào chồng nhau) và 11 (góc tường kín)
+- [x] Chạy hai phép kiểm mới trên massing cũ: bắt đúng cả hai lỗi — v1 có 93 cặp khối chồng, 11
+      góc khuyết. Bản sửa: cả 12 phương án qua 11 phép kiểm
+
+> **Vấp ở phép kiểm 11:** điểm chọc rơi đúng ranh hai mảnh tường sát nhau (vệt tường cắt theo mép
+> giếng trời SK1) nên so "nằm hẳn bên trong" thì không mảnh nào nhận — báo khuyết oan. Đổi sang
+> tính cả điểm nằm trên mặt hộp.
+
+> **Chủ nhà thấy tiếp:** trần hiên cửa chính và trần ban công hụt bề rộng so với nhà — bản mái
+> phủ từ tim tới tim (`x` 0–5) trong khi khối nhà, sau khi kéo góc, chạy từ mặt ngoài tường
+> (−0.11–5.11). Nay bản mái đổ ra ngoài kéo hai đầu tới mặt ngoài tường, dùng chung `jointHalf()`
+> trong `lib/envelope.js` với phần kéo góc tường để hai bên không lệch nhau nữa.
 
 ---
 
