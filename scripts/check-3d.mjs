@@ -93,7 +93,7 @@ function check(plan){
                    y: L.floor + 0.05 })),
     ...plan.windows
       .map(w => ({ id: w[0], ax: w[1], pos: w[2], a: w[3], b: w[4],
-                   y: L.floor + H.sill + 0.05 })),
+                   y: L.floor + ((H.only[w[0]] || {}).sill ?? H.sill) + 0.05 })),
     ...plan.gates
       .map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3], y: 0.05 })),
   ];

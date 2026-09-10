@@ -35,7 +35,7 @@ Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không s�
 | [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 2 lỗi |
 | [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 1 lỗi |
 | [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 1 lỗi |
-| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L** (nguyên v12) | **107.70** | **sạch 13/13** |
+| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách 2 × 2 m** (v12 + sửa sau) | **108.50** | **sạch 13/13** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.

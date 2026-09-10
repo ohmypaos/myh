@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
 
-> Sinh tự động từ `lib/versions/current.js` lúc 20:06:42 10/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 23:38:23 10/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -15,10 +15,10 @@ Ban công sau nới lên 2.0 m. Bếp thêm nhánh kệ vuông góc với chậu
 |---|---:|---:|
 | Lô đất 9.5 × 30 | 285.00 m² | — |
 | **Khối nhà chính** | **80.00 m²** | 72.87 m² |
-| **Toàn bộ phần kín** | **107.70 m²** | 97.97 m² |
+| **Toàn bộ phần kín** | **108.50 m²** | 98.90 m² |
 | Hành lang ngoài (có mái, hở) | 7.00 m² | — |
-| Sân trống | 170.30 m² | — |
-| Tường chiếm chỗ | 9.73 m² | — |
+| Sân trống | 169.50 m² | — |
+| Tường chiếm chỗ | 9.60 m² | — |
 
 Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
@@ -39,7 +39,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | R2 | BẾP + NHÀ ĂN | 5.0 | 18.0 | 8.5 | 25.0 | 3.5 × 7.0 | 24.50 | 3.34 × 6.78 | 22.65 | Phòng |
 | R3 | HÀNH LANG NGOÀI | 8.5 | 18.0 | 9.5 | 25.0 | 1.0 × 7.0 | 7.00 | 0.84 × 7.00 | 5.88 | Lưu thông |
 | R4 | SÂN PHƠI / GIẶT | 5.0 | 25.0 | 9.5 | 30.0 | 4.5 × 5.0 | 22.50 | 4.28 × 4.78 | 20.46 | Sân |
-| R5 | WC KHÁCH | 7.9 | 28.0 | 9.5 | 30.0 | 1.6 × 2.0 | 3.20 | 1.38 × 1.78 | 2.46 | Vệ sinh |
+| R5 | WC KHÁCH | 7.5 | 28.0 | 9.5 | 30.0 | 2.0 × 2.0 | 4.00 | 1.84 × 1.84 | 3.39 | Vệ sinh |
 
 **Kiểm tra:** cột trái 150.00 + cột phải 135.00 = **285.00 m²** (WC khách nằm trong sân phơi, không cộng riêng)
 **Chuỗi dọc lô chính:** 12.0 + 5.0 + 2.0 + 3.0 + 2.0 + 4.0 + 2.0 = **30.0**
@@ -60,7 +60,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | D10 | ngang | 25.0 | 7.40 | 8.20 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Bếp ↔ Sân phơi — mở vào bếp |
 | D11 | ngang | 28.0 | 8.40 | 9.20 | 0.80 | Mở quay | bản lề đầu nhỏ, mở + | Sân phơi ↔ WC khách — trên trục hành lang ngoài |
 | D12 | ngang | 28.0 | 0.90 | 4.10 | 3.20 | Lùa 2 cánh | — | Master ↔ Ban công sau — kính lùa 3.2 m, nguồn sáng duy nhất của master |
-| D13 | dọc | 5.0 | 28.60 | 29.40 | 0.80 | Mở quay | bản lề đầu lớn, mở + | Ban công sau ↔ Sân phơi — bản lề phía tường bao sau |
+| D13 | dọc | 5.0 | 28.60 | 29.40 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Ban công sau ↔ Sân phơi — mở vào ban công, chừa phía sân phơi cho bậc; bản lề phía tường bao sau |
 
 ## 4. Bảng cửa sổ
 
@@ -69,7 +69,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | W1 | dọc | 5.0 | 12.60 | 14.40 | 1.80 | Phòng khách ← Sân chính |
 | W2 | ngang | 18.0 | 5.30 | 6.30 | 1.00 | Bếp ← Sân chính |
 | W3 | dọc | 8.5 | 19.20 | 21.20 | 2.00 | Bếp ← Hành lang ngoài |
-| W4 | dọc | 7.9 | 28.60 | 29.40 | 0.80 | WC khách ← Sân phơi |
+| W4 | dọc | 7.5 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 1.90, kèm quạt hút |
 
 ## 5. Lấy sáng trên mái
 
@@ -107,8 +107,8 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | ngang | 18.0 | 5.0 | 8.5 | 220 |
 | ngang | 25.0 | 5.0 | 8.5 | 220 |
 | dọc | 8.5 | 18.0 | 25.0 | 100 |
-| ngang | 28.0 | 7.9 | 9.5 | 220 |
-| dọc | 7.9 | 28.0 | 30.0 | 220 |
+| ngang | 28.0 | 7.5 | 9.5 | 100 |
+| dọc | 7.5 | 28.0 | 30.0 | 100 |
 
 ## 8. Nội thất
 
@@ -181,7 +181,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | ban công 2 m, bếp chữ L | 107.7 |
+| current ← | ban công 2 m, bếp chữ L | 108.5 |
 
 ### Thay đổi ở Hiện hành — ban công 2 m, bếp chữ L
 
@@ -190,3 +190,6 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 - Bếp thêm **nhánh kệ vuông góc** dài 2.4 m dọc tường tây → bếp chữ L
 - **Bếp nấu tách sang nhánh dọc**, chậu rửa giữ ở nhánh ngang — hết nấu và rửa chen nhau
 - Chậu rửa vẫn quay ra sân phơi, bếp nấu quay vào trong
+- WC khách 1.6 → **2.0 × 2.0 m**, hai tường trong xuống 100 mm
+- W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 1.90 — không nhìn ra được
+- D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
