@@ -1,0 +1,44 @@
+/* Khung chung cho cả trang 2D và trang 3D — bảng màu giấy can, chữ hệ thống.
+   Chuyển từ <style> của index.html cũ, tách phần dùng chung ra khỏi phần riêng của bản vẽ. */
+
+:root{
+  --ink:#111; --dim:#8a1c1c; --paper:#fdfdfb; --panel:#fff; --muted:#666;
+  --line:#d8d5cd; --bar:#f2f0ea; --side:#f7f5f0;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);
+  font:14px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+  margin:0;overflow:hidden;display:flex;flex-direction:column}
+
+header{flex:none;padding:10px 14px 0;background:var(--bar);border-bottom:1px solid var(--line)}
+h1{font-size:18px;margin:0 0 2px;letter-spacing:.02em}
+.sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-bottom:10px}
+.bar button{font:inherit;font-size:13px;line-height:1;padding:7px 11px;border:1px solid #b9b4a8;
+  background:#fbfaf7;border-radius:4px;cursor:pointer;color:#222}
+.bar button:hover{background:#fff;border-color:#8d8778}
+.bar button:active{background:#efece5}
+.bar button.on{background:#e8e4d8;border-color:#8d8778}
+.bar select{font:inherit;font-size:13px;padding:6px 8px;border:1px solid #8d8778;
+  border-radius:4px;background:#fff;color:#222;cursor:pointer;max-width:280px}
+.bar label{font-size:12px;color:#555}
+.bar .zoomval{font-variant-numeric:tabular-nums;min-width:62px;text-align:center;
+  font-size:13px;color:#444;padding:0 4px}
+.bar .sep{width:1px;align-self:stretch;background:#c9c4b8;margin:0 5px}
+.bar .hint{color:var(--muted);font-size:12px;margin-left:auto}
+.bar a.nav{font-size:13px;line-height:1;padding:7px 11px;border:1px solid #b9b4a8;
+  background:#fbfaf7;border-radius:4px;color:#222;text-decoration:none}
+.bar a.nav:hover{background:#fff;border-color:#8d8778}
+
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:10px}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+th{background:#f0eee8;font-weight:600;position:sticky;top:0;z-index:1;
+  box-shadow:0 1px 0 var(--line), 0 3px 8px -4px rgba(0,0,0,.28)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{font-weight:700;background:#f6f4ee}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:#444;margin:0 0 8px;
+  border-bottom:1px solid #ddd;padding-bottom:5px}
+.note{font-size:12.5px;color:#7a2b12;background:#fdf3ec;border-left:3px solid #c8734a;
+  padding:9px 11px;border-radius:2px;margin-top:12px}
+code{background:#eeece6;padding:1px 4px;border-radius:2px;font-size:12px}

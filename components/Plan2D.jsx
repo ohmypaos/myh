@@ -1,0 +1,86 @@
+'use client';
+
+import { useEffect } from 'react';
+import Link from 'next/link';
+import '../app/plan2d.css';
+import { khoiTao } from './ve2d.js';
+
+/* React chỉ dựng khung DOM rỗng với đúng các id mà ve2d.js trông đợi, rồi gọi khoiTao()
+   một lần sau khi mount. Toàn bộ việc vẽ do mã cũ đảm nhiệm — xem đầu file ve2d.js. */
+export default function Plan2D() {
+  useEffect(() => khoiTao(), []);
+
+  return (
+    <>
+      <header>
+        <div className="titles">
+          <h1>MẶT BẰNG TẦNG TRỆT — LÔ 9.5 × 30 m</h1>
+          <p className="sub" id="subline">
+            285 m² &nbsp;·&nbsp; Tỉ lệ 1:100 &nbsp;·&nbsp; Kích thước tim tường
+          </p>
+        </div>
+
+        <div className="bar">
+          <label htmlFor="ver">Phiên bản</label>
+          <select id="ver" defaultValue=""></select>
+          <span className="sep" />
+          <button id="zOut" title="Thu nhỏ (phím −)">−</button>
+          <span className="zoomval" id="zVal">100%</span>
+          <button id="zIn" title="Phóng to (phím +)">+</button>
+          <span className="sep" />
+          <button id="zFit" title="Xem toàn bộ (phím 0)">Vừa khung</button>
+          <button id="zWide">Vừa bề ngang</button>
+          <button id="z100">100%</button>
+          <span className="sep" />
+          <button id="zDim" title="Đổi giữa kích thước tim tường và kích thước sử dụng">
+            Nhãn: Tim tường
+          </button>
+          <span className="sep" />
+          <button id="zRot" title="Xoay bản vẽ 90° (phím R)">⟳ Xoay 90°</button>
+          <button id="zSide" title="Ẩn cột bảng để bản vẽ rộng hơn">Ẩn bảng</button>
+          <button id="zFull" title="Toàn màn hình (phím F · thoát bằng Esc)">⛶ Toàn màn hình</button>
+          <Link className="nav" href="/3d">Xem 3D →</Link>
+          <span className="hint">Lăn chuột để zoom · kéo để di chuyển · phím + − 0 R F</span>
+        </div>
+      </header>
+
+      <div className="app">
+        <div className="sheet">
+          <div className="viewer"><svg id="plan" /></div>
+          <button id="zExit" title="Thoát toàn màn hình (Esc)" aria-label="Thoát toàn màn hình">✕</button>
+        </div>
+
+        <aside className="side">
+          <section>
+            <h2 id="vTitle">Phiên bản</h2>
+            <p className="vmeta" id="vMeta" />
+            <div id="vNote" />
+            <ul className="vlist" id="vChanges" />
+            <div id="vCheck" />
+          </section>
+          <section>
+            <h2>Bảng thống kê phòng</h2>
+            <table id="sched" />
+          </section>
+          <section>
+            <h2>Bảng cửa</h2>
+            <table id="tblDoors" />
+          </section>
+          <section id="secWin">
+            <h2>Bảng cửa sổ</h2>
+            <table id="tblWins" />
+          </section>
+          <section id="secSky">
+            <h2>Bảng lấy sáng mái</h2>
+            <table id="tblSky" />
+          </section>
+          <section>
+            <h2>Ký hiệu chung</h2>
+            <table id="legend" />
+            <div className="note" id="warn" />
+          </section>
+        </aside>
+      </div>
+    </>
+  );
+}

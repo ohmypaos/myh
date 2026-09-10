@@ -1,0 +1,46 @@
+/* Phần riêng của bản vẽ 2D — chuyển nguyên văn từ index.html cũ. */
+
+.app{flex:1;min-height:0;display:flex;align-items:stretch}
+.side{width:440px;flex:none;min-width:0;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--side);border-left:1px solid #c9c6bd;padding:0}
+.side[hidden]{display:none}
+
+.sheet{flex:1;min-width:0;background:var(--paper);overflow:hidden}
+.viewer{height:100%;position:relative;background:var(--paper)}
+#plan{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#plan.drag{cursor:grabbing}
+
+/* toàn màn hình: chỉ còn bản vẽ tràn viền + một nút thoát góc phải trên */
+.sheet:fullscreen{background:var(--paper);position:relative}
+.sheet:fullscreen .viewer{height:100%}
+#zExit{display:none}
+.sheet:fullscreen #zExit{
+  display:flex;align-items:center;justify-content:center;
+  position:absolute;z-index:10;top:18px;right:18px;width:46px;height:46px;
+  font:400 21px/1 ui-sans-serif,system-ui,sans-serif;color:#fff;cursor:pointer;
+  border:0;border-radius:50%;
+  background:rgba(28,28,30,.74);backdrop-filter:blur(4px);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);
+  opacity:0;pointer-events:none;transition:opacity .2s ease, background .15s ease}
+.sheet:fullscreen #zExit.show{opacity:1;pointer-events:auto}
+.sheet:fullscreen #zExit:hover{background:rgba(28,28,30,.92)}
+
+.side>section{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:12px 14px;margin:14px}
+.new{color:#0a6b3d;font-weight:600}
+.vmeta{font-size:12.5px;color:#555;margin:0 0 8px}
+.vlist{margin:8px 0 0;padding-left:18px;font-size:12.5px}
+.vlist li{margin-bottom:4px}
+.chk{margin-top:12px;padding:8px 11px;border-radius:2px;font-size:12.5px;border-left:3px solid}
+.chk.ok{background:#eef7f1;border-color:#0a6b3d;color:#0a5c34}
+.chk.bad{background:#fdeeec;border-color:#c0392b;color:#8e2b20}
+.chk ul{margin:6px 0 0;padding-left:18px}
+.chk li{margin-bottom:3px}
+
+@media (max-width:900px){
+  html,body{height:auto}
+  body{overflow:auto}
+  .app{flex-direction:column}
+  .sheet{flex:none;height:68vh;min-height:320px;border-bottom:1px solid #c9c6bd}
+  .side{width:auto;border-left:none;overflow:visible}
+}
