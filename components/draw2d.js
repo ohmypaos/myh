@@ -1,9 +1,10 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua 13 phép kiểm và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
-import { LOT } from '../lib/lot.js';
+import { LOT, frontAzimuth } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
+import { compassName } from '../lib/sun.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -586,7 +587,7 @@ export function init(){
   <tr><td>Vòng tròn + 4 ghế</td><td>Bàn ngoài sân</td></tr>
 
   <tr><td colspan="2" style="background:#f6f4ee;font-weight:700">Khác</td></tr>
-  <tr><td>Mũi tên "MẶT TIỀN"</td><td>Mặt tiền quay hướng Đông Bắc (phương vị 45°)</td></tr>
+  <tr><td>Mũi tên "MẶT TIỀN"</td><td>Mặt tiền quay hướng ${compassName(frontAzimuth())} (phương vị ${+frontAzimuth().toFixed(1)}°)</td></tr>
   <tr><td>Thanh đen–trắng 0–5</td><td>Thang tỉ lệ, mỗi ô 1 mét</td></tr>
   <tr><td>Khung dưới bản vẽ</td><td>Khung tên: tên bản, tỉ lệ, diện tích</td></tr>`;
 

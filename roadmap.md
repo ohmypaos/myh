@@ -38,7 +38,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
 | **Cấu hình tuỳ chỉnh** ||||
 | E0 | Bỏ hằng số ghim trong `validate()` | ✅ xong | |
-| E1 | Đổi hướng nhà được | ⬜ chưa làm | |
+| E1 | Đổi hướng nhà được | ✅ xong | |
 | E2 | Advanced config — ranh phòng và cao độ, lan truyền tự động | ⬜ chưa làm | E0 |
 | E3 | Lưu cấu hình đặt tên trong `localStorage` | ⬜ chưa làm | E2 |
 | **Hạ tầng** ||||
@@ -227,18 +227,31 @@ L = ranh × LOT.d          R = (LOT.w − ranh) × LOT.d
 > Phép kiểm còn **mạnh nguyên**: nó chuyển từ "cột trái phải đúng 150 m²" sang "cột trái phải
 > lấp kín đúng phần lô của mình" — hở hay chồng đều lộ, và `L + R = 285` vẫn suy ra được.
 
-### ⬜ E1 · Đổi hướng nhà được
+### ✅ E1 · Đổi hướng nhà được
 
-Rẻ nhất nhóm, làm riêng được. `LOT.frontAzimuth` hiện chỉ chảy vào `toSceneVector()` trong
-`lib/sun.js` — đổi nó **không đụng gì tới hình học**, chỉ đổi đường đi của nắng và mũi tên bắc.
+Rẻ nhất nhóm, làm riêng được. Hướng **không đụng gì tới hình học** — chỉ đổi đường đi của nắng
+và mũi tên bắc.
 
-Nhưng có một chỗ đang nói dối: `components/draw2d.js` ghi **cứng** chuỗi
-`"Mặt tiền quay hướng Đông Bắc (phương vị 45°)"` trong bảng ký hiệu, không đọc `LOT`. Đổi
-hướng mà không sửa chỗ này thì bản vẽ 2D ghi sai.
+Hoá ra có **hai** chỗ ghi cứng hướng chứ không phải một: bảng ký hiệu trong `draw2d.js`, và cả
+dòng phụ đầu trang 3D (`Plan3D.jsx`) — chỗ thứ hai chỉ lộ ra khi kéo thanh trượt rồi thấy tiêu
+đề vẫn nói "Đông Bắc".
 
-- [ ] Thanh trượt phương vị mặt tiền trên trang 3D
-- [ ] `draw2d.js` đọc `LOT.frontAzimuth` và `compassName()` thay vì chuỗi ghim cứng
-- [ ] Mũi tên bắc trong 3D đã tự xoay theo — chỉ cần kiểm lại
+Giá trị nằm ở `localStorage` qua `frontAzimuth()` / `setFrontAzimuth()` trong `lib/lot.js`, chứ
+không phải biến trong một trang — nếu để riêng thì 2D và 3D nói hai đằng ngay khi kéo. Chạy
+trong node (gen-spec) không có `localStorage` nên hàm trả về giá trị gốc; hướng không đụng hình
+học nên `validate()` và `spec/` không phụ thuộc nó.
+
+- [x] Thanh trượt phương vị mặt tiền trên trang 3D, kèm nút về hướng thiết kế
+- [x] `draw2d.js` đọc hướng thật qua `compassName()` thay vì chuỗi ghim cứng
+- [x] Dòng phụ đầu trang 3D cũng đọc hướng thật
+- [x] Mũi tên bắc xoay theo — tách thành `aimNorth()`, gọi lại mỗi lần đổi hướng
+- [x] Kiểm: kéo sang 225° thì 3D đổi nắng, F5 vẫn giữ, và bảng ký hiệu 2D ghi
+      "Tây Nam (phương vị 225°)"; bấm về hướng thiết kế thì cả hai trang về 45° · Đông Bắc
+
+> Bản vẽ 2D **không xoay** theo — nó vẽ theo lô, hướng chỉ là thông tin kèm. Mũi tên "MẶT TIỀN"
+> vẫn chỉ về cạnh `y = 0` như cũ, đúng như vậy.
+
+> **E3 sẽ gom khoá này vào cấu hình đặt tên.** Giờ để riêng một khoá `myh.frontAzimuth` cho gọn.
 
 ### ⬜ E2 · Advanced config — ranh phòng và cao độ
 

@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { LOT } from '../lib/lot.js';
+import { LOT, frontAzimuth, setFrontAzimuth } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { PLACES, KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
@@ -101,7 +101,6 @@ export function init(){
   /* ═══════════ MŨI TÊN CHỈ BẮC ═══════════ */
   function northArrow(){
     const g = new THREE.Group();
-    const dir = toSceneVector(0, 0);              // phương vị 0 = bắc, đổi sang hệ cảnh
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.6),
       new THREE.MeshBasicMaterial({ color: 0x8a1c1c }));
     shaft.rotation.x = Math.PI / 2;
@@ -112,11 +111,17 @@ export function init(){
     tip.position.z = -1.85;
     g.add(shaft, tip);
     g.position.set(LOT.w + 1.6, 0.05, 2.2);
-    /* Thân mũi tên dựng theo chiều −z cục bộ, nên xoay để −z trùng với hướng bắc trong cảnh. */
-    g.rotation.y = Math.atan2(-dir.x, -dir.z);
     return g;
   }
-  scene.add(northArrow());
+  const compass = northArrow();
+  scene.add(compass);
+
+  /* Thân mũi tên dựng theo chiều −z cục bộ, nên xoay để −z trùng với hướng bắc trong cảnh.
+     Gọi lại mỗi lần đổi hướng mặt tiền. */
+  function aimNorth(){
+    const dir = toSceneVector(0, 0);              // phương vị 0 = bắc, đổi sang hệ cảnh
+    compass.rotation.y = Math.atan2(-dir.x, -dir.z);
+  }
 
   /* ═══════════ DỰNG KHỐI ═══════════ */
   let group = null, LEVELS = null, roofHidden = false;
@@ -190,6 +195,19 @@ export function init(){
         + ` · mọc ${hhmm(sunrise)}, lặn ${hhmm(sunset)}`
       : `Mặt trời đã lặn (mọc ${hhmm(sunrise)}, lặn ${hhmm(sunset)})`
         + ` — chỉ còn ánh trời khuếch tán`);
+  }
+
+  /* ═══════════ HƯỚNG NHÀ ═══════════ */
+  /* Hướng không đụng hình khối — chỉ đường đi của nắng và mũi tên bắc. Giá trị nằm ở
+     localStorage (lib/lot.js) nên bản vẽ 2D đọc cùng một chỗ. */
+  function updateAzimuth(){
+    const deg = frontAzimuth();
+    setHtml('lblAzimuth', `<b>${deg.toFixed(0)}°</b> · ${compassName(deg)}`);
+    setHtml('subAzimuth', `Mặt tiền quay ${compassName(deg)}`);
+    const slider = document.getElementById('azimuth');
+    if (slider && Math.abs(+slider.value - deg) > 0.5) slider.value = deg;
+    aimNorth();
+    updateSun();
   }
 
   /* ═══════════ GÓC NHÌN ═══════════ */
@@ -359,6 +377,9 @@ export function init(){
   on('day',   'input',  e => { state.day   = +e.target.value; updateSun(); });
   on('hour',  'input',  e => { state.hour  = +e.target.value; updateSun(); });
 
+  on('azimuth', 'input', e => { setFrontAzimuth(+e.target.value); updateAzimuth(); });
+  on('azReset', 'click', () => { setFrontAzimuth(null); updateAzimuth(); });
+
   on('vRoof', 'click', e => {
     roofHidden = !roofHidden;
     e.target.classList.toggle('on', roofHidden);
@@ -392,7 +413,7 @@ export function init(){
   }
 
   openPlan(plan.id);
-  updateSun();
+  updateAzimuth();                             // gọi luôn updateSun() bên trong
   resize();                                    // phải có aspect thật trước khi ngắm cho vừa
   overviewView();
   setHtml('hint', ORBIT_HINT);

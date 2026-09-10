@@ -16,7 +16,7 @@ export default function Plan3D() {
         <div className="titles">
           <h1>MÔ HÌNH 3D — LÔ 9.5 × 30 m</h1>
           <p className="sub">
-            Mặt tiền quay Đông Bắc &nbsp;·&nbsp; dựng từ đúng dữ liệu của bản vẽ 2D
+            <span id="subAzimuth" />&nbsp;·&nbsp; dựng từ đúng dữ liệu của bản vẽ 2D
           </p>
         </div>
 
@@ -42,6 +42,22 @@ export default function Plan3D() {
           <section>
             <h2 id="planTitle">Phiên bản</h2>
             <div id="planNote" />
+          </section>
+
+          <section>
+            <h2>Hướng nhà</h2>
+
+            <label className="sl" htmlFor="azimuth">
+              Phương vị mặt tiền — <b id="lblAzimuth" />
+            </label>
+            <input id="azimuth" type="range" min="0" max="359" step="1" defaultValue="45" />
+            <div className="mocs">
+              <button id="azReset">Về hướng thiết kế</button>
+            </div>
+            <p className="doc" style={{ marginTop: 10 }}>
+              Chỉ đổi đường đi của nắng và mũi tên bắc — hình khối giữ nguyên. Bản vẽ 2D đọc
+              cùng giá trị này nên hai trang không nói hai đằng.
+            </p>
           </section>
 
           <section>
@@ -82,7 +98,8 @@ export default function Plan3D() {
             </div>
             <p className="doc">
               Mái che sân phụ (chỗ để xe) mới khai tạm ở <code>lib/lot.js</code>, chưa vào dữ liệu
-              phiên bản — nó là thay đổi thiết kế nên phải thành v13. Xem <code>3d.md</code> mục 3.
+              mặt bằng — chốt xong thì chuyển vào <code>lib/versions/current.js</code>. Xem{' '}
+              <code>3d.md</code> mục 3.
             </p>
           </section>
         </aside>
