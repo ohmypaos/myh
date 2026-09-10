@@ -24,3 +24,10 @@ mat-bang-dac-ta*.md
 .idea/
 *.swp
 *~
+
+# Next.js
+/node_modules
+/.next
+/out
+.env*.local
+.vercel

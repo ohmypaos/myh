@@ -1,0 +1,19 @@
+{
+  "name": "mat-bang-9x30",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "spec": "node scripts/gen-spec.mjs",
+    "spec:check": "node scripts/gen-spec.mjs --check"
+  },
+  "dependencies": {
+    "next": "^16.3.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.0"
+  }
+}
