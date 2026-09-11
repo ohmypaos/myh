@@ -44,7 +44,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
-| B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
+| B3 | Nội thất dạng khối và cánh cửa đi trong 3D | ✅ xong | |
 | B4 | Tường bao dọc hành lang ngoài hạ về cao rào | ✅ xong | |
 | B5 | Góc tường vuông, hết mái nhấp nháy | ✅ xong | |
 | **Cấu hình tuỳ chỉnh** ||||
@@ -481,16 +481,45 @@ nhà nên bước ra sân thì lửng lơ 45 cm. Hoãn ngày 10/9/2026, chủ nh
 > **Hai bán kính.** Chỉ dùng bề ngang vai thì kẹt trước bậc tam cấp: tâm còn dưới sân mà vòng vai đã
 > chạm bậc thứ hai, cao hơn tầm bước. Vật thấp dưới đầu gối nên chỉ cản theo mũi chân.
 
-> **Chưa vướng nội thất** — nội thất chưa có trong 3D (B3). Kính cửa lùa không cản, coi như mở.
+> **Vướng nội thất và cánh cửa** từ B3. Kính cửa lùa không cản, coi như mở.
 
-### 💤 B3 · Nội thất dạng khối trong 3D
+### ✅ B3 · Nội thất dạng khối và cánh cửa đi trong 3D
 
 Mới có khối tường, sàn, mái. Dữ liệu đã có sẵn ở `furn` của từng mặt bằng (2D đang vẽ), chỉ
-thiếu chiều cao. **Cố ý hoãn** — làm nếu thấy cần cảm nhận tỉ lệ kỹ hơn. Xem `3d.md` mục 8.
-Chủ nhà xác nhận giữ hoãn ngày 10/9/2026.
+thiếu chiều cao. Hoãn ngày 10/9/2026; chủ nhà gọi làm ngày 11/9/2026 **kèm cánh cửa đi** — cửa
+quay trước đó chỉ là lỗ trống.
 
-- [ ] Thêm chiều cao cho từng loại nội thất vào `HEIGHTS` trong `lib/lot.js`
-- [ ] Dựng hộp trong `lib/massing.js`
+- [x] Chiều cao theo loại ở `FURNITURE` trong `lib/lot.js` — **không** vào `HEIGHTS` như định ban đầu:
+      giống `ROOF`, đó là kích thước đồ đạc chứ không phải cao độ thiết kế, không có thanh trượt nào
+- [x] `cab` dùng cho ba thứ nên chia: ở phòng khách là kệ tivi 0.60, nhỏ dưới 0.5 m² là tủ đầu giường
+      0.55, còn lại tủ áo / kệ kho 2.00. Buồng tắm đứng chỉ dựng khay sàn, không dựng vách kính
+- [x] `lib/massing.js` dựng mỗi món một hộp đứng trên sàn phòng chứa nó, **cắt theo lọt lòng phòng** —
+      mặt bằng khai theo tim với dung sai 1 cm nên chậu rửa bếp, lavabo WC khách lấn tường chừng ấy
+- [x] Cánh cửa (`DOOR_LEAF`): cửa quay dựng cánh **mở 90°** về phía `open` đúng nét 2D; cửa 4 cánh D1 chủ
+      nhà chốt tạm **hai cánh ngoài đóng, hai cánh giữa mở** (lối còn ~1.5 m), 2D sửa cho khớp — trước vẽ
+      hai cánh ngoài mở; cửa lùa giữ tấm kính. Cánh nằm trong lọt lòng phòng phía mở — lỗ D8 khai tới 4.90 mà
+      mặt tường bên cạnh ở 4.89; hành lang 0.9 m ở kho đối chiếu thì cánh dừng ở mặt tường đối diện
+- [x] Người đi bộ vướng nội thất và cánh cửa
+- [x] **Giường và sofa nhiều khối** thay hộp đặc — chủ nhà thấy giường "chiếm rất nhiều không gian". Cỡ
+      giường đúng nệm 1m6, 1m8 nên giữ, chỉ đổi cách dựng: chân, gầm hở, khung, nệm lõm, đầu giường; sofa
+      mặt ngồi 0.42 + tựa lưng 0.18 ở cạnh dài phía xa tâm phòng. Các khối mang `item` để phép 17 gom
+- [x] **Bố trí lại trong `current.js`** khi xem 3D: bàn trà ngoài sân dời ra sát ngoài W1 (trước chắn lối
+      vào cửa bếp D9); sofa phòng khách xếp chữ L góc tây bắc thay hai ghế đối diện; kệ tivi dài hết
+      tường `y = 17`
+- [x] `check-3d` thêm **phép kiểm 17** (mỗi món một khối đúng chỗ, đúng cốt sàn, dưới trần; đủ số cánh,
+      áp một đầu lỗ, đứng phía mở, cao đúng đầu cửa); phép 5 coi cánh cửa là vật bịt lỗ
+- [x] Phép 10 bỏ qua cặp đồ đạc ↔ cánh cửa / đồ đạc ↔ đồ đạc, phép 16 chỉ đi thử trên phần xây và chỉ
+      qua khỏi lối cửa — chắn lối là chuyện bố trí, `validate()` soi trên mặt bằng
+- [x] Phá thử: bỏ cắt theo tường → phép 10 báo; cánh mở ngược phía → phép 17 báo; cánh đứng giữa lỗ →
+      phép 17 báo; nệm thò ra ngoài khung → phép 17 báo
+
+> **Vấp ở phá thử:** cánh đứng chắn giữa lỗ cửa mà cả 17 phép vẫn sạch. Phép 5 chọc điểm ở tim tường,
+> còn cánh bắt đầu từ mặt tường nên không bao giờ bị chọc trúng; phép 16 thì cố ý bỏ cánh cửa. Phép 17
+> nay đòi cánh áp một đầu lỗ.
+
+> **Lộ ra khi đi thử:** tủ đầu giường master lấn 0.3 m trước cửa lùa D7 — vẫn lách qua được, không
+> phải lỗi, nhưng đi thẳng giữa cửa là vướng. Ở kho đối chiếu v1…v3, cửa phòng thờ mở hết thì cánh
+> chắn ngang hành lang 0.9 m.
 
 ### ✅ B4 · Tường bao dọc hành lang ngoài hạ về cao rào
 
@@ -749,8 +778,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **16** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **17** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

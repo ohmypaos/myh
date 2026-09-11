@@ -275,7 +275,8 @@ export function init(){
           for(let i=1;i<4;i++) el('line',{x1:M(pos)-9,y1:M(a+q*i),x2:M(pos)+9,y2:M(a+q*i),
             stroke:col,stroke_width:2},gD);
         }
-        for(const [hv,dir] of [[a,1],[b,-1]]){
+        // hai cánh ngoài đóng (nằm trong thanh đậm), hai cánh giữa mở — bản lề ở mép trong cánh ngoài
+        for(const [hv,dir] of [[a+q,1],[b-q,-1]]){
           const hx = ax==='h' ? hv : pos, hy = ax==='h' ? pos : hv;
           const px = ax==='h' ? hx : hx + open*q, py = ax==='h' ? hy + open*q : hy;
           const ox = ax==='h' ? hx + dir*q : pos,  oy = ax==='h' ? pos : hy + dir*q;

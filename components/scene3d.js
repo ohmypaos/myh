@@ -39,6 +39,8 @@ const COLORS = {
   ceiling:     0xe4e0d4,
   dropCeiling: 0xe9e6dc,     // trần giả thạch cao / nhựa
   step:        0xe2dccd,
+  furniture:   0xc4ab86,     // nội thất — gỗ nhạt, tách khỏi tường và sàn
+  doorLeaf:    0x8d6e4f,     // cánh cửa đi — gỗ sẫm
   glass:       0xa9cfe0,
 };
 

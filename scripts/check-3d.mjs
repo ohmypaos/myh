@@ -76,6 +76,7 @@ const CHECKS = [
   'Tường rào có lan can: phần xây không vượt cốt xây đặc, lan can nằm gọn giữa cốt xây đặc và đỉnh rào, trên tuyến tường có thật',
   'Trần giả dựng đúng cốt khai, dưới bản mái, và cao hơn đầu mọi cửa, cửa sổ trên tường phòng ấy',
   'Đi bộ: qua được mọi cửa và cổng cả hai chiều, tới nơi đứng đúng cốt sàn phòng bên kia; không đi xuyên được tường nhà',
+  'Nội thất: khối của mỗi món nằm gọn trong chỗ khai và phủ gần trọn nó, chân chạm sàn phòng chứa nó, thấp hơn trần. Cánh cửa: cửa quay 1 cánh, cửa 4 cánh 4 cánh, áp mép lỗ, đứng phía mở, cao đúng đầu cửa',
 ];
 
 function check(plan){
@@ -151,7 +152,7 @@ function check(plan){
     ...plan.gates
       .map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3], ys: [0.05, upper(Infinity)] })),
   ];
-  const blockers = m.boxes.filter(b => /Wall$/.test(b.kind) || b.kind === 'railing');
+  const blockers = m.boxes.filter(b => /Wall$/.test(b.kind) || b.kind === 'railing' || b.kind === 'doorLeaf');
 
   for (const o of holes) {
     const mid = (o.a + o.b) / 2;
@@ -253,10 +254,15 @@ function check(plan){
      Mái tôn dốc và đầu hồi có mặt nghiêng nên đo bằng độ đâm sâu (penetration) chứ không phải
      thể tích hộp bao — hộp bao của một mặt dốc chồng lên hàng xóm là chuyện thường. */
   const solid = [...m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground'), ...m.prisms];
+  /* Đồ đạc và cánh cửa chạm nhau (cánh quét vào tủ, hai món kê sát) là chuyện bố trí trên mặt bằng —
+     validate() đã soi, và kho đối chiếu còn lỗi loại đó là bình thường. Ở đây chỉ đòi chúng không đâm
+     vào phần xây. */
+  const movable = b => b.kind === 'furniture' || b.kind === 'doorLeaf';
   let clashes = 0;
   for (let i = 0; i < solid.length; i++)
     for (let j = i + 1; j < solid.length; j++) {
       const a = solid[i], b = solid[j];
+      if (movable(a) && movable(b)) continue;
       const ov = penetration(a, b);
       const bad = a.axis || b.axis ? ov > 1e-4 : ov > 1e-6;
       if (bad && clashes++ < 3)
@@ -458,16 +464,22 @@ function check(plan){
       if (o.head > y + EPS) e.push(`đầu ${o.id} (${n(o.head)}) cao hơn trần giả ${id} (${n(y)})`);
   }
 
-  /* 16 — đi bộ, bằng đúng lib/walk.js mà trang 3D dùng. Mỗi cửa và cổng: đứng giữa phòng phía này,
-     đi thẳng vuông góc qua tâm lỗ sang phía kia — không được vướng, và tới nơi phải đứng đúng cốt sàn
-     phòng bên kia (bậc thiếu, bậc cao quá một nấc, ngưỡng sai cốt đều lộ ở đây). Chiều đi lên chỉ đòi
+  /* 16 — đi bộ, bằng đúng lib/walk.js mà trang 3D dùng. Mỗi cửa và cổng: đứng trước lỗ phía này, đi
+     thẳng vuông góc qua tâm lỗ sang phía kia — không được vướng, và tới nơi phải đứng đúng cốt sàn
+     phòng bên kia (bậc thiếu, bậc cao quá một nấc, ngưỡng sai cốt đều lộ ở đây). Điểm đứng cách mặt
+     tường vừa đủ qua khỏi bậc và tầm vai — soi **lối cửa**, không soi cả căn phòng: đi sâu 1.2 m vào
+     phòng thì vướng giường, bàn trà, mà đó không phải lỗi. Đồ kê chắn ngay trước cửa thì vẫn báo. Chiều đi lên chỉ đòi
      khi cửa có bậc hoặc chênh không quá một nấc: kho đối chiếu chưa có bậc thì sàn nhà cao 0.45 là
      không trèo được, đúng như thật. Phía ngoài cổng là ngõ, ngang cốt sân.
      Cửa 'open' là chỗ không có tường (như phép 5): chỉ đi thử khi đúng là không khai tường ở đó — v2…v4
      có lối 'open' nằm trên một tường khai suốt, massing.js dựng tường ấy kín, dữ liệu kho đối chiếu.
      Rồi chiều ngược lại: đi thẳng vào giữa từng mảnh tường nhà cao suốt — phải bị chặn trước tim. */
-  const solids = walkSolids(m);
-  const withSteps = new Set(stepsOf(plan).filter(s => !s.error).map(s => s.id));
+  /* Chỉ phần xây. Trong trang 3D người đi bộ vẫn vướng đồ đạc và cánh cửa, nhưng chúng chắn lối là chuyện
+     bố trí trên mặt bằng (validate() soi vùng quét cánh) — tủ đầu giường master lấn 0.3 m trước cửa lùa
+     D7 vẫn lách qua được, cánh cửa mở hết chắn hành lang 0.9 m ở kho đối chiếu là đúng như thật. */
+  const solids = walkSolids(m).filter(s => s.kind !== 'furniture' && s.kind !== 'doorLeaf');
+  const stepList = stepsOf(plan).filter(s => !s.error);
+  const withSteps = new Set(stepList.map(s => s.id));
   const passages = [
     ...plan.doors.filter(d => d[5] !== 'open' || !wallThickness(plan, d[1], d[2], d[3], d[4]))
       .map(d => ({ id: d[0], ax: d[1], pos: d[2], a: d[3], b: d[4] })),
@@ -477,12 +489,15 @@ function check(plan){
   for (const o of passages) {
     const mid = (o.a + o.b) / 2;
     const half = wallThickness(plan, o.ax, o.pos, o.a, o.b) / 2;
-    /* Mỗi phía: cốt sàn, và điểm đứng — lùi vào phòng tối đa 1.2 m nhưng không chạm tường đối diện. */
+    /* Mỗi phía: cốt sàn, và điểm đứng — qua khỏi mặt tường, bậc phía ấy và tầm vai, nhưng không chạm
+       tường đối diện. */
     const side = dir => {
       const r = roomsAlong(plan.rooms, o.ax, o.pos, o.a, o.b)
         .find(r => (Math.abs((o.ax === 'h' ? r[3] : r[2]) - o.pos) < EPS ? 1 : -1) === dir);
       const depth = r ? (o.ax === 'h' ? r[5] : r[4]) - 0.11 - WALK.radius - 0.02 : 1.2;
-      return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(1.2, depth) };
+      const st = stepList.find(s => s.id === o.id && s.dir === dir);
+      const want = half + (st ? st.depth : 0) + WALK.radius + 0.15;
+      return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(want, depth) };
     };
     const sides = { [-1]: side(-1), [1]: side(1) };
     for (const dir of [-1, 1]) {
@@ -507,6 +522,8 @@ function check(plan){
       const c0 = pos - dir * 0.5;
       const [x0, z0] = alongX ? [u, c0] : [c0, u];
       if (x0 < 0 || x0 > LOT.w || z0 < 0 || z0 > LOT.d) continue;
+      /* Không có nội thất trong `solids` cũng là điều phải có ở đây: tủ kê sát tường chặn trước thì phép
+         thử "tường có chặn không" qua mà chẳng soi gì. */
       const foot = supportAt(solids, x0, z0, H.floor);
       const r = stepWalk(solids, { x: x0, z: z0, foot }, alongX ? 0 : dir, alongX ? dir : 0);
       if (((alongX ? r.z : r.x) - pos) * dir > 0) {
@@ -514,6 +531,69 @@ function check(plan){
         break;
       }
     }
+  }
+
+  /* 17 — nội thất và cánh cửa. Tra thẳng từ `furn` và `doors`, không gọi hàm dựng: các khối của mỗi món
+     (giường, sofa có nhiều khối — gom theo `item`) phải nằm trong chữ nhật khai và hộp bao của chúng phủ
+     gần trọn nó (massing cắt phần lấn tường, cỡ 1 cm), khối thấp nhất chạm cốt sàn phòng chứa nó (tra
+     floorLevels / cốt nền), cao dương và không chạm trần. Không đâm vào phần
+     xây thì phép 10 soi. Mỗi cửa quay có một cánh, cửa 4 cánh bốn cánh — tổng bề rộng các cánh đo dọc
+     tường không quá bề rộng lỗ, cánh nằm trọn phía mở tính từ mặt tường, chân ở ngưỡng, đỉnh ở đầu cửa.
+     Cánh không chắn lối thì phép 5 (điểm chọc giữa lỗ) và phép 16 (đi bộ qua cửa) đã soi. */
+  const furnBoxes = m.boxes.filter(b => b.kind === 'furniture');
+  for (const [i, [kind, x, y, w, h]] of (plan.furn || []).entries()) {
+    const room = plan.rooms.find(([, , rx, ry, rw, rh]) =>
+      x >= rx - 0.01 && y >= ry - 0.01 && x + w <= rx + rw + 0.01 && y + h <= ry + rh + 0.01);
+    if (!room) continue;                                // validate() đã báo
+    const at = `nội thất ${kind} @${x},${y}`;
+    const parts = furnBoxes.filter(b => b.item === i);
+    if (!parts.length) { e.push(`${at} không có khối nào`); continue; }
+    if (parts.some(b => b.x < x - EPS || b.z < y - EPS || b.x + b.w > x + w + EPS || b.z + b.d > y + h + EPS))
+      e.push(`${at} có khối thò ra ngoài chữ nhật khai`);
+    const bw = Math.max(...parts.map(b => b.x + b.w)) - Math.min(...parts.map(b => b.x));
+    const bd = Math.max(...parts.map(b => b.z + b.d)) - Math.min(...parts.map(b => b.z));
+    if (bw * bd < 0.8 * w * h) e.push(`${at} chỉ phủ ${n(bw)} × ${n(bd)} trên ${w} × ${h} khai`);
+    const f = plan.floorLevels?.[room[0]] ?? (room[6] !== 'yard' && room[0] !== 'R3' || /^BAN CÔNG/.test(room[1]) ? H.floor : 0);
+    const low = Math.min(...parts.map(b => b.y0)), high = Math.max(...parts.map(b => b.y1));
+    if (Math.abs(low - f) > EPS) e.push(`${at} chân ở cốt ${n(low)}, sàn ${room[1]} ở ${n(f)}`);
+    if (!(high > low) || high > L.ceiling - 0.3) e.push(`${at} cao tới ${n(high)}, sát trần ${n(L.ceiling)}`);
+  }
+  const stray = furnBoxes.filter(b => !(b.item >= 0 && b.item < (plan.furn || []).length));
+  if (stray.length) e.push(`${stray.length} khối nội thất không thuộc món khai nào`);
+  const leaves = m.boxes.filter(b => b.kind === 'doorLeaf');
+  for (const [id, ax, pos, a, b, style, , open] of plan.doors) {
+    const mine = leaves.filter(l => l.id === id);
+    const want = style === 'swing' ? 1 : style === 'quad' ? 4 : 0;
+    if (mine.length !== want) { e.push(`cửa ${id} (${style}) có ${mine.length} cánh, phải ${want}`); continue; }
+    const t = Math.max(0, ...plan.walls
+      .filter(w => w[0] === ax && Math.abs(w[1] - pos) < EPS && w[2] < b && w[3] > a).map(w => w[4]));
+    const face = pos + open * t / 2;
+    const sill = base([id, ax, pos, a, b]);
+    const head = sill + ((H.only[id] || {}).door ?? H.door);
+    let width = 0, closed = 0;
+    for (const l of mine) {
+      const [u0, u1, n0, n1] = ax === 'h' ? [l.x, l.x + l.w, l.z, l.z + l.d] : [l.z, l.z + l.d, l.x, l.x + l.w];
+      width += u1 - u0;
+      if (u0 < a - EPS || u1 > b + EPS) e.push(`cánh cửa ${id} thò ra ngoài lỗ ${a}–${b}`);
+      /* Cánh đứng đúng chỗ (chừa 0.1 m cho phần bản lề lùi về mặt tường bên cạnh). Phép 5 chọc ở tim tường
+         còn cánh mở bắt đầu từ mặt tường, nên cánh đứng chắn giữa lỗ chỉ lộ ở đây — đã phá thử đúng kiểu
+         đó và phép 5 không thấy. */
+      else if (n0 >= pos - t / 2 - EPS && n1 <= pos + t / 2 + EPS) {
+        /* Cánh đóng — nằm trong bề dày tường. Chỉ cửa 4 cánh có, và phải là cánh ngoài, áp một đầu lỗ. */
+        closed++;
+        if (style !== 'quad' || (u0 - a > 0.1 && b - u1 > 0.1)) e.push(`cánh cửa ${id} đóng chắn giữa lỗ ${a}–${b}`);
+      } else {
+        /* Cánh mở — áp bản lề: đầu lỗ với cửa quay, mép trong cánh ngoài (1/4 và 3/4 lỗ) với cửa 4 cánh. */
+        const hinges = style === 'quad' ? [a + (b - a) / 4, b - (b - a) / 4] : [a, b];
+        if (!hinges.some(hg => Math.abs(u0 - hg) < 0.1 || Math.abs(u1 - hg) < 0.1))
+          e.push(`cánh cửa ${id} không áp bản lề (${hinges.map(n).join(' / ')}), đứng chắn lối`);
+        if ((open > 0 ? n0 - face : face - n1) < -EPS) e.push(`cánh cửa ${id} không nằm phía mở`);
+      }
+      if (Math.abs(l.y0 - sill) > EPS || Math.abs(l.y1 - head) > EPS)
+        e.push(`cánh cửa ${id} cao ${n(l.y0)}–${n(l.y1)}, lỗ ${n(sill)}–${n(head)}`);
+    }
+    if (style === 'quad' && closed !== 2) e.push(`cửa 4 cánh ${id} có ${closed} cánh đóng, phải 2 cánh ngoài`);
+    if (width > b - a + EPS) e.push(`các cánh cửa ${id} rộng ${n(width)} quá lỗ ${n(b - a)}`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
