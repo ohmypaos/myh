@@ -290,7 +290,7 @@ function check(plan){
   /* Đồ đạc và cánh cửa chạm nhau (cánh quét vào tủ, hai món kê sát) là chuyện bố trí trên mặt bằng —
      validate() đã soi, và kho đối chiếu còn lỗi loại đó là bình thường. Ở đây chỉ đòi chúng không đâm
      vào phần xây. */
-  const movable = b => b.kind === 'furniture' || b.kind === 'doorLeaf';
+  const movable = b => b.kind === 'furniture' || b.kind === 'doorLeaf' || b.kind === 'gateDoor';
   let clashes = 0;
   for (let i = 0; i < solid.length; i++)
     for (let j = i + 1; j < solid.length; j++) {
@@ -539,7 +539,7 @@ function check(plan){
   /* Chỉ phần xây. Trong trang 3D người đi bộ vẫn vướng đồ đạc và cánh cửa, nhưng chúng chắn lối là chuyện
      bố trí trên mặt bằng (validate() soi vùng quét cánh) — tủ đầu giường master lấn 0.3 m trước cửa lùa
      D7 vẫn lách qua được, cánh cửa mở hết chắn hành lang 0.9 m ở kho đối chiếu là đúng như thật. */
-  const solids = walkSolids(m).filter(s => s.kind !== 'furniture' && s.kind !== 'doorLeaf');
+  const solids = walkSolids(m).filter(s => s.kind !== 'furniture' && s.kind !== 'doorLeaf' && s.kind !== 'gateDoor');
   const stepList = stepsOf(plan).filter(s => !s.error);
   const withSteps = new Set(stepList.map(s => s.id));
   const passages = [

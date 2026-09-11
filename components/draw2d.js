@@ -10,7 +10,7 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -83,8 +83,10 @@ export function init(){
     for(const w of WINDOWS) hole(w[1],w[2],w[3],w[4]);
     for(const [ax,pos,a,b] of GATES) hole(ax,pos,a,b);
     const gateRoofs = gateRoofsOf(V);
+    const gateDoors = gateDoorsOf(V);
     for(const [i,[ax,pos,a,b,nm]] of GATES.entries()){
       const roof = gateRoofs.find(r=>r.gate===i && !r.error);
+      const gateDoor = gateDoors.find(d=>d.gate===i && !d.error);
       if(roof){
         const {x,z,w,d} = roof.rect;
         /* Mái nằm trên đầu nên vẽ mờ, sống mái là nét giữa. Hai ô vuông là hai trụ xây
@@ -95,6 +97,20 @@ export function init(){
         else el('line',{x1:M(pos),y1:M(z),x2:M(pos),y2:M(z+d),stroke:'#9e4f3d',stroke_width:2.2},gHole);
         for(const p of roof.pillars)
           el('rect',{x:M(p.x),y:M(p.z),width:M(roof.pillar),height:M(roof.pillar),fill:'#d9d3c4',stroke:'#141414',stroke_width:1.5},gHole);
+      }
+      /* Cổng hai cánh đang mở vào sân: hai nét đậm là khung cánh, các nét nhỏ là nan sắt. */
+      if(gateDoor){
+        const L=(b-a)/2, F=gateDoor.frame, ends=ax==='h'
+          ? [[a,pos,a,pos+L],[b,pos,b,pos+L]] : [[pos,a,pos+L,a],[pos,b,pos+L,b]];
+        for(const [x1,y1,x2,y2] of ends){
+          el('line',{x1:M(x1),y1:M(y1),x2:M(x2),y2:M(y2),stroke:'#30363a',stroke_width:5},gHole);
+          const N=Math.max(2,Math.ceil(L/gateDoor.slatPitch));
+          for(let k=1;k<N;k++){
+            const t=k/N, dx=(x2-x1)*t, dy=(y2-y1)*t;
+            const nx=Math.sign(y2-y1)*F, ny=-Math.sign(x2-x1)*F;
+            el('line',{x1:M(x1+dx-nx),y1:M(y1+dy-ny),x2:M(x1+dx+nx),y2:M(y1+dy+ny),stroke:'#30363a',stroke_width:1.4},gHole);
+          }
+        }
       }
       el('line',{x1:M(a),y1:M(pos),x2:M(b),y2:M(pos),
         stroke:'#999',stroke_width:2.5,stroke_dasharray:'12 8'},gHole);

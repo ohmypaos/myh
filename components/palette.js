@@ -37,6 +37,7 @@ export const COLORS = {
   gatePillar:  0xd9d3c4,     // trụ cổng gạch vuông, cùng tông rào xây
   gateCap:     0xd9d3c4,     // đầu trụ vát khít mặt dưới mái ngói
   gateBeam:    0xd9d3c4,     // giằng BTCT nối hai trụ ngay dưới sống mái
+  gateDoor:    0x30363a,     // khung và nan cổng sắt sơn tối
   gateRoofTile:0x9e4f3d,     // mái ngói đất nung trên cổng
   post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
   beam:        0x55595a,     // dầm biên thép hộp, cùng màu cột

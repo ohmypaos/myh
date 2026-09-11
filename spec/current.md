@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 21:03:12 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 21:13:56 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -86,6 +86,14 @@ Mỗi cổng có hai trụ xây vuông đặt **ngoài** khoảng thông; mái n
 | Mã | Cổng | Trụ vuông | Đua mỗi phía | Mép mái | Nóc mái | Vật liệu |
 |---|---|---:|---:|---:|---:|---|
 | GC1 | CỔNG CHÍNH 3.6m | 0.50 × 0.50 | 0.85 | 2.50 | 3.00 | trụ gạch vuông 500 × 500, giằng BTCT và mái ngói hai dốc ra đường và vào sân |
+
+### Cánh cổng sắt
+
+Hai cánh có bản lề ở mặt trong hai trụ, mở vào sân; khung thép hộp với ba đố ngang và nan đứng.
+
+| Mã | Cổng | Cao | Khung | Nan | Bước nan tối đa | Vật liệu |
+|---|---|---:|---:|---:|---:|---|
+| CG1 | CỔNG CHÍNH 3.6m | 2.10 | 0.06 | 0.03 | 0.12 | khung thép hộp, 3 đố ngang và nan sắt đứng |
 
 ### Bậc tam cấp
 
@@ -405,7 +413,7 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 - **Mái sân phơi** dốc 17% → **10%** (mép thấp 3.00 → 3.20)
 - **Tường rào hạ 2.20 → 1.80 m**, chỉ xây đặc 0.80 m, phía trên là lan can song thoáng — lấy sáng, lấy gió thay cho tường cao kín. Hai tường bên ban công (tường ranh trái, tường có cửa D13 ra sân phơi) vẫn xây tới trần; lan can chỉ ở rào sau ban công và rào quanh các sân
 - **Cổng chính 2.4 → 3.6 m**, tâm vẫn thẳng cửa chính — ô tô vào thoải mái
-- **Cổng chính có hai trụ gạch vuông 500 × 500, giằng BTCT và mái ngói hai dốc dày** — trụ lên tới sống mái, giằng nối hai trụ ngay dưới sống mái nên mái không lơ lửng; mái chìa đều **ra đường và vào sân**; khoảng thông xe 3.6 m giữ nguyên giữa hai mặt trong trụ
+- **Cổng chính có hai trụ gạch vuông 500 × 500, giằng BTCT, mái ngói hai dốc dày và cổng sắt hai cánh nan đứng** — trụ lên tới sống mái, giằng nối hai trụ ngay dưới sống mái nên mái không lơ lửng; hai cánh sắt mở vào sân; mái chìa đều **ra đường và vào sân**; khoảng thông xe 3.6 m giữ nguyên giữa hai mặt trong trụ
 - **Máng xối** chỉ còn ở mép trước mái sân chính và mép thấp mái sân phơi (đoạn áp tường WC khách đặt sát chân tường); mỗi máng một **ống xả** áp mặt trong tường bao phải, xuống ống ngầm chứ không đổ ra sân
 - **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m, chỉ trong bếp — hành lang ngoài không trần. Tường bắc và nam bếp dừng ở mép mái, tường đông bếp lên tới mặt dưới mái, nằm gọn dưới tôn liền
 - **Mái sân phơi** dốc một mái phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng

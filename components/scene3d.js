@@ -130,7 +130,7 @@ export function init(){
   }
 
   /* ═══════════ DỰNG KHỐI ═══════════ */
-  let group = null, LEVELS = null, roofHidden = false, furnitureHidden = false;
+  let group = null, LEVELS = null, roofHidden = false, furnitureHidden = false, doorsOpen = true;
   let solids = [];                               // khối đặc cho đi bộ (lib/walk.js)
 
   function box(b, material, kind){
@@ -186,7 +186,7 @@ export function init(){
       scene.remove(group);
       group.traverse(o => { if (o.isMesh && o.geometry !== UNIT_BOX) o.geometry.dispose(); });
     }
-    const massing = buildMassing(plan);
+    const massing = buildMassing(plan, { doorsOpen });
     LEVELS = massing.levels;
     solids = walkSolids(massing);
     BOUNDS.max.y = LEVELS.top;
@@ -574,6 +574,12 @@ export function init(){
     e.target.classList.toggle('on', furnitureHidden);
     e.target.textContent = furnitureHidden ? 'Hiện đồ' : 'Ẩn đồ';
     applyFurnitureHidden();
+  });
+  on('vDoors', 'click', e => {
+    doorsOpen = !doorsOpen;
+    e.target.classList.toggle('on', !doorsOpen);
+    e.target.textContent = doorsOpen ? 'Đóng toàn bộ cửa' : 'Mở toàn bộ cửa';
+    rebuild();
   });
   on('vOverview', 'click', overviewView);
   on('vTop', 'click', topView);
