@@ -9,7 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -153,6 +153,11 @@ export function init(){
       const {x,y,w,h} = pp.rect;
       el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.max(w,h)/2)+2,fill:'#5d5a52'},gSky);
     }
+    /* Xà gồ — các thanh mảnh dưới tấm tôn, vuông góc chiều dốc. Vẽ trước dầm để dầm biên vẫn đọc rõ. */
+    for(const p of purlinsOf(V)){
+      const {x,y,w,h} = p.rect;
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'#73787a',fill_opacity:.7},gSky);
+    }
     /* Dầm biên — dải xám mờ dưới mép mái, nằm trên đầu nên không đậm như tường. */
     for(const b of beamsOf(V)){
       const {x,y,w,h} = b.rect;
@@ -232,11 +237,12 @@ export function init(){
           if(horiz) el('rect',{x:M(x+sc-sl/2),y:M(y+.08),width:M(sl),height:M(h-.16),rx:4},gF);
           else      el('rect',{x:M(x+.08),y:M(y+sc-sl/2),width:M(w-.16),height:M(sl),rx:4},gF);
         }
-      } else if(k==='desk'){                       // bàn làm việc: mặt bàn áp tường phải + ghế
-        const dw = 0.60;
-        fr(x+w-dw, y, dw, h, {fill:'#f6f4ee'});
-        el('line',{x1:M(x+w-dw+0.15),y1:M(y),x2:M(x+w-dw+0.15),y2:M(y+h),stroke:'#cfcfcf'},gF);
-        el('rect',{x:M(x+w-dw-0.62),y:M(y+h/2-0.24),width:M(0.48),height:M(0.48),rx:7},gF);
+      } else if(k==='desk'){                       // bàn làm việc áp tường phải
+        fr(x, y, w, h, {fill:'#f6f4ee'});
+        el('line',{x1:M(x+.15),y1:M(y),x2:M(x+.15),y2:M(y+h),stroke:'#cfcfcf'},gF);
+      } else if(k==='chair'){                      // ghế làm việc rời, tựa quay về phía bàn
+        fr(x, y, w, h, {fill:'#e7e4dc'});
+        el('line',{x1:M(x+.07),y1:M(y),x2:M(x+.07),y2:M(y+h),stroke:'#aaa69d',stroke_width:2},gF);
       } else if(k==='dine'){
         fr(x,y,w,h);
         for(let i=0;i<3;i++){ fr(x-0.42,y+0.25+i*0.7,0.36,0.45); fr(x+w+0.06,y+0.25+i*0.7,0.36,0.45); }
@@ -682,7 +688,8 @@ export function init(){
   <tr><td>Hộp có vòng tròn</td><td>Lavabo</td></tr>
   <tr><td>Ô xanh có gạch chéo</td><td>Khu vực sen tắm</td></tr>
   <tr><td>Dải dài + 2 vòng tròn</td><td>Kệ bếp — 2 vòng tròn là bếp nấu, ô bo góc là chậu rửa</td></tr>
-  <tr><td>Chữ nhật hẹp + ô vuông bo</td><td>Bàn làm việc và ghế</td></tr>
+  <tr><td>Chữ nhật hẹp có vạch</td><td>Bàn làm việc</td></tr>
+  <tr><td>Ô vuông bo có tựa</td><td>Ghế làm việc</td></tr>
   <tr><td>Chữ nhật + 6 ghế</td><td>Bàn ăn</td></tr>
   <tr><td>Vòng tròn + 4 ghế</td><td>Bàn ngoài sân</td></tr>
 

@@ -27,7 +27,7 @@ export default function Plan3D() {
           <button id="vOverview">Toàn cảnh</button>
           <button id="vTop">Từ trên xuống</button>
           <button id="vRoof">Ẩn mái</button>
-          <button id="vWalk" title="Đứng trong hành lang để cảm nhận tỉ lệ đứng">
+          <button id="vWalk" title="Bắt đầu từ cổng chính, đi vào nhà bằng W A S D">
             Đi bộ trong nhà
           </button>
           <Link className="nav" href="/">← Về bản vẽ 2D</Link>

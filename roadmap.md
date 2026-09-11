@@ -479,7 +479,10 @@ trà. Phương án 3 cột ở chỗ nối mái bị bỏ: nhịp 6–7 m phải
       cột hay dầm khác. Phép 13 cho qua mươi phân tôn đua qua dầm ra trên đỉnh tường bao (không có máng)
 - [x] Phá thử dầm: bỏ hết dầm ngang → phép 18 báo đủ 5 đoạn mép không có dầm; hạ mặt trên dầm 5 cm → phép 18
       báo dầm không chạm mái; bỏ cắt máng ở mặt cột → phép 18 báo đầu dầm không gối lên cột góc
-- [ ] Xà gồ chưa dựng — tấm tôn vẫn vượt liền từ tường sang dầm
+- [x] **Xà gồ mái sân chính** — `RF1.purlins:true` suy ra 4 thanh thép hộp 40 × 80 ở `y` 13.20,
+      14.40, 15.60, 16.80 (bước 1.20 m), chạy vuông góc dốc từ tường phòng khách tới mặt dầm dọc
+      tường rào; nhịp thực 4.365 m. Dựng 2D/3D, in đặc tả; phép 19 soi cốt chạm tôn, gối hai đầu,
+      nhịp và bước. Tiết diện thi công vẫn cần kỹ sư kết cấu chốt theo tải thực.
 
 > **Vấp ở dầm:** bản đầu cho dầm dọc tường rào nội suy thẳng hai đầu nên nằm phẳng 3.50 dưới nóc 3.85 của mái
 > hành lang — cột giữa ra 3.40 thay vì 3.745. Rồi máng chạy xuyên qua tuyến dầm ở góc WC khách làm dầm gãy bậc,
@@ -523,6 +526,8 @@ nhà nên bước ra sân thì lửng lơ 45 cm. Hoãn ngày 10/9/2026, chủ nh
 - [x] `check-3d` thêm **phép kiểm 16**: đi thử qua mọi cửa và cổng cả hai chiều bằng chính `lib/walk.js`,
       tới nơi phải đứng đúng cốt sàn phòng bên kia; đi thẳng vào từng mảnh tường nhà thì phải bị chặn
 - [x] Phá thử: tắt va chạm → phép 16 báo xuyên tường; bỏ dựng bậc → D1, D2, D13 báo vướng
+- [x] Điểm khởi tạo nút **Đi bộ trong nhà** ở ngay phía trong cổng chính, nhìn vào sân; suy từ cổng
+      khai trong từng phương án (bản cũ có cổng xe + cổng bộ thì ưu tiên cổng bộ), không ghim toạ độ
 
 > **Vấp: kẹt sau khi bước xuống.** Bản đầu soi mỗi vị trí mới xem có vật cản trong tầm bán kính
 > không. Vừa bước khỏi ngưỡng 0.45 xuống sân thì mép ngưỡng sau lưng thành vật cao hơn tầm bước, vẫn

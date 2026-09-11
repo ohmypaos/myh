@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 11:32:25 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 11:52:06 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -156,6 +156,15 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF4 | x = 9.50 | 18.00 | 21.50 | 3.50 | 3.50 → 3.85 | nghiêng theo mái |
 | RF4 | x = 9.50 | 21.50 | 25.00 | 3.50 | 3.85 → 3.50 | nghiêng theo mái |
 
+**Xà gồ** — thép hộp 40 × 80, đặt vuông góc chiều dốc, mặt trên chạm mặt dưới tôn. Số hàng suy ra để bước dọc mái không quá 1.20 m; mỗi thanh dừng ở mặt tường hoặc dầm biên, nhịp không quá 4.50 m.
+
+| Mái | Mã | Tuyến | Từ | Đến | Nhịp | Mặt trên |
+|---|---|---|---:|---:|---:|---:|
+| RF1 | RF1-P1 | y = 13.20 | 5.11 | 9.47 | 4.36 | 3.02 |
+| RF1 | RF1-P2 | y = 14.40 | 5.11 | 9.47 | 4.36 | 3.14 |
+| RF1 | RF1-P3 | y = 15.60 | 5.11 | 9.47 | 4.36 | 3.26 |
+| RF1 | RF1-P4 | y = 16.80 | 5.11 | 9.47 | 4.36 | 3.38 |
+
 ### Tường xây lên hết chiều cao nhà
 
 Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dưới đây khai riêng dù chỉ áp vào sân.
@@ -223,7 +232,10 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | cab | 0.30 | 24.60 | 0.45 | 0.45 |
 | cab | 0.30 | 27.20 | 0.45 | 0.45 |
 | cab | 1.80 | 24.15 | 1.80 | 0.55 |
-| desk | 3.55 | 25.00 | 1.30 | 1.50 |
+| desk | 4.25 | 25.49 | 0.60 | 1.20 |
+| desk | 4.25 | 26.69 | 0.60 | 1.20 |
+| chair | 3.55 | 25.85 | 0.48 | 0.48 |
+| chair | 3.55 | 27.05 | 0.48 | 0.48 |
 | kitsink | 5.15 | 24.30 | 2.15 | 0.60 |
 | kithob | 5.15 | 21.90 | 0.60 | 2.40 |
 | wash | 5.20 | 25.20 | 0.65 | 0.65 |
@@ -316,4 +328,6 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
 - **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18, 21.5, 25), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80
 - **Dầm biên thép hộp 50 × 100** dọc mọi mép mái nhẹ không tựa tường — tuyến tường rào phải (nghiêng theo mái, đi qua đầu cột), mép trước mái sân chính, mép dải hở mái sân phơi, hai chỗ nối mái ở góc bếp; ở mép có máng thì dầm lùi vào sau máng. Cột hạ đỉnh xuống đáy dầm
+- **Xà gồ mái sân chính** — 4 thanh thép hộp 40 × 80, bước 1.20 m, chạy vuông góc dốc mái từ tường phòng khách tới dầm dọc tường rào; tấm tôn không còn vượt nhịp trống 4.5 m
+- **Góc làm việc master** — thay bàn 1.3 × 1.5 m bằng 2 bàn 0.6 × 1.2 m nối nhau dọc tường phải, kèm 2 ghế làm việc riêng
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống

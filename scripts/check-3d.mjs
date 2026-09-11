@@ -9,9 +9,9 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, POST, BEAM, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, POST, BEAM, PURLIN, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
-import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness }
+import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf }
   from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
@@ -78,6 +78,7 @@ const CHECKS = [
   'Đi bộ: qua được mọi cửa và cổng cả hai chiều, tới nơi đứng đúng cốt sàn phòng bên kia; không đi xuyên được tường nhà',
   'Nội thất: khối của mỗi món nằm gọn trong chỗ khai và phủ gần trọn nó, chân chạm sàn phòng chứa nó, thấp hơn trần. Cánh cửa: cửa quay 1 cánh, cửa 4 cánh 4 cánh, áp mép lỗ, đứng phía mở, cao đúng đầu cửa',
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
+  'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
 ];
 
 function check(plan){
@@ -700,6 +701,45 @@ function check(plan){
           e.push(`${where}: nhịp ${n(held[i - 1])}–${n(held[i])} dài ${n(held[i] - held[i - 1])} m, quá ${POST.maxSpan} m`);
           break;
         }
+    }
+  }
+
+  /* 19 — xà gồ. Không soi lại trực tiếp `purlinsOf()` để kết luận kết cấu: so khối đã dựng với
+     danh sách suy ra, rồi soi cốt chạm tôn, hai gối và nhịp thực tế. */
+  const purlinBoxes = m.boxes.filter(b => b.kind === 'purlin');
+  const expectedPurlins = purlinsOf(plan);
+  if (purlinBoxes.length !== expectedPurlins.length)
+    e.push(`dựng ${purlinBoxes.length} xà gồ, cần ${expectedPurlins.length}`);
+  const purlinSupports = [...m.boxes.filter(b => /Wall$/.test(b.kind) || b.kind === 'beam'),
+                           ...m.prisms.filter(p => p.kind === 'beam')];
+  for (const p of expectedPurlins) {
+    const b = purlinBoxes.find(q => q.id === p.id);
+    if (!b) { e.push(`thiếu xà gồ ${p.id}`); continue; }
+    const alongX = p.ax === 'h', span = alongX ? b.w : b.d;
+    if (Math.abs(b.x - p.rect.x) > EPS || Math.abs(b.z - p.rect.y) > EPS
+     || Math.abs(b.w - p.rect.w) > EPS || Math.abs(b.d - p.rect.h) > EPS)
+      e.push(`xà gồ ${p.id} dựng lệch tuyến suy ra`);
+    if (Math.abs(b.y1 - p.top) > 1e-3 || Math.abs(b.y1 - b.y0 - PURLIN.depth) > EPS)
+      e.push(`xà gồ ${p.id} sai cao độ / tiết diện`);
+    if (span > PURLIN.maxSpan + EPS)
+      e.push(`xà gồ ${p.id} nhịp ${n(span)} m, quá ${PURLIN.maxSpan} m`);
+    const mid = [b.x + b.w / 2, b.z + b.d / 2];
+    const touchRoof = panels.some(q => q.id === p.roofId && inPlan(q, ...mid)
+      && spanAt(q, q.axis === 'x' ? mid[0] : mid[1])[0] >= b.y1 - EPS
+      && spanAt(q, q.axis === 'x' ? mid[0] : mid[1])[0] - b.y1 < 0.01);
+    if (!touchRoof) e.push(`xà gồ ${p.id} không chạm đúng mặt dưới tôn`);
+    for (const end of alongX ? [b.x, b.x + b.w] : [b.z, b.z + b.d]) {
+      const cross = alongX ? b.z + b.d / 2 : b.x + b.w / 2;
+      const rests = purlinSupports.some(s => {
+        const face = alongX ? Math.abs(end - s.x) < 0.02 || Math.abs(end - (s.x + s.w)) < 0.02
+                            : Math.abs(end - s.z) < 0.02 || Math.abs(end - (s.z + s.d)) < 0.02;
+        const across = alongX ? cross >= s.z - EPS && cross <= s.z + s.d + EPS
+                              : cross >= s.x - EPS && cross <= s.x + s.w + EPS;
+        const sx = alongX ? end : cross, sz = alongX ? cross : end;
+        const cap = s.axis ? spanAt(s, s.axis === 'x' ? sx : sz)[1] : s.y1;
+        return face && across && cap >= b.y0 - 0.01;
+      });
+      if (!rests) e.push(`đầu xà gồ ${p.id} không tựa tường hoặc dầm`);
     }
   }
 

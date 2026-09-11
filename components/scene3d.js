@@ -38,6 +38,7 @@ const COLORS = {
   downpipe:    0x6a716e,     // ống xả đứng áp tường bao
   post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
   beam:        0x55595a,     // dầm biên thép hộp, cùng màu cột
+  purlin:      0x73787a,     // xà gồ dưới tấm tôn, nhỏ hơn dầm biên
   ceiling:     0xe4e0d4,
   dropCeiling: 0xe9e6dc,     // trần giả thạch cao / nhựa
   step:        0xe2dccd,
@@ -208,7 +209,7 @@ export function init(){
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
      được vào trong bếp. Đầu hồi là tường, giữ nguyên. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang'
-                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'ceiling' || k === 'dropCeiling';
+                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }
@@ -307,26 +308,44 @@ export function init(){
 
   const ORBIT_HINT = 'Kéo để xoay · lăn để phóng · giữ chuột phải để dời';
 
+  /* Đi bộ luôn bắt đầu ngay phía trong cổng chính, nhìn vào sân. Không ghim toạ độ: mỗi phương án
+     có bề rộng cổng khác nhau; bản cũ có cổng xe + cổng bộ thì ưu tiên cổng bộ cho người đi. */
+  function gateEntry(plan){
+    const gate = plan.gates.find(g => /CỔNG CHÍNH/i.test(g[4]))
+              || plan.gates.find(g => /CỔNG BỘ/i.test(g[4])) || plan.gates[0];
+    if (!gate) {
+      const p = roomCenter(plan, /HÀNH LANG$/);
+      return { ...p, dx:0, dz:1, label:'hành lang' };
+    }
+    const [ax, pos, a, b, label] = gate, mid = (a + b) / 2, inset = 0.45;
+    if (ax === 'h') {
+      const dz = pos <= LOT.d / 2 ? 1 : -1;
+      return { x:mid, z:pos + dz * inset, dx:0, dz, label };
+    }
+    const dx = pos <= LOT.w / 2 ? 1 : -1;
+    return { x:pos + dx * inset, z:mid, dx, dz:0, label };
+  }
+
   /* Trạng thái đi bộ bám theo sự kiện khoá chuột thật, không tự đoán: requestPointerLock()
      có thể bị trình duyệt từ chối, đoán trước thì kẹt ở chế độ không điều khiển được gì. */
   function enterWalk(plan){
-    const p = roomCenter(plan, /HÀNH LANG$/);
+    const p = gateEntry(plan);
     foot = supportAt(solids, p.x, p.z, LEVELS ? LEVELS.floor : 0.45);
     const y = eyeY = foot + WALK.eye;
 
-    /* Đứng vào hành lang ở cao độ mắt trước, rồi mới xin khoá chuột. Trình duyệt có thể từ
+    /* Đứng ngay trong cổng ở cao độ mắt trước, rồi mới xin khoá chuột. Trình duyệt có thể từ
        chối khoá (thiếu cử chỉ người dùng, iframe không cho) — khi đó vẫn đang đứng đúng chỗ,
-       đúng tầm mắt, chỉ là xoay bằng cách kéo chứ không rê được chuột. Đây là câu hỏi chính
-       của mô hình (3d.md mục 1) nên không được để nó phụ thuộc vào pointer lock. */
+       đúng tầm mắt, chỉ là xoay bằng cách kéo chứ không rê được chuột. Đây là lộ trình tự nhiên
+       để vào nhà, nên không được để nó phụ thuộc vào pointer lock. */
     camera.position.set(p.x, y, p.z);
-    orbit.target.set(p.x, y, p.z + 4);         // nhìn dọc hành lang
+    orbit.target.set(p.x + p.dx * 4, y, p.z + p.dz * 4); // nhìn vào trong lô
     orbit.update();
 
     /* Gọi thẳng requestPointerLock chứ không qua walk.lock(): three bỏ rơi promise, bị từ
        chối là văng lỗi đỏ mà người xem không hiểu chuyện gì. Trả về undefined ở trình duyệt
        cũ nên phải ?.catch. */
     renderer.domElement.requestPointerLock()?.catch(() => {
-      setHtml('hint', 'Trình duyệt không cho khoá chuột — vẫn đứng trong hành lang, '
+      setHtml('hint', `Trình duyệt không cho khoá chuột — vẫn đứng ở ${p.label}, `
                     + 'kéo để nhìn quanh (không đi lại được bằng W A S D)');
     });
   }
@@ -344,7 +363,7 @@ export function init(){
     walking = true;
     orbit.enabled = false;
     document.getElementById('vWalk')?.classList.add('on');
-    setHtml('hint', 'Chuột để nhìn · <b>W A S D</b> để đi · <b>Esc</b> để thoát');
+    setHtml('hint', 'Bắt đầu từ cổng chính · Chuột để nhìn · <b>W A S D</b> để đi · <b>Esc</b> để thoát');
   });
   walk.addEventListener('unlock', () => {
     walking = false;
