@@ -51,7 +51,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
 | A22 | Bồn nước 1000 L trên mái, góc cuối nhà trên ban công sau | ✅ xong | |
 | A23 | Giàn phơi tam giác ngược ở dải hở sân phơi, dọc tường bao sau | ✅ xong | |
-| A24 | Rào mặt tiền và rào sau xây kín 2.20, bỏ lan can — lấy riêng tư | ✅ xong | |
+| A24 | Rào mặt tiền kín 2.10, rào sau kín 1.80, bỏ lan can — lấy riêng tư | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -725,15 +725,18 @@ Chủ nhà muốn (11/9/2026) thêm giàn phơi vào sân phơi, **cạnh nhà W
 Chủ nhà chỉnh (11/9/2026): hai cạnh lộ nhất — mặt tiền quay ra ngõ và cạnh sau quay sang nhà phía sau —
 xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` mục 2a.
 
-- [x] `HEIGHTS.fencePrivate` (có thanh trượt ở trang 3D), bản hiện hành khai đè **2.10**; đoạn khai ở `solidFences` của mặt bằng,
-      cùng dạng với `fullHeightWalls`. `massing.js` cắt đoạn ấy thành một bậc chiều cao riêng: đỉnh lên
-      `fencePrivate`, xây đặc suốt, không sinh lan can
-- [x] Bản hiện hành khai `[['h',0,0,9.5], ['h',30,0,7.9]]` — cạnh sau dừng ở `x` 7.9 vì từ đó ra ranh phải
-      đã là **tường WC khách**, vốn là tường nhà cao tới mái
+- [x] `HEIGHTS.fencePrivate` (có thanh trượt ở trang 3D) làm **đỉnh mặc định**; mỗi đoạn khai được đỉnh
+      riêng ở phần tử thứ 5 của `solidFences`, vì hai cạnh lộ khác nhau thì cần khác cao. `solidFencesOf()`
+      trong `lib/envelope.js` gom lại; `massing.js` cắt mỗi đoạn thành một bậc chiều cao riêng, xây đặc suốt,
+      không sinh lan can
+- [x] Bản hiện hành khai `[['h',0,0,9.5], ['h',30,0,7.9, 1.80]]` — mặt tiền 2.10, **cạnh sau 1.80**; cạnh sau
+      dừng ở `x` 7.9 vì từ đó ra ranh phải đã là **tường WC khách**, vốn là tường nhà cao tới mái
 - [x] `validate()` soi: đoạn khai phải nằm trên một bức tường có thật, và bức ấy phải là **tường rào** —
       không phòng kín nào áp vào. Neo vào lưới như tường nâng
-- [x] `check-3d` phép 14 biết đoạn kín: không thanh lan can nào được đứng trên đoạn ấy, và phần xây không
-      vượt `fencePrivate`; phần rào còn lại vẫn soi theo `fenceSolid` như cũ
+- [x] `check-3d` phép 14 biết đoạn kín: không thanh lan can nào được đứng trên đoạn ấy, và mỗi mảnh tường
+      trên đoạn phải cao **đúng đỉnh khai của chính đoạn ấy** — không hụt cũng không quá; phần rào còn lại
+      vẫn soi theo `fenceSolid` như cũ. Phá thử: dựng cạnh sau cao bằng mặt tiền → báo quá đỉnh khai 1.80;
+      dựng hụt còn 1.20 → báo hụt đỉnh khai
 - [x] Phá thử: vẫn dựng lan can trên đoạn kín → phép 14 báo; khai đoạn kín trên tường nhà (`v 5`, `y` 24–25
       giáp master) → `validate()` báo áp vào phòng kín; khai ở chỗ không có tường → `validate()` báo
 - [x] Đo cái giá bằng chiếu tia trên chính khối đã dựng, ghi vào `warn` và `3d.md` mục 2a
@@ -741,16 +744,19 @@ xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` m�
 > **Phép kiểm bắt lỗi khai ngay lần chạy đầu.** Bản đầu khai cạnh sau suốt `x` 0–9.5; `validate()` báo
 > "áp vào phòng kín" vì đoạn `x` 7.9–9.5 là tường WC khách. Thu về 7.9.
 
-> **Cái giá là nắng mùa đông, không phải nắng hè.** Hè nắng cao nên tường 2.10 không với tới; đông chí thì
-> chỗ giàn phơi mất 40% số giờ nắng (5.7 → 3.4 h) và cửa D12 của master mất 39% (4.6 → 2.8 h) — đúng
-> mùa Bắc Giang cần nắng nhất và đúng chỗ đau nhất, vì master không có nguồn sáng nào khác. Lam chéo hay
-> kính mờ ở đoạn trên 0.80 m sẽ giữ được cả hai; chưa chốt nên chưa dựng.
+> **Chủ nhà chỉnh hai lần, kết cục là hai cạnh khác cao.** Bản đầu cả hai cạnh 2.20 → thấy tường sau cao
+> quá → hạ cả hai còn 2.10 → chốt lại: **chỉ cạnh sau xuống 1.80, mặt tiền giữ 2.10**. Lần chỉnh thứ hai là
+> lần đúng chỗ: hai cạnh ấy lộ theo hai kiểu khác nhau nên không có lý gì cùng một chiều cao. Vì thế đỉnh
+> chuyển từ một số chung sang **khai riêng từng đoạn**.
 
-> **Chủ nhà chỉnh: 2.20 → 2.10.** Thấy tường sau cao quá. Đo lại thì con số quyết định không phải chiều cao
-> tuyệt đối mà là **chiều cao trên sàn ban công**: ban công cao hơn sân 0.45 nên rào `h` chỉ nhô `h − 0.45`
-> ở chỗ cần kín nhất, và chắn tầm mắt người cao 1.70 m đòi `h ≥ 2.03`. 2.10 dư 7 cm, 2.20 dư 17 cm — phần
-> dư ấy không mua thêm được gì mà lấy mất 0.7 h nắng đông chí ở chỗ phơi. Ghi rõ trong `warn`: người cao
-> 1.80 m đứng sát rào ban công vẫn nhìn qua được ở mức 2.10.
+> **Ở 1.80 thì chỗ phơi không mất giờ nắng nào** — bóng đổ phụ thuộc đỉnh rào, không phụ thuộc đặc hay
+> thoáng, mà đỉnh vẫn 1.80 như cũ. Chỗ mất là **D12**: đông chí 4.6 → 3.6 h (−22%), thu phân 3.3 → 2.8 h —
+> đúng phần ánh sáng vốn lọt qua khe lan can. Không tránh được bằng cách hạ thấp hơn nữa.
+
+> **Chiều cao đo từ cốt sân, và đó là chỗ dễ đọc nhầm nhất.** Ban công sau cao hơn sân 0.45 nên rào sau 1.80
+> chỉ nhô **1.35 m** trên sàn ban công — dưới tầm mắt 1.58: ngồi thì kín, **đứng thì nhìn qua được và bị nhìn
+> lại**. Ở sân phơi (cốt bằng sân) thì đủ 1.80, trên tầm mắt. Muốn kín cả khi đứng trên ban công phải ≥ 2.05
+> và lúc ấy chỗ phơi mất ~2 h nắng đông chí — chủ nhà chốt không đổi. Đã ghi rõ trong `warn`.
 
 > **Vấp ở phép 14:** bản đầu nhận diện "thanh lan can nằm trên đoạn rào kín" bằng dung sai 0.12 quanh
 > đường tim, nên vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —

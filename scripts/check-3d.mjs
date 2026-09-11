@@ -12,7 +12,7 @@ import { PLANS } from '../lib/versions/index.js';
 import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -471,8 +471,18 @@ function check(plan){
   });
   const privRail = railBoxes.find(onPriv);
   if (privRail) e.push(`đoạn rào khai xây kín vẫn có thanh lan can quanh x ${n(privRail.x)}, z ${n(privRail.z)}`);
-  const privTall = m.boxes.find(b => b.kind === 'fenceWall' && onPriv(b) && b.y1 > L.fencePrivate + EPS);
-  if (privTall) e.push(`đoạn rào xây kín quanh x ${n(privTall.x)}, z ${n(privTall.z)} cao ${n(privTall.y1)}, quá ${n(L.fencePrivate)}`);
+  /* Mỗi đoạn một đỉnh riêng: mảnh rào trên đoạn nào phải cao đúng đỉnh đoạn ấy — không thấp hơn (hụt kín)
+     cũng không cao hơn. So với chính đỉnh khai, không so với một số chung. */
+  for (const f of solidFencesOf(plan)) {
+    const mine = m.boxes.filter(b => b.kind === 'fenceWall' && (f.ax === 'h'
+      ? Math.abs(b.z + b.d / 2 - f.pos) < 0.06 && b.x + b.w > f.a + EPS && b.x < f.b - EPS
+      : Math.abs(b.x + b.w / 2 - f.pos) < 0.06 && b.z + b.d > f.a + EPS && b.z < f.b - EPS));
+    if (!mine.length) { e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} (${n(f.a)}–${n(f.b)}) không dựng mảnh tường nào`); continue; }
+    const bad = mine.find(b => Math.abs(b.y1 - f.top) > EPS && b.y1 < f.top - EPS);
+    const over = mine.find(b => b.y1 > f.top + EPS);
+    if (over) e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} có mảnh cao ${n(over.y1)}, quá đỉnh khai ${n(f.top)}`);
+    else if (bad) e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} có mảnh chỉ cao ${n(bad.y1)}, hụt đỉnh khai ${n(f.top)}`);
+  }
   if (H.fenceSolid == null) {
     if (railBoxes.length) e.push(`mặt bằng không khai fenceSolid mà có ${railBoxes.length} thanh lan can`);
   } else {
