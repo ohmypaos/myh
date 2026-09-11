@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 09:49:11 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 10:24:09 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -185,10 +185,10 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 | Loại | x | y | Rộng | Sâu |
 |---|---:|---:|---:|---:|
-| sofa | 0.25 | 13.50 | 0.85 | 2.40 |
-| sofa | 3.10 | 14.00 | 0.85 | 1.00 |
-| tbl | 1.50 | 14.40 | 1.30 | 0.80 |
-| cab | 2.20 | 16.40 | 1.80 | 0.50 |
+| sofa | 0.25 | 13.30 | 2.60 | 0.85 |
+| sofa | 0.25 | 14.15 | 0.85 | 1.20 |
+| tbl | 1.40 | 14.55 | 1.30 | 0.80 |
+| cab | 0.11 | 16.45 | 3.89 | 0.50 |
 | altar | 0.15 | 17.15 | 0.60 | 1.70 |
 | bedw | 0.25 | 19.90 | 2.00 | 1.60 |
 | cab | 3.30 | 20.30 | 0.60 | 1.50 |
@@ -207,7 +207,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | wash | 5.20 | 25.20 | 0.65 | 0.65 |
 | wc | 8.05 | 29.10 | 0.42 | 0.68 |
 | lav | 9.00 | 28.95 | 0.40 | 0.60 |
-| round | 6.35 | 15.60 | 1.40 | 1.40 |
+| round | 5.50 | 12.80 | 1.40 | 1.40 |
 
 ---
 
@@ -289,4 +289,6 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Máng xối** chỉ còn ở mép trước mái sân chính và mép thấp mái sân phơi (đoạn áp tường WC khách đặt sát chân tường); mỗi máng một **ống xả** áp mặt trong tường bao phải, xuống ống ngầm chứ không đổ ra sân
 - **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m. Tường bắc và nam bếp dừng ở mép mái, tường đông thành đầu hồi
 - **Mái sân phơi** dốc một mái phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng
-- **Bàn trà dời** từ giữa sân chính vào dưới mái RF1, tránh bậc D2 và vùng quét cánh D2, D9
+- **Bàn trà ngoài sân dời ra sát W1**, thẳng giữa cửa sổ, vẫn dưới mái sân chính — trước đứng chắn lối vào cửa bếp D9
+- **Sofa phòng khách xếp chữ L** ở góc tây bắc, cạnh dài quay về kệ tivi — thay hai ghế đối diện nhau; lối từ cửa chính sang hành lang chừa trống ~2 m phía đông
+- **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
