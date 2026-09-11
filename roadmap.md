@@ -725,7 +725,7 @@ Chủ nhà muốn (11/9/2026) thêm giàn phơi vào sân phơi, **cạnh nhà W
 Chủ nhà chỉnh (11/9/2026): hai cạnh lộ nhất — mặt tiền quay ra ngõ và cạnh sau quay sang nhà phía sau —
 xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` mục 2a.
 
-- [x] `HEIGHTS.fencePrivate` 2.20 (có thanh trượt ở trang 3D); đoạn khai ở `solidFences` của mặt bằng,
+- [x] `HEIGHTS.fencePrivate` (có thanh trượt ở trang 3D), bản hiện hành khai đè **2.10**; đoạn khai ở `solidFences` của mặt bằng,
       cùng dạng với `fullHeightWalls`. `massing.js` cắt đoạn ấy thành một bậc chiều cao riêng: đỉnh lên
       `fencePrivate`, xây đặc suốt, không sinh lan can
 - [x] Bản hiện hành khai `[['h',0,0,9.5], ['h',30,0,7.9]]` — cạnh sau dừng ở `x` 7.9 vì từ đó ra ranh phải
@@ -741,10 +741,16 @@ xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` m�
 > **Phép kiểm bắt lỗi khai ngay lần chạy đầu.** Bản đầu khai cạnh sau suốt `x` 0–9.5; `validate()` báo
 > "áp vào phòng kín" vì đoạn `x` 7.9–9.5 là tường WC khách. Thu về 7.9.
 
-> **Cái giá là nắng mùa đông, không phải nắng hè.** Hè nắng cao nên tường 2.20 không với tới; đông chí thì
-> chỗ giàn phơi mất hơn nửa số giờ nắng (5.7 → 2.7 h) và cửa D12 của master mất 41% (4.6 → 2.7 h) — đúng
+> **Cái giá là nắng mùa đông, không phải nắng hè.** Hè nắng cao nên tường 2.10 không với tới; đông chí thì
+> chỗ giàn phơi mất 40% số giờ nắng (5.7 → 3.4 h) và cửa D12 của master mất 39% (4.6 → 2.8 h) — đúng
 > mùa Bắc Giang cần nắng nhất và đúng chỗ đau nhất, vì master không có nguồn sáng nào khác. Lam chéo hay
 > kính mờ ở đoạn trên 0.80 m sẽ giữ được cả hai; chưa chốt nên chưa dựng.
+
+> **Chủ nhà chỉnh: 2.20 → 2.10.** Thấy tường sau cao quá. Đo lại thì con số quyết định không phải chiều cao
+> tuyệt đối mà là **chiều cao trên sàn ban công**: ban công cao hơn sân 0.45 nên rào `h` chỉ nhô `h − 0.45`
+> ở chỗ cần kín nhất, và chắn tầm mắt người cao 1.70 m đòi `h ≥ 2.03`. 2.10 dư 7 cm, 2.20 dư 17 cm — phần
+> dư ấy không mua thêm được gì mà lấy mất 0.7 h nắng đông chí ở chỗ phơi. Ghi rõ trong `warn`: người cao
+> 1.80 m đứng sát rào ban công vẫn nhìn qua được ở mức 2.10.
 
 > **Vấp ở phép 14:** bản đầu nhận diện "thanh lan can nằm trên đoạn rào kín" bằng dung sai 0.12 quanh
 > đường tim, nên vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —
