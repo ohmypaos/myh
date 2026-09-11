@@ -48,7 +48,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
-| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới ✅, tay vịn khe giữa hai vế, XPS lát rời | 🔵 đang làm | XPS lát rời chờ chủ nhà quyết |
+| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới ✅, tay vịn khe giữa hai vế ✅, XPS lát rời | ⏸ chờ quyết | XPS lát rời chờ chủ nhà quyết |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -597,7 +597,7 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
       diềm và ô văng. Đã cân nhắc tường chắn mái (máng giấu dễ tắc lá) và mái bê tông (nặng, khó dỡ)
 - [x] Chủ nhà chốt, commit
 
-### ⬜ A21 · Việc tồn sau A20
+### ⏸ A21 · Việc tồn sau A20
 
 - [x] **Neo thang, tum, lan can mái vào lưới (E2).** Trước đó kéo thanh trượt `y` 16.85 hay `y` 19 thì cả ba
       đứng yên, tách khỏi phòng
