@@ -2,16 +2,16 @@
  *
  *   npm run check:3d
  *
- * 13 phép kiểm trong lib/plan.js chỉ soi mặt bằng 2D. Khối 3D do lib/massing.js sinh ra thì
+ * 15 phép kiểm trong lib/plan.js chỉ soi mặt bằng 2D. Khối 3D do lib/massing.js sinh ra thì
  * chưa có gì canh — mà nó cắt tường theo lỗ mở và khoét mái theo giếng trời, đúng loại việc
  * dễ sai lặng lẽ: thiếu một mảnh hay chồng hai mảnh thì ảnh vẫn trông bình thường.
  *
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
-import { openingFloor, stepsOf } from '../lib/envelope.js';
+import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect } from '../lib/envelope.js';
 
 const EPS = 1e-6;
 const AREA_EPS = 1e-4;
@@ -22,18 +22,54 @@ const boxArea = b => b.w * b.d;
 /* Nửa bề dày tường dày nhất — tường bao nằm trên tim lô nên hộp thò ra ngoài đúng chừng đó. */
 const outset = plan => Math.max(0, ...plan.walls.map(w => w[4])) / 2;
 
+/* Cao độ [mặt dưới, mặt trên] của một khối tại toạ độ `u` dọc trục nghiêng. Hộp thẳng trục thì
+   ở đâu cũng như nhau; lăng trụ mái dốc thì nội suy tuyến tính giữa hai đầu. */
+function spanAt(b, u){
+  if (!b.axis) return [b.y0, b.y1];
+  const [a0, a1] = b.axis === 'x' ? [b.x, b.x + b.w] : [b.z, b.z + b.d];
+  const f = a1 - a0 > EPS ? Math.min(1, Math.max(0, (u - a0) / (a1 - a0))) : 0;
+  return [b.yb[0] + (b.yb[1] - b.yb[0]) * f, b.yt[0] + (b.yt[1] - b.yt[0]) * f];
+}
+
+/* Hai khối đâm vào nhau bao nhiêu. Hai hộp thẳng trục thì trả về **thể tích** phần chồng như
+   trước; có mặt nghiêng thì hộp bao không nói được gì, phải chia nhỏ dọc trục nghiêng và trả về
+   **độ đâm sâu** theo phương đứng — chạm mặt (mái gá đúng lên đỉnh tường) ra 0, không tính là
+   chồng. Mọi mái trong dự án chỉ dốc theo một trục nên không phải xét lưới hai chiều. */
+function penetration(a, b){
+  const ox = overlap(a.x, a.x + a.w, b.x, b.x + b.w);
+  const oz = overlap(a.z, a.z + a.d, b.z, b.z + b.d);
+  if (ox <= EPS || oz <= EPS) return 0;
+  const flat = overlap(a.y0, a.y1, b.y0, b.y1);
+  if (!a.axis && !b.axis) return Math.max(0, ox * oz * flat);
+  if (flat <= 0) return 0;
+  /* Hai mặt nghiêng khác trục thì không có ở đây; nếu có, so bằng hộp bao cho an toàn. */
+  if (a.axis && b.axis && a.axis !== b.axis) return flat;
+  const axis = a.axis || b.axis;
+  const [c0, c1] = axis === 'x'
+    ? [Math.max(a.x, b.x), Math.min(a.x + a.w, b.x + b.w)]
+    : [Math.max(a.z, b.z), Math.min(a.z + a.d, b.z + b.d)];
+  let deep = 0;
+  for (let i = 0; i <= 200; i++) {
+    const u = c0 + (c1 - c0) * i / 200;
+    const [al, ah] = spanAt(a, u), [bl, bh] = spanAt(b, u);
+    deep = Math.max(deep, Math.min(ah, bh) - Math.max(al, bl));
+  }
+  return deep;
+}
+
 const CHECKS = [
-  'Mọi hộp có bề rộng, bề sâu và chiều cao dương',
-  'Không hộp nào thò ra ngoài lô quá nửa bề dày tường',
-  'Không hộp nào cao quá đỉnh mái nhà',
+  'Mọi khối có bề rộng, bề sâu và chiều cao dương',
+  'Không khối nào thò ra ngoài lô quá nửa bề dày tường',
+  'Không khối nào cao quá đỉnh cao nhất của thiết kế',
   'Mảnh tường trên cùng một đường tim không chồng nhau',
   'Mỗi lỗ mở thật sự thủng — không mảnh tường nào che tâm lỗ',
-  'Diện tích mái bằng phòng kín trừ đúng phần giếng trời',
+  'Mái che kín đúng phòng kín trừ phần giếng trời — bản bê tông hoặc trần tôn',
   'Các mảnh mái không chồng lên nhau',
   'Kính giếng trời nằm đúng cao độ trần',
   'Bậc cần có đều dựng được, đều nhau, bậc cao nhất áp mặt tường cửa và thấp hơn ngưỡng đúng một nấc',
   'Không hai khối đặc nào chồng lên nhau — chồng là có mặt trùng, nhấp nháy khi xoay',
   'Góc tường kín — chỗ hai tường gặp nhau không khuyết ô nửa bề dày',
+  'Mái nhẹ gá thấp dưới mái kề nó, và không hạ xuống dưới đầu lỗ mở nào nó phủ',
 ];
 
 function check(plan){
@@ -41,7 +77,7 @@ function check(plan){
   const m = buildMassing(plan);
   const H = heightsOf(plan);
   const L = levels(H);
-  const all = [...m.boxes, ...m.glass];
+  const all = [...m.boxes, ...m.glass, ...m.prisms];
   const out = outset(plan);
   const n = x => +x.toFixed(4);
 
@@ -59,10 +95,13 @@ function check(plan){
       e.push(`hộp ${b.kind} thò ra ngoài lô: x ${n(b.x)}…${n(b.x + b.w)}, z ${n(b.z)}…${n(b.z + b.d)}`);
   }
 
-  /* 3 — cao quá đỉnh mái. */
+  /* 3 — cao quá đỉnh thiết kế. Không còn là đỉnh mái nhà: nóc mái tôn bếp cố ý nhô cao hơn mặt
+     mái bê tông. Mốc suy từ **số khai** (đỉnh mái nhà, nóc mái nhẹ cao nhất cộng bề dày tấm lợp)
+     chứ không lấy từ khối đã dựng — lấy từ khối dựng thì phép kiểm tự nói đúng mọi lúc. */
+  const design = Math.max(L.houseTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet));
   for (const b of all)
-    if (b.y1 > L.houseTop + EPS)
-      e.push(`hộp ${b.kind} cao ${n(b.y1)} > đỉnh mái ${n(L.houseTop)}`);
+    if (b.y1 > design + EPS)
+      e.push(`hộp ${b.kind} cao ${n(b.y1)} > đỉnh thiết kế ${n(design)}`);
 
   /* 4 — mảnh tường chồng nhau. Chỉ soi các mảnh nằm trên cùng một đường tim: hai bức tường
      vuông góc thì đương nhiên chồng nhau ở góc, đó không phải lỗi. */
@@ -115,14 +154,26 @@ function check(plan){
   /* 6 — diện tích mái. Bắt được cả mảnh thiếu lẫn mảnh chồng của phép khoét giếng trời. */
   const enclosed = plan.rooms.filter(r => r[6] !== 'yard' && r[0] !== 'R3');
   let want = 0;
-  for (const [, , x, y, w, h] of enclosed) {
-    want += w * h;
+  for (const r of enclosed) {
+    /* Phòng lợp mái nhẹ được che bằng trần tôn, mà trần tôn bắt vào mặt trong tường nên chỉ
+       phủ phần lọt lòng — tính theo đúng chữ nhật ấy. */
+    const c = roofOver(plan, r) ? clearRect(plan, r)
+                                : { x: r[2], y: r[3], w: r[4], h: r[5] };
+    want += c.w * c.h;
     for (const [, , sx, sy, sw, sh] of plan.skylights)
-      want -= overlap(x, x + w, sx, sx + sw) * overlap(y, y + h, sy, sy + sh);
+      want -= overlap(c.x, c.x + c.w, sx, sx + sw) * overlap(c.y, c.y + c.h, sy, sy + sh);
   }
-  const got = m.boxes.filter(b => b.kind === 'roof').reduce((s, b) => s + boxArea(b), 0);
+  /* Bếp lợp tôn nên không có bản bê tông, nhưng vẫn phải được che kín: trần tôn tính vào đây,
+     và phòng nào có mái nhẹ phủ mà thiếu trần thì lộ ra ở tổng diện tích. */
+  const got = m.boxes.filter(b => b.kind === 'roof' || b.kind === 'ceiling')
+                     .reduce((s, b) => s + boxArea(b), 0);
   if (Math.abs(got - want) > AREA_EPS)
-    e.push(`diện tích mái ${n(got)} ≠ phòng kín trừ giếng trời ${n(want)}`);
+    e.push(`mái + trần ${n(got)} ≠ phòng kín trừ giếng trời ${n(want)}`);
+  for (const r of enclosed) {
+    const light = roofOver(plan, r);
+    if (light && light.ceiling === undefined)
+      e.push(`${r[0]} ${r[1]} lợp mái nhẹ ${light.id} mà mái không khai cốt trần`);
+  }
 
   /* 7 — mảnh mái chồng nhau. Tổng diện tích có thể vẫn đúng nếu chỗ chồng bù chỗ thiếu, nên
      phải soi từng cặp chứ không tin mỗi phép 6. */
@@ -177,16 +228,19 @@ function check(plan){
 
   /* 10 — hai khối đặc không được chồng lên nhau. Chồng nhau là có mặt trùng nhau, và mặt trùng
      thì card đồ hoạ vẽ lúc mặt này lúc mặt kia — mái nhấp nháy như bị tường xuyên qua khi xoay.
-     Sàn và nền không tính: sàn lọt trong chân tường, không có mặt nào lộ ra trùng. */
-  const solid = m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground');
+     Sàn và nền không tính: sàn lọt trong chân tường, không có mặt nào lộ ra trùng.
+     Mái tôn dốc và đầu hồi có mặt nghiêng nên đo bằng độ đâm sâu (penetration) chứ không phải
+     thể tích hộp bao — hộp bao của một mặt dốc chồng lên hàng xóm là chuyện thường. */
+  const solid = [...m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground'), ...m.prisms];
   let clashes = 0;
   for (let i = 0; i < solid.length; i++)
     for (let j = i + 1; j < solid.length; j++) {
       const a = solid[i], b = solid[j];
-      const ov = overlap(a.x, a.x + a.w, b.x, b.x + b.w) * overlap(a.z, a.z + a.d, b.z, b.z + b.d)
-               * overlap(a.y0, a.y1, b.y0, b.y1);
-      if (ov > 1e-6 && clashes++ < 3)
-        e.push(`${a.kind} và ${b.kind} chồng nhau ${n(ov)} m³ quanh x ${n(Math.max(a.x, b.x))}, z ${n(Math.max(a.z, b.z))}`);
+      const ov = penetration(a, b);
+      const bad = a.axis || b.axis ? ov > 1e-4 : ov > 1e-6;
+      if (bad && clashes++ < 3)
+        e.push(`${a.kind} và ${b.kind} chồng nhau ${a.axis || b.axis ? `${n(ov)} m` : `${n(ov)} m³`}`
+             + ` quanh x ${n(Math.max(a.x, b.x))}, z ${n(Math.max(a.z, b.z))}`);
     }
   if (clashes > 3) e.push(`… tổng cộng ${clashes} cặp khối chồng nhau`);
 
@@ -222,6 +276,44 @@ function check(plan){
       }
     }
   if (gaps.size) e.push(`góc tường khuyết ở ${[...gaps].slice(0, 4).join('; ')}${gaps.size > 4 ? ` … (${gaps.size} góc)` : ''}`);
+
+  /* 12 — mái nhẹ. Hai chuyện dễ sai khi kéo thanh trượt hay chỉnh cao độ mái:
+     a) hai mái gặp nhau ngang cốt — nước mái trên đổ thẳng vào mép mái dưới, không có chỗ đặt
+        máng xối. Mái bàn trà và mái sân phơi đều phải gá **thấp hẳn** dưới mép mái bếp.
+     b) mái tụt xuống dưới đầu một lỗ mở nó phủ — bịt mất cửa. */
+  const panels = m.prisms.filter(p => p.kind === 'metalRoof');
+  const sideBySide = (a, b) => {
+    const dx = Math.max(a.x - (b.x + b.w), b.x - (a.x + a.w));
+    const dz = Math.max(a.z - (b.z + b.d), b.z - (a.z + a.d));
+    return dx < 0.2 && dz < 0.2 && (dx > -EPS || dz > -EPS);
+  };
+  for (let i = 0; i < panels.length; i++)
+    for (let j = i + 1; j < panels.length; j++) {
+      const a = panels[i], b = panels[j];
+      if (a.id === b.id || !sideBySide(a, b)) continue;
+      const lo = Math.max(...a.yt), hi = Math.min(...b.yb);
+      const lo2 = Math.max(...b.yt), hi2 = Math.min(...a.yb);
+      if (!(lo < hi - EPS || lo2 < hi2 - EPS))
+        e.push(`mái ${a.id} và ${b.id} gặp nhau ngang cốt — không mái nào gá thấp hẳn dưới mái kia`);
+    }
+  const heads = [
+    ...plan.doors.filter(d => d[5] !== 'open')
+      .map(d => ({ id: d[0], ax: d[1], pos: d[2], a: d[3], b: d[4],
+                   head: base(d) + ((H.only[d[0]] || {}).door ?? H.door) })),
+    ...plan.windows
+      .map(w => ({ id: w[0], ax: w[1], pos: w[2], a: w[3], b: w[4],
+                   head: base(w) + ((H.only[w[0]] || {}).head ?? H.head) })),
+  ];
+  for (const o of heads) {
+    const mid = (o.a + o.b) / 2;
+    const px = o.ax === 'h' ? mid : o.pos, pz = o.ax === 'h' ? o.pos : mid;
+    for (const p of panels) {
+      if (px < p.x - EPS || px > p.x + p.w + EPS || pz < p.z - EPS || pz > p.z + p.d + EPS) continue;
+      const [under] = spanAt(p, p.axis === 'x' ? px : pz);
+      if (under < o.head - EPS)
+        e.push(`mái ${p.id} ở cốt ${n(under)} thấp hơn đầu ${o.id} (${n(o.head)})`);
+    }
+  }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

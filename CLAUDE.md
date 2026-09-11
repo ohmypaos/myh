@@ -17,11 +17,11 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `MIN_CLEAR` |
-| `lib/plan.js` | Diện tích thông thủy và **14 phép kiểm** `validate()` |
-| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần), `MIN_CLEAR` |
+| `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
+| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
-| `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D. Hình học thuần, không dính three.js |
+| `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D: `boxes` hộp thẳng trục và `prisms` lăng trụ mặt nghiêng (mái tôn dốc, đầu hồi). Hình học thuần, không dính three.js |
 | `lib/sun.js` | Vị trí mặt trời (NOAA) |
 | `components/draw2d.js` · `scene3d.js` | Bộ vẽ. Không dính React — React chỉ dựng DOM rỗng rồi gọi `init()` |
 | `components/Plan2D.jsx` · `Plan3D.jsx` | Khung DOM cho hai bộ vẽ trên |
@@ -54,7 +54,7 @@ trong cùng bản vẽ. Không sửa, trừ khi đó là **lỗi của chính b�
 
 **1. Sửa `lib/versions/current.js`.**
 File là một snapshot đầy đủ (rooms, walls, doors, windows, skylights, gates, strips, furn,
-dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
+roofs, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
 mới — đó là phần hiện trên cột phải của bản vẽ.
 
 **2. Chạy bộ kiểm tra — phải sạch trước khi đi tiếp.**
@@ -80,7 +80,12 @@ Một thay đổi thiết kế = một commit gồm đủ: `lib/versions/current
 ## Trang 3D
 
 Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào từng file mặt bằng; phương
-án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên. `lib/massing.js`
+án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên.
+
+**Mái phụ lợp tôn** khai ở `roofs` của mặt bằng: vùng phủ theo tim tường, dạng (`flat`, `mono:y`,
+`gable:y`) và cao độ **mặt dưới**; độ dốc suy từ cao độ với nhịp, không khai tay. Mái trùm trọn
+một phòng kín thì phòng đó bỏ bản bê tông, thay bằng trần tôn ở cốt `ceiling`, và đỉnh các bức
+tường chỉ đỡ phòng ấy tự bám mặt dưới mái — đầu hồi tam giác ra theo, không khai. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (tường
 trái ban công sau, đỡ trần ban công). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
@@ -93,18 +98,14 @@ riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của t
 Suy ra: cạnh sau lô (ban công sau, sân phơi) quay **Tây Nam** — nắng chiều gắt;
 cạnh phải (bếp, hành lang ngoài) quay **Đông Nam**; tường bao trái quay **Tây Bắc**.
 
-## Đã chốt, chưa vào dữ liệu
+## Đã chốt, không nằm trong mô hình
 
-Chủ nhà chốt ngày 10/9/2026, việc đưa vào `lib/versions/current.js` là A4 trong `roadmap.md`.
+Hai việc chống nóng chủ nhà chốt ngày 10/9/2026 **không đổi hình khối** nên không có gì để dựng —
+chúng sống trong `warn` của mặt bằng và trong `3d.md` mục 2c, đừng tưởng là còn thiếu:
 
-- **Mái bàn trà ở sân chính** — mái che xe ở sân phụ đã bỏ hẳn, cửa chính thay bằng mái hiên
-  bê tông (đã vào dữ liệu). Xem `3d.md` mục 3.
-- **Sơn chống nóng tường trái** lúc xây và **lát lớp chống nóng mái** — không đổi hình khối,
-  không phải sửa mô hình. Xem `3d.md` mục 2c.
-- **Bếp lợp tôn hai mái + trần tôn**, không đổ mái bê tông. `lib/massing.js` hiện chỉ sinh hộp
-  thẳng trục nên chưa dựng được mái dốc. Xem `3d.md` mục 3a.
-- **Mái sân phơi** — tôn dốc một mái phủ `y` 25–28, chừa dải hở thẳng hàng ban công. Xem `3d.md`
-  mục 3b.
+- **Sơn chống nóng mặt ngoài tường trái** ngay lúc xây, khi lô bên cạnh còn trống.
+- **Lát lớp chống nóng trên sàn mái bê tông** nhà chính, kể cả phần trần ban công sau.
+
 Chi tiết và trạng thái từng việc: `roadmap.md`.
 
 <!-- BEGIN:nextjs-agent-rules -->

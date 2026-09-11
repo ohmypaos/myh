@@ -1,5 +1,5 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
-   Nó đã qua 13 phép kiểm và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
+   Nó đã qua bộ kiểm tra và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
 import { LOT } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
@@ -9,7 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -128,6 +128,36 @@ export function init(){
       const {x,y,w,h} = o.rect;
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'none',
         stroke:'#6f6a5e',stroke_width:2.4,stroke_dasharray:'3 7'},gSky);
+    }
+  }
+
+  /* Mái nhẹ — nằm trên đầu nên vẽ viền chấm như mái hiên, thêm vạch nóc và mũi tên chỉ chiều
+     nước chảy. Vẽ theo tấm đã dựng (lib/envelope.js) chứ không theo vùng khai: mép mái lùi vào
+     hay đua ra theo tường, khác nhau tới cả gang tay. */
+  function drawRoofs(){
+    const seen = new Set();
+    for(const p of roofPanels(V)){
+      const x=Math.min(p.x0,p.x1), y=Math.min(p.y0,p.y1), w=Math.abs(p.x1-p.x0), h=Math.abs(p.y1-p.y0);
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'none',
+        stroke:'#6f6a5e',stroke_width:2,stroke_dasharray:'10 7'},gSky);
+      /* Chiều dốc: mũi tên chạy từ mép cao xuống mép thấp, giữa tấm. */
+      if(p.axis && Math.abs(p.yb[1]-p.yb[0])>0.001){
+        const down = p.yb[1] < p.yb[0];
+        const [c0,c1] = p.axis==='x' ? [p.x0,p.x1] : [p.y0,p.y1];
+        const [s,e] = down ? [c0,c1] : [c1,c0];
+        const mid = p.axis==='x' ? (p.y0+p.y1)/2 : (p.x0+p.x1)/2;
+        const pt = t => p.axis==='x' ? [M(t),M(mid)] : [M(mid),M(t)];
+        const [x1,y1]=pt(s+(e-s)*0.25), [x2,y2]=pt(s+(e-s)*0.75);
+        el('line',{x1,y1,x2,y2,stroke:'#8d8778',stroke_width:2},gSky);
+        const ux=(x2-x1), uy=(y2-y1), L=Math.hypot(ux,uy)||1, nx=ux/L*22, ny=uy/L*22;
+        el('path',{d:`M${x2} ${y2}l${-nx-ny*0.5} ${-ny+nx*0.5}M${x2} ${y2}l${-nx+ny*0.5} ${-ny-nx*0.5}`,
+          stroke:'#8d8778',stroke_width:2,fill:'none'},gSky);
+      }
+      if(seen.has(p.id)) continue;              // mái hai mái: nhãn một lần ở tấm đầu
+      seen.add(p.id);
+      const t=el('text',{x:M(x+w/2),y:M(y)+26,font_size:18,text_anchor:'middle',fill:'#6f6a5e',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gSky);
+      t.textContent=p.name;
     }
   }
 
@@ -482,7 +512,8 @@ export function init(){
                font_size:17,text_anchor:'middle'});
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
-    drawRooms(); drawSteps(); drawWalls(); drawSkylights(); drawOverhangs(); drawFurniture();
+    drawRooms(); drawSteps(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs();
+    drawFurniture();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
   }

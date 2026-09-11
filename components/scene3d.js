@@ -30,6 +30,8 @@ const COLORS = {
   roof:        0xc9c2b2,
   alleyRoof:   0xbdb6a6,
   overhang:    0xc9c2b2,
+  metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
+  ceiling:     0xe4e0d4,
   step:        0xe2dccd,
   glass:       0xa9cfe0,
 };
@@ -141,6 +143,30 @@ export function init(){
     return m;
   }
 
+  /* Lăng trụ mặt nghiêng — mái tôn dốc và đầu hồi tam giác của bếp (lib/massing.js). Hộp co
+     giãn không dựng được vì bốn góc khác cao độ. Dựng không chỉ mục (36 đỉnh) để mỗi mặt
+     phẳng lì: dùng chung đỉnh thì pháp tuyến bị trung bình hoá, mái dốc trông như bị bẻ. */
+  function prismGeometry(p){
+    const x0 = p.x, x1 = p.x + p.w, z0 = p.z, z1 = p.z + p.d;
+    /* i = 0/1 là đầu nhỏ / đầu lớn của trục nghiêng; hai đầu kia dùng chung cao độ. */
+    const lvl = (ix, iz, top) => (top ? p.yt : p.yb)[p.axis === 'x' ? ix : iz];
+    const c = (ix, iz, top) => [ix ? x1 : x0, lvl(ix, iz, top), iz ? z1 : z0];
+    const A = c(0,0,0), B = c(1,0,0), C = c(1,1,0), D = c(0,1,0);
+    const a = c(0,0,1), b = c(1,0,1), d = c(1,1,1), e = c(0,1,1);
+    const tri = [
+      A,B,C,  A,C,D,           // đáy (pháp tuyến −y)
+      a,d,b,  a,e,d,           // mặt trên
+      A,a,B,  a,b,B,           // mặt z nhỏ
+      D,C,e,  C,d,e,           // mặt z lớn
+      A,D,a,  D,e,a,           // mặt x nhỏ
+      B,b,C,  b,d,C,           // mặt x lớn
+    ];
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(tri.flat(), 3));
+    g.computeVertexNormals();
+    return g;
+  }
+
   function build(plan){
     if (group) {
       scene.remove(group);
@@ -148,9 +174,16 @@ export function init(){
     }
     const massing = buildMassing(plan);
     LEVELS = massing.levels;
+    BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes)
       group.add(box(b, solidMats[b.kind] || solidMats.houseWall, b.kind));
+    for (const p of massing.prisms) {
+      const m = new THREE.Mesh(prismGeometry(p), solidMats[p.kind] || solidMats.houseWall);
+      m.castShadow = m.receiveShadow = true;
+      m.userData.kind = p.kind;
+      group.add(m);
+    }
     for (const b of massing.glass) {
       const m = box(b, glassMat, 'glass');
       m.castShadow = false;                    // kính không đổ bóng: để vệt nắng lọt xuống
@@ -160,7 +193,10 @@ export function init(){
     applyRoofHidden();
   }
 
-  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang';
+  /* "Ẩn mái" phải giấu cả mái tôn và trần tôn của bếp, không thì bấm xong vẫn không nhìn được
+     vào trong bếp. Đầu hồi là tường, giữ nguyên. */
+  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang'
+                   || k === 'metalRoof' || k === 'ceiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }
@@ -223,7 +259,8 @@ export function init(){
     return r ? new THREE.Vector3(r[2] + r[4] / 2, 0, r[3] + r[5] / 2) : CENTER.clone();
   }
 
-  /* Khung bao cả lô, kể cả mái. */
+  /* Khung bao cả lô, kể cả mái. Chiều cao lấy đỉnh thật của phương án đang mở (`levels.top`) —
+     nóc mái tôn bếp nhô trên mái bê tông nên ghim một con số là hụt mất chỏm. */
   const BOUNDS = new THREE.Box3(new THREE.Vector3(0, 0, 0),
                                 new THREE.Vector3(LOT.w, 4.2, LOT.d));
 

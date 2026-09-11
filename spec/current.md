@@ -1,11 +1,11 @@
-# Đặc tả mặt bằng — Hiện hành — ban công 2 m, bếp chữ L
+# Đặc tả mặt bằng — Hiện hành — ba mái tôn phụ, bếp lợp tôn
 
-> Sinh tự động từ `lib/versions/current.js` lúc 01:11:48 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 01:42:37 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Ban công sau nới lên 2.0 m. Bếp thêm nhánh kệ vuông góc với chậu rửa, thành bếp chữ L.
+Ban công sau 2.0 m, bếp chữ L. Ba mái phụ lợp tôn: mái bàn trà ở sân chính, mái hai mái cho bếp (thay bản bê tông), mái dốc một mái cho sân phơi.
 
 ---
 
@@ -80,7 +80,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | SK3 | CỬA TRỜI | 1.60 | 17.50 | 1.0 × 1.0 | Phòng thờ — cửa trời có cánh lật, đặt trước kệ thờ |
 | SK4 | Ô THOÁNG | 2.60 | 22.60 | 0.8 × 0.7 | WC chung — ô thoáng kèm quạt hút |
 
-## 6. Cổng, bậc, mái hiên
+## 6. Cổng, bậc, mái
 
 | Trục | Vị trí | Từ | Đến | Rộng | Tên |
 |---|---:|---:|---:|---:|---|
@@ -104,6 +104,18 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 |---|---:|---:|---:|---:|---|
 | ngang | 12.0 | -0.1 | 5.1 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
 | ngang | 28.0 | -0.1 | 5.1 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
+
+### Mái nhẹ
+
+Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng phủ khai theo tim tường; tấm mái thật lùi vào mặt trong bức tường nào cao hơn nó và đua ra mặt ngoài bức nào thấp hơn, nên hai cột dưới đây lệch nhau nửa bề dày tường. Cao độ là **mặt dưới** mái, tấm lợp dày 0.05 m.
+
+| Mã | Tên | Vùng khai | Tấm mái dựng | Dạng | Cao độ mặt dưới | Vật liệu |
+|---|---|---|---|---|---|---|
+| RF1 | MÁI BÀN TRÀ | 5.0 · 15.0 · 8.5 · 18.0 | 5.11 · 15.00 · 8.50 · 17.89 | bằng | 3.20 | tôn cách nhiệt |
+| RF2 | MÁI BẾP | 5.0 · 18.0 · 8.5 · 25.0 | 5.11 · 17.89 · 8.55 · 25.11 | hai mái, nóc theo y ở 21.5 (dốc 30%) | 3.75 → 4.80 | tôn cách nhiệt |
+| RF3 | MÁI SÂN PHƠI | 5.0 · 25.0 · 9.5 · 28.0 | 5.11 · 25.11 · 9.61 · 27.95 | dốc một mái theo y (dốc 17%) | 3.50 → 3.00 | tôn cách nhiệt |
+
+- RF2 có **trần tôn cốt 3.75** — BẾP + NHÀ ĂN không đổ mái bê tông; cách sàn phòng 3.60 m
 
 ### Tường xây lên hết chiều cao nhà
 
@@ -170,7 +182,7 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 | wash | 5.20 | 25.20 | 0.65 | 0.65 |
 | wc | 8.05 | 29.10 | 0.42 | 0.68 |
 | lav | 9.00 | 28.95 | 0.40 | 0.60 |
-| round | 6.40 | 11.60 | 1.40 | 1.40 |
+| round | 6.35 | 15.60 | 1.40 | 1.40 |
 
 ---
 
@@ -180,9 +192,13 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 
 **Tam giác bếp:** bếp nấu ở nhánh dọc, chậu rửa ở nhánh ngang, tủ lạnh nên đặt ở đầu bắc nhánh dọc — ba điểm tạo tam giác cạnh khoảng 1.5–2.0 m, đúng tầm thao tác.
 
+**Bếp bị mái che ba phía** — bàn trà phía bắc, hiên hành lang phía đông, sân phơi phía nam, cả ba đều là tôn không cho sáng qua. Các cửa bếp còn 55% phần trời (W2 42%, D9 52%, D10 37%); ngày âm u có thể phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
+
+**Hai việc chống nóng không đổi hình khối, đừng quên khi thi công:** sơn chống nóng mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo; lát lớp chống nóng trên toàn bộ sàn mái bê tông nhà chính, kể cả phần trần ban công sau. Mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái nên đó mới là chỗ đáng tiền.
+
 ## 10. Kết quả bộ kiểm tra
 
-**Sạch — qua toàn bộ 14 phép kiểm.**
+**Sạch — qua toàn bộ 15 phép kiểm.**
 
 1. Cột trái lấp kín phần lô của nó, không hở không chồng
 2. Cột phải lấp kín phần lô còn lại
@@ -198,6 +214,7 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
 14. Bậc, mái hiên, tường nâng, cốt sàn riêng khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
+15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần
 
 ---
 
@@ -216,9 +233,9 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | ban công 2 m, bếp chữ L | 108.5 |
+| current ← | ba mái tôn phụ, bếp lợp tôn | 108.5 |
 
-### Thay đổi ở Hiện hành — ban công 2 m, bếp chữ L
+### Thay đổi ở Hiện hành — ba mái tôn phụ, bếp lợp tôn
 
 - Ban công sau 1.0 → **2.0 m sâu** (5.0 × 2.0 = 10.00 m²) — nay ngồi được, không chỉ để thoáng
 - Nhà chính 17.0 → **18.0 m**; sân phụ bù lại 13.0 → 12.0 m
@@ -233,3 +250,7 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - **Mái hiên bê tông** đua 1.2 m trước cửa chính, thay cho mái che xe đã bỏ
 - Sàn WC khách **hạ còn +0.15 so với sân**, cùng cốt với bếp — D11 khỏi dựng bậc
 - **Đổ trần ban công sau**, tường trái ban công xây lên tới mái — thay cho lam đứng D12: ngang lam về sáng và nắng hè, tháng 9 nắng lên kính còn một nửa, D12 hết dính mưa
+- **Mái bàn trà** ở sân chính (3.5 × 3.0 m, mặt dưới 3.20, tôn cách nhiệt) — che chỗ ngồi, cửa D2 và cửa bếp D9, vẫn chừa W1. Mái che xe ở sân phụ bỏ hẳn
+- **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m. Tường bắc và nam bếp dừng ở mép mái, tường đông thành đầu hồi
+- **Mái sân phơi** dốc một mái 3.50 → 3.00 phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng
+- **Bàn trà dời** từ giữa sân chính vào dưới mái RF1, tránh bậc D2 và vùng quét cánh D2, D9
