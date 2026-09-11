@@ -48,7 +48,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
-| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới ✅, tay vịn khe giữa hai vế ✅, XPS lát rời | ⏸ chờ quyết | XPS lát rời chờ chủ nhà quyết |
+| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -597,7 +597,7 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
       diềm và ô văng. Đã cân nhắc tường chắn mái (máng giấu dễ tắc lá) và mái bê tông (nặng, khó dỡ)
 - [x] Chủ nhà chốt, commit
 
-### ⏸ A21 · Việc tồn sau A20
+### ✅ A21 · Việc tồn sau A20
 
 - [x] **Neo thang, tum, lan can mái vào lưới (E2).** Trước đó kéo thanh trượt `y` 16.85 hay `y` 19 thì cả ba
       đứng yên, tách khỏi phòng
@@ -632,7 +632,20 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
   - [x] Vẽ 2D (nét đứt hai mép khe và đầu khe), `specMarkdown()` ghi bề rộng khe và cách làm
   - [x] `check-3d` phép 21 đòi đủ hai tay vịn chạy gần hết vế và trụ đầu khe — lấy từ khối đã dựng, không từ số khai
   - [x] Phá thử: bỏ tay vịn vế 1 → báo `0 / 2.34 m`; bỏ tay vịn vế 2 → báo `0 / 2.86 m`; bỏ trụ → báo đầu khe để hở
-- [ ] Lớp chống nóng XPS kiểu lát rời để tháo khi xây tầng 2 — chờ chủ nhà quyết
+- [x] **Lớp chống nóng XPS kiểu lát rời để tháo khi xây tầng 2 — chủ nhà chốt lát rời.** Bỏ vữa cán 40 mm
+      lưới thép + gạch lát, thay bằng **tấm bê tông đúc sẵn 400 × 400 × 40 đặt rời** trên vải địa: dỡ là
+      nhấc tấm chứ không đục, không có mũi đục nào chạm tới lớp chống thấm ngay dưới XPS. Lý do và cái giá:
+      `3d.md` mục 2c
+  - [x] `ROOF_INSULATION` bỏ `screed` / `tile` / `joint`, thêm `paver` / `paverSize`; bề dày trên XPS
+        0.06 → 0.04
+  - [x] Mọi thứ dựa vào mặt mái **tự đi theo** — không sửa chỗ nào khác: mặt mái 4.11 → **4.09**, cao bậc
+        thang 0.171 → 0.170, chiếu nghỉ 2.16 → 2.15, đỉnh thang 4.21 → 4.19, mặt dưới mái tum 6.81 → 6.79,
+        chân lan can mái, và đoạn chừa đầu hồi bếp nới ra 19.20 → 19.13 / 23.80 → 23.87 (mặt mái thấp hơn
+        nên đầu hồi chắn muộn hơn — đúng là thứ vừa cho suy ra ở việc trên)
+  - [x] `warn` thêm mục **lát rời phải giữ mấy điều**: tấm đủ nặng chống gió bốc, hàng ngoài cùng ở mép mái
+        / quanh lỗ thang / chân tường tum chèn khít, vét khe hằng năm, mặt lát theo dốc nên kê bồn nước phải
+        đệm; bỏ phần khe co giãn vữa cán không còn nữa
+  - [x] `npm run check` sạch, `npm run spec`, cập nhật `3d.md` mục 2c và 3d, `floor-plan.md`
 
 > **Phép 16 đi bộ qua tim lỗ là quá chặt với lỗ rộng.** D4 là cả cạnh hở của buồng thang, rộng 2.15 m; tim lỗ
 > rơi đúng khe giữa hai vế, nên vừa thêm tay vịn là phép 16 báo "đi bộ D4 ← vướng stairRail". Người thật đi trên

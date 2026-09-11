@@ -109,7 +109,7 @@ function check(plan){
   /* 3 — cao quá đỉnh thiết kế. Không còn là đỉnh mái nhà: nóc mái tôn bếp cố ý nhô cao hơn mặt
      mái bê tông. Mốc suy từ **số khai** (đỉnh mái nhà, nóc mái nhẹ cao nhất cộng bề dày tấm lợp)
      chứ không lấy từ khối đã dựng — lấy từ khối dựng thì phép kiểm tự nói đúng mọi lúc. */
-  const insulationT = ROOF_INSULATION.xps + ROOF_INSULATION.screed + ROOF_INSULATION.tile;
+  const insulationT = ROOF_INSULATION.xps + ROOF_INSULATION.paver;
   /* Tum và lan can mái đứng trên mặt mái: cộng từ số khai (TUM, ROOF_RAILING), không từ khối. */
   const walkTop = L.houseTop + (plan.roofInsulation ? insulationT : 0);
   const design = Math.max(walkTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet),

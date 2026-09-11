@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 18:18:17 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 18:32:26 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -100,7 +100,7 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 
 ### Lớp chống nóng mái
 
-Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, CẦU THANG, PHÒNG NGỦ 1, THAY ĐỒ / KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt gạch. Diện tích lát **95.66 m²**, mặt gạch cốt **4.11** (bản mái 4.00, chưa tính vữa tạo dốc).
+Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, CẦU THANG, PHÒNG NGỦ 1, THAY ĐỒ / KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt lát. Diện tích lát **95.66 m²**, mặt lát cốt **4.09** (bản mái 4.00, chưa tính vữa tạo dốc). Lát **rời**, không cán vữa: xây tầng 2 thì nhấc tấm, cuộn vải địa, gỡ XPS — không phải đục, không phạm vào lớp chống thấm.
 
 | Lớp (dưới lên) | Dày (m) | Ghi chú |
 |---|---:|---|
@@ -108,9 +108,8 @@ Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, đư
 | Vữa tạo dốc | thay đổi | dốc về chỗ thoát nước; không dựng trong 3D |
 | Chống thấm | — | gốc xi măng hoặc màng dán nguội; **không** khò bitum nóng, **không** sơn gốc dầu — dung môi làm chảy XPS |
 | Tấm XPS | 0.05 | cường độ nén ≥ 300 kPa, ghép so le; phủ kín ngay, không để phơi nắng; không nhầm xốp trắng EPS |
-| Vải địa kỹ thuật | — | ngăn vữa chảy vào khe tấm |
-| Vữa cán lưới thép | 0.04 | khe co giãn cách nhau ≤ 3.0 m, chèn keo đàn hồi |
-| Gạch lát | 0.02 | |
+| Vải địa kỹ thuật | — | lớp lọc trên XPS, giữ rác và cát khỏi lọt xuống khe tấm |
+| Tấm bê tông đúc sẵn | 0.04 | 400 × 400 mm **đặt rời** — không vữa, không keo; mặt lát đi theo dốc mái, khe giữa các tấm để hở cho nước xuống |
 
 ### Mái nhẹ
 
@@ -179,17 +178,17 @@ Cao bậc suy ra từ mặt sàn tới mặt mái đi lại được chia đều
 
 | Mã | Tên | Lỗ thang x₁ · y₁ · x₂ · y₂ | Rộng vế | Nấc (vế 1 + vế 2) | Cao bậc | Mặt bậc | Chiếu nghỉ | Từ cốt → tới cốt |
 |---|---|---|---:|---|---:|---:|---:|---|
-| CT1 | CẦU THANG LÊN MÁI | 0.11 · 16.90 · 3.92 · 18.95 | 0.95 | 10 + 12 | 0.171 | 0.26 | 2.16 | 0.45 → 4.21 |
+| CT1 | CẦU THANG LÊN MÁI | 0.11 · 16.90 · 3.92 · 18.95 | 0.95 | 10 + 12 | 0.170 | 0.26 | 2.15 | 0.45 → 4.19 |
 
 Lan can thang cao 0.90 m dọc mép vế 2 giáp phòng khách (trên bức lửng cao 1.00 m) và ở mép lỗ thang trên mặt mái. Khe giữa hai vế rộng 0.15 m: mỗi vế một tay vịn ở mép trong, chết vào một trụ ở đầu khe trên chiếu nghỉ.
 
 ### Tum
 
-Tường gạch 100 trát sơn, mái tôn, ô lấy sáng polycarbonate, ô thoáng lá kính gắn tường xếp nghiêng sát mái. Vùng 0.00 · 16.85 · 3.97 · 19.00 (tim vách), sàn là mặt mái cốt 4.11, mặt dưới mái tum 6.81; tường dày 100 mm, ô thoáng cao 0.30 m sát mái trên hai vách dài, gắn 4 lá kính cố định xếp nghiêng chéo xuống ra ngoài (lá trên chồng mép lá dưới — mưa hắt, lá cây không vào). Mái tum đua ngắn 0.18 m ra khỏi mặt ngoài tường (cạnh trên ranh lô không đua), mép bọc diềm gập cao 0.12 m. Trên cửa có ô văng đua 0.60 m, dài hơn cửa 0.20 m mỗi bên. Cửa ra mái có cánh mở vào trong tum, chốt từ trong nhà, ngưỡng có gờ chắn nước cao 0.10 m, cao 2.20 m tính từ mặt mái:vách x = 3.97, y 16.98–17.78. Ô polycarbonate đậy trọn lỗ thang. Dỡ đi khi xây tầng 2.
+Tường gạch 100 trát sơn, mái tôn, ô lấy sáng polycarbonate, ô thoáng lá kính gắn tường xếp nghiêng sát mái. Vùng 0.00 · 16.85 · 3.97 · 19.00 (tim vách), sàn là mặt mái cốt 4.09, mặt dưới mái tum 6.79; tường dày 100 mm, ô thoáng cao 0.30 m sát mái trên hai vách dài, gắn 4 lá kính cố định xếp nghiêng chéo xuống ra ngoài (lá trên chồng mép lá dưới — mưa hắt, lá cây không vào). Mái tum đua ngắn 0.18 m ra khỏi mặt ngoài tường (cạnh trên ranh lô không đua), mép bọc diềm gập cao 0.12 m. Trên cửa có ô văng đua 0.60 m, dài hơn cửa 0.20 m mỗi bên. Cửa ra mái có cánh mở vào trong tum, chốt từ trong nhà, ngưỡng có gờ chắn nước cao 0.10 m, cao 2.20 m tính từ mặt mái:vách x = 3.97, y 16.98–17.78. Ô polycarbonate đậy trọn lỗ thang. Dỡ đi khi xây tầng 2.
 
 ### Lan can mái
 
-Lan can thép sơn, trụ bắt nở vào đỉnh tường, cao 1.10 m từ mặt mái cốt 4.11.
+Lan can thép sơn, trụ bắt nở vào đỉnh tường, cao 1.10 m từ mặt mái cốt 4.09.
 
 | Trục | Vị trí | Từ | Đến | Dài |
 |---|---:|---:|---:|---:|
@@ -197,8 +196,8 @@ Lan can thép sơn, trụ bắt nở vào đỉnh tường, cao 1.10 m từ mặ
 | dọc | 0.00 | 10.73 | 16.85 | 6.12 |
 | dọc | 0.00 | 19.00 | 30.00 | 11.00 |
 | ngang | 30.00 | 0.00 | 5.00 | 5.00 |
-| dọc | 5.00 | 10.73 | 19.20 | 8.47 |
-| dọc | 5.00 | 23.80 | 30.00 | 6.20 |
+| dọc | 5.00 | 10.73 | 19.13 | 8.40 |
+| dọc | 5.00 | 23.87 | 30.00 | 6.13 |
 
 ### Tường xây lên hết chiều cao nhà
 
@@ -294,7 +293,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Hành lang ngoài hứng mưa tạt nhiều hơn.** Mái bếp kéo sang nên khoảng hở giữa đỉnh rào 1.80 và đáy dầm mép mái rộng 1.85 m ở hai đầu, 2.9 m dưới nóc, quay Đông Nam — mưa gió tạt vào lối đi và tường đông bếp; thấy ướt thì thêm diềm tôn hoặc lam ở đầu hồi phía rào. Cột C4 dưới nóc cao ~4.7 m đứng trên rào chỉ xây đặc 0.80 — kỹ sư kết cấu xem lại tiết diện và liên kết chân cột.
 
-**Cầu thang và tum — nghĩ cho tầng 2.** Móng, cột, dầm nhà chính phải tính cho 2 tầng cộng tum ngay bây giờ; tường gạch tum phải đứng trên dầm, không xây thẳng lên bản mái; bản mái sẽ thành sàn tầng 2, lỗ thang đổ sẵn dầm bo. Sau khi bỏ giếng trời, **đầu nam hành lang (gần master) tối hơn**: chỉ còn ánh sáng từ tum rọi xuống buồng thang. **Phòng ngủ 1 chỉ còn ánh sáng mượn** qua hai ô thoáng nhỏ W5, W6 ra buồng thang — không cửa sổ ra trời, ban ngày tối; hợp làm phòng ngủ phụ, phòng khách ở lại. Cánh lật cố định nên không đóng được: tiếng động và ánh đèn đêm ở cầu thang vẫn qua ô. Muốn đóng được thì làm cánh lật có tay chốt thay vì cố định. **Cửa tum ra thẳng mái, không có chiếu tới**: cánh phải mở ra phía mái (mở vào là quét lên bậc), chốt bằng then ở mặt trong cánh. Người đi lên đứng trên bậc cuối mới mở được cửa — lắp tay nắm và đèn ở đầu thang, đừng để đồ trước cửa phía mái. Gờ chắn nước 10 cm ở ngưỡng, ô văng 0.6 m che trên cửa, cửa mở ra được gió ép vào khuôn; vẫn cần gioăng và mặt mái trước cửa dốc ra ngoài. Ô thoáng tum gắn lá kính xếp nghiêng chéo xuống, lá trên chồng mép lá dưới, lại nằm dưới mái đua — mưa hắt và lá cây không vào; lá kính bám bụi, thỉnh thoảng phải lau. Buồng thang thông phòng khách nên hơi lạnh máy lạnh bay lên tum — mở máy lạnh thì đóng cửa đầu thang. Lớp chống nóng XPS trên mái sẽ nằm dưới sàn tầng 2 sau 5 năm; cân nhắc kiểu lát rời để tháo được — chưa chốt.
+**Cầu thang và tum — nghĩ cho tầng 2.** Móng, cột, dầm nhà chính phải tính cho 2 tầng cộng tum ngay bây giờ; tường gạch tum phải đứng trên dầm, không xây thẳng lên bản mái; bản mái sẽ thành sàn tầng 2, lỗ thang đổ sẵn dầm bo. Sau khi bỏ giếng trời, **đầu nam hành lang (gần master) tối hơn**: chỉ còn ánh sáng từ tum rọi xuống buồng thang. **Phòng ngủ 1 chỉ còn ánh sáng mượn** qua hai ô thoáng nhỏ W5, W6 ra buồng thang — không cửa sổ ra trời, ban ngày tối; hợp làm phòng ngủ phụ, phòng khách ở lại. Cánh lật cố định nên không đóng được: tiếng động và ánh đèn đêm ở cầu thang vẫn qua ô. Muốn đóng được thì làm cánh lật có tay chốt thay vì cố định. **Cửa tum ra thẳng mái, không có chiếu tới**: cánh phải mở ra phía mái (mở vào là quét lên bậc), chốt bằng then ở mặt trong cánh. Người đi lên đứng trên bậc cuối mới mở được cửa — lắp tay nắm và đèn ở đầu thang, đừng để đồ trước cửa phía mái. Gờ chắn nước 10 cm ở ngưỡng, ô văng 0.6 m che trên cửa, cửa mở ra được gió ép vào khuôn; vẫn cần gioăng và mặt mái trước cửa dốc ra ngoài. Ô thoáng tum gắn lá kính xếp nghiêng chéo xuống, lá trên chồng mép lá dưới, lại nằm dưới mái đua — mưa hắt và lá cây không vào; lá kính bám bụi, thỉnh thoảng phải lau. Buồng thang thông phòng khách nên hơi lạnh máy lạnh bay lên tum — mở máy lạnh thì đóng cửa đầu thang. Lớp chống nóng XPS trên mái sẽ nằm dưới sàn tầng 2 sau 5 năm, nên **đã chốt lát rời** — dỡ bằng cách nhấc tấm chứ không đục.
 
 **WC chung không còn ô thoáng.** Quạt hút âm trần nối ống PVC lên mái, đầu ống có chụp chắn mưa và đi xuyên lớp chống thấm có cổ ống — sau này đi tiếp lên theo hộp kỹ thuật tầng 2. Chọn quạt có van một chiều để gió mái không thổi ngược mùi vào.
 
@@ -304,7 +303,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Sơn chống nóng tường trái — không đổi hình khối, đừng quên:** sơn mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo.
 
-**Lớp chống nóng mái — chỗ đáng tiền nhất** (mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái). XPS được che kín thì bền cỡ 30–50 năm; thứ hỏng trước là chống thấm và gạch, nên khi thi công: chống thấm nằm **dưới** XPS, không khò bitum nóng hay sơn gốc dầu; phủ vữa ngay, không để tấm phơi nắng; mua đúng XPS ô kín, không phải xốp trắng EPS; tạo dốc từ lớp dưới cho nước không đọng dưới gạch; vữa cán chia khe co giãn ≤ 3 m — gạch mái bong chủ yếu vì thiếu khe; quanh giếng trời xây gờ cao hơn mặt gạch. Dột thì phải dỡ gạch và XPS mới sửa được lớp chống thấm.
+**Lớp chống nóng mái — chỗ đáng tiền nhất** (mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái). XPS được che kín thì bền cỡ 30–50 năm; thứ hỏng trước là lớp chống thấm, nên khi thi công: chống thấm nằm **dưới** XPS, không khò bitum nóng hay sơn gốc dầu; lát tấm ngay, không để XPS phơi nắng; mua đúng XPS ô kín, không phải xốp trắng EPS; tạo dốc từ lớp dưới cho nước không đọng dưới tấm; quanh mọi lỗ trên mái xây gờ cao hơn mặt lát. Dột thì nhấc tấm và gỡ XPS là tới được lớp chống thấm — đó chính là cái lợi của lát rời.
+
+**Lát rời — phải giữ mấy điều.** Tấm đủ nặng để gió không bốc: 400 × 400 × 40 bê tông nặng chừng 15 kg/m², đặt sát nhau và có lan can 1.1 m quanh mép mái nên đủ; **đừng thay bằng tấm mỏng hay tấm nhựa**. Mép mái, quanh lỗ thang và chân tường tum là chỗ gió xoáy mạnh nhất — hàng tấm ngoài cùng nên chèn khít hoặc dán điểm. Khe giữa các tấm để hở cho nước xuống, nên rác và lá đọng trong khe: mỗi năm nhấc vài tấm ở chỗ thoát nước mà vét. Mặt lát đi theo dốc mái, **không phẳng tuyệt đối** — kê bồn nước hay chân giàn phơi thì phải đệm. Đi trên tấm rời có tiếng cộc và tấm hơi bập bênh nếu lớp dưới không đều: cán phẳng mặt XPS trước khi trải vải địa.
 
 ## 10. Kết quả bộ kiểm tra
 
@@ -382,8 +383,8 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Góc làm việc master** — thay bàn 1.3 × 1.5 m bằng 2 bàn 0.6 × 1.2 m nối nhau dọc tường phải, kèm 2 ghế làm việc riêng
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
 - **Sân giếng sát tường bếp** — dành một khoảng 1.5 m ngay ngoài D10, hai vòi âm tường giãn nhau trên tường nhà chính; mái sân phơi giữ nguyên. Một máy giặt/sấy 0.60 × 0.60 m ở góc giữa tường bếp và tường nhà chính, kê trên bệ sân 0.68 × 0.68 m cao 0.15 m để nước rửa sân không ảnh hưởng máy; bỏ máy rửa bát
-- **Lớp chống nóng mái kiểu mái ngược** — chống thấm + tấm XPS 50 mm + vải địa kỹ thuật + vữa cán 40 mm lưới thép + gạch lát, phủ mọi sàn mái bê tông (nhà chính, WC khách), trần ban công sau và mái hiên cửa chính, tới mặt ngoài tường; chừa giếng trời. Mặt mái 4.00 → 4.11. Chọn thay gạch lỗ chống nóng (trữ nhiệt rồi nhả vào buổi tối, ngay trên phòng ngủ) và thay mái tôn trên sàn mái (phải khoét theo giếng trời; lợp sát trần thì khe gió không lùa được)
-- **Cầu thang chữ U lên mái** thay phòng thờ (chuẩn bị tầng 2 sau khoảng 5 năm): hai vế rộng 0.95 m, 22 nấc cao ≈ 0.171, mặt bậc 0.26, chiếu nghỉ sát tường trái; chân thang ở đầu bắc hành lang. Bỏ vách phòng khách – phòng thờ, thay bằng **bức lửng 1 m** kèm **lan can song thoáng** (không tấm đặc cho khỏi bí) — phòng khách nhận sáng và gió từ tum. Phòng khách 5 × 5 → 5 × 4.85
+- **Lớp chống nóng mái kiểu mái ngược, lát rời** — chống thấm + tấm XPS 50 mm + vải địa kỹ thuật + **tấm bê tông đúc sẵn 400 × 400 × 40 đặt rời** (chủ nhà chốt: không cán vữa, không dán keo), phủ mọi sàn mái bê tông (nhà chính, WC khách), trần ban công sau và mái hiên cửa chính, tới mặt ngoài tường; chừa giếng trời. Mặt mái 4.00 → 4.09. Lát rời để **dỡ được khi xây tầng 2**: nhấc tấm, cuộn vải địa, gỡ XPS — tái dùng gần hết, và không phải đục vữa ngay trên lớp chống thấm, thứ đắt và khó vá nhất. Cái giá: mặt lát đi theo dốc mái chứ không phẳng tuyệt đối, khe tấm hở. Chọn thay gạch lỗ chống nóng (trữ nhiệt rồi nhả vào buổi tối, ngay trên phòng ngủ) và thay mái tôn trên sàn mái (phải khoét theo giếng trời; lợp sát trần thì khe gió không lùa được)
+- **Cầu thang chữ U lên mái** thay phòng thờ (chuẩn bị tầng 2 sau khoảng 5 năm): hai vế rộng 0.95 m, 22 nấc cao ≈ 0.170, mặt bậc 0.26, chiếu nghỉ sát tường trái; chân thang ở đầu bắc hành lang. Bỏ vách phòng khách – phòng thờ, thay bằng **bức lửng 1 m** kèm **lan can song thoáng** (không tấm đặc cho khỏi bí) — phòng khách nhận sáng và gió từ tum. Phòng khách 5 × 5 → 5 × 4.85
 - **Tum tường gạch** (không vách tôn / nhựa), mái tôn, trên buồng thang; mặt dưới mái tum 2.70 m trên mặt mái, ô thoáng 0.30 m sát mái gắn **4 lá kính xếp nghiêng chéo xuống** — gió qua, mưa hắt và lá cây không vào, ô polycarbonate đậy trọn lỗ thang, tum **gọn, tường áp sát đầu thang, một cửa** ngay đầu vế 2 — lên hết thang là ra thẳng mái; cánh mở ra phía mái, **then chốt mặt trong** — không ai từ mái vào nhà tự do — ngưỡng có **gờ chắn nước** cao 0.10 m làm nấc cuối của thang; **mái tum đua ngắn 0.18 m bọc diềm gập** ba phía (phía ranh lô trái không đua) cho gọn, **ô văng 0.6 m** che trên cửa; dỡ khi xây tầng 2
 - **Lan can thép 1.1 m** quanh mép mái nhà chính, **bao luôn mái hiên cửa chính** — mái thành sân thượng: phơi đồ, bồn nước, bảo trì lớp chống nóng. Khai tuyến liền cả bốn cạnh; đoạn chừa ở vách tum và ở chỗ đầu hồi bếp nhô trên mặt mái (tuyến x = 5) nay **suy từ hình học** thay cho hai số chép tay — đầu hồi chỉ thật sự chắn từ y 19.20 đến 23.80, lan can dài thêm 0.40 m mỗi đầu
 - **Bỏ giếng trời hành lang SK1, hai cửa trời SK2, SK3 và ô thoáng WC chung SK4** — xây tầng 2 là phải bịt; mái bê tông không còn lỗ nào ngoài lỗ thang. WC chung dùng quạt hút nối ống lên mái. Phòng ngủ 1 lấy gió, sáng qua **hai ô thoáng nhỏ W5, W6** (0.40 × 0.30 m, bệ 2.40) ra buồng thang, dồn về phía cửa PN1 — **cánh kính mờ lật cố định** ngả vào phòng, người bên thang đứng thấp hơn bệ chỉ nhìn thấy trần. Thay ô kính cố định và ô lật to đã thử, nhìn vào dễ quá
