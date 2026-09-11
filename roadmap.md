@@ -762,6 +762,19 @@ xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` m�
 > lần đúng chỗ: hai cạnh ấy lộ theo hai kiểu khác nhau nên không có lý gì cùng một chiều cao. Vì thế đỉnh
 > chuyển từ một số chung sang **khai riêng từng đoạn**.
 
+> **Đã thử lam chéo thay mảng xây đặc, đo rồi bỏ (chủ nhà chốt).** Dựng thật: xây đặc tới 0.80 rồi lam bê
+> tông nghiêng chéo **lên ra ngoài** tới đỉnh, trụ gạch chia khoang ≤ 1.80. Đo ra: chỗ **ngồi ở ban công**
+> được lại 2.8 → 4.3 h nắng đông chí, nhưng **cửa D12 chỉ 3.6 → 3.8 h**, chỗ phơi và sân phụ không đổi gì.
+> Nắng tới D12 phần lớn đi **qua trên đỉnh rào** (từ cốt 1.20 nhìn ra, mép rào 1.80 ở xa 2 m — mọi tia trên
+> ~17° đã qua tự do) chứ không qua dải lam. Không đáng tiền và công, lại hở tiếng động và dễ trèo hơn mảng
+> gạch đặc ở mặt tiền. **Đã revert**, giữ tường xây đặc.
+>
+> Hai chỗ vấp đáng nhớ nếu ai định thử lại: (1) lá phải dốc **lên** ra ngoài — dốc xuống ra ngoài (kiểu che
+> mưa như ô thoáng tum) thì độ dốc lá cộng với độ dốc tia nắng, khe đóng hẳn, chặn nắng y hệt tường đặc;
+> (2) công cụ chiếu tia phải cắt **đúng mặt nghiêng** của lăng trụ, quy về hộp bao là dải lam đo ra đặc kín.
+> Sửa xong công cụ thì số của mái nhẹ cũng nhích: giàn phơi 21/6 từ 9.1 lên 9.5 h — bảng ở `3d.md` đã theo
+> số đúng.
+
 > **Ở 1.80 thì chỗ phơi không mất giờ nắng nào** — bóng đổ phụ thuộc đỉnh rào, không phụ thuộc đặc hay
 > thoáng, mà đỉnh vẫn 1.80 như cũ. Chỗ mất là **D12**: đông chí 4.6 → 3.6 h (−22%), thu phân 3.3 → 2.8 h —
 > đúng phần ánh sáng vốn lọt qua khe lan can. Không tránh được bằng cách hạ thấp hơn nữa.

@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 20:05:46 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 20:22:47 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -321,9 +321,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Mái hiên cửa chính thành một phần sân thượng.** Bản công xôn 1.2 m không cột nay có người đi lại và lan can bắt ở mép ngoài — kỹ sư kết cấu phải tính lại tải và neo trụ lan can; lan can mép công xôn chịu lực đẩy ngang lớn nhất.
 
-**Rào kín hai cạnh trước / sau — riêng tư đổi lấy chút nắng.** Mặt tiền (`y = 0`) xây kín **2.10 m**, cạnh sau (`y = 30`, tới `x` 7.9) xây kín **1.80 m**, cả hai không lan can. Đo trên chính khối đã dựng (giờ nắng trực tiếp): chỗ giàn phơi cốt 1.80 **không đổi** — 9.1 h hạ chí, 7.0 h thu phân, 5.7 h đông chí, đúng bằng khi còn lan can, vì rào sau vẫn 1.80; giữa cửa D12 của master cốt 1.20 thì **đông chí 4.6 → 3.6 h**, thu phân 3.3 → 2.8 h — phần mất là ánh sáng vốn lọt qua khe lan can, nay bị bịt. Giữa sân phụ 13.1 → 12.4 h hạ chí do rào trước cao 2.10.
+**Rào kín hai cạnh trước / sau — riêng tư đổi lấy chút nắng.** Mặt tiền (`y = 0`) xây kín **2.10 m**, cạnh sau (`y = 30`, tới `x` 7.9) xây kín **1.80 m**, cả hai không lan can. Đo trên chính khối đã dựng (giờ nắng trực tiếp): chỗ giàn phơi cốt 1.80 **không đổi** — 9.5 h hạ chí, 7.0 h thu phân, 5.7 h đông chí, đúng bằng khi còn lan can, vì rào sau vẫn 1.80; giữa cửa D12 của master cốt 1.20 thì **đông chí 4.6 → 3.6 h**, thu phân 3.3 → 2.8 h — phần mất là ánh sáng vốn lọt qua khe lan can, nay bị bịt. Giữa sân phụ 13.1 → 12.4 h hạ chí do rào trước cao 2.10.
 
-**Rào sau 1.80 kín tới đâu.** Sân phơi cốt bằng sân nên rào nhô đủ 1.80, trên tầm mắt 1.58 — đứng giặt phơi thì kín. Nhưng **ban công sau cao hơn sân 0.45** nên rào chỉ nhô **1.35 m** trên sàn ban công, dưới tầm mắt: ngồi ở ban công thì kín, **đứng thì nhìn qua được và bị nhìn lại** — người ngoài thấy từ khoảng ngực trở lên. Muốn kín cả khi đứng thì đoạn sau phải 2.05 m trở lên, và lúc đó chỗ phơi mất khoảng 2 h nắng đông chí. Nếu sau này thấy vướng mắt thì cách rẻ nhất là thêm **lam chéo hoặc giàn cây** cao thêm 0.3 m trên đoạn rào sau sát ban công (`x` 0–5), không đụng tới đoạn sau chỗ phơi.
+**Rào sau 1.80 kín tới đâu.** Sân phơi cốt bằng sân nên rào nhô đủ 1.80, trên tầm mắt 1.58 — đứng giặt phơi thì kín. Nhưng **ban công sau cao hơn sân 0.45** nên rào chỉ nhô **1.35 m** trên sàn ban công, dưới tầm mắt: ngồi ở ban công thì kín, **đứng thì nhìn qua được và bị nhìn lại** — người ngoài thấy từ khoảng ngực trở lên. Muốn kín cả khi đứng thì đoạn sau phải 2.05 m trở lên, và lúc đó chỗ phơi mất khoảng 2 h nắng đông chí — chủ nhà chốt không đổi lấy chỗ phơi. **Chỗ ngồi ở ban công** (cốt 1.00) là nơi mất nhiều nhất: đông chí 5.7 → 2.8 h nắng. **Đã thử lam chéo thay mảng xây đặc rồi bỏ** (3d.md mục 2a): dựng thật và đo thì chỗ ngồi ban công được lại 2.8 → 4.3 h, nhưng cửa D12 chỉ 3.6 → 3.8 h — nắng tới D12 phần lớn đi qua **trên đỉnh rào** chứ không qua dải lam; lại thêm tiền, thêm công, hở tiếng động và dễ trèo hơn mảng gạch đặc, nhất là ở mặt tiền quay ra ngõ.
 
 Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can, nên từ nhà bên vẫn nhìn thấy sân chính, sân phơi và ban công — muốn kín nữa thì thêm rèm, lam hay cây ở đoạn đó. Cổng chính nay cao 2.10 m theo rào. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
 
