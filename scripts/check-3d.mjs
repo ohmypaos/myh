@@ -9,10 +9,10 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, FURNITURE, STAIR, TUM, ROOF_RAILING, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -1008,12 +1008,19 @@ function check(plan){
      chân đúng mặt mái — lan can lơ lửng hay cắm xuống bản mái đều lộ. */
   const badRail = roofRailBoxes.find(b => b.y0 < walkTopOf - EPS || b.y1 > walkTopOf + ROOF_RAILING.height + EPS);
   if (badRail) e.push(`lan can mái quanh x ${n(badRail.x)}, z ${n(badRail.z)} cao ${n(badRail.y0)}–${n(badRail.y1)}, ra ngoài khoảng mặt mái ${n(walkTopOf)} → đỉnh lan can`);
-  for (const [ax, pos, a, b] of plan.roofRailings || []) {
-    const mid = (a + b) / 2;
-    const has = roofRailBoxes.some(q => Math.abs(q.y0 - walkTopOf) < EPS && (ax === 'h'
-      ? pos >= q.z - EPS && pos <= q.z + q.d + EPS && q.x < b && q.x + q.w > a
-      : pos >= q.x - EPS && pos <= q.x + q.w + EPS && q.z < b && q.z + q.d > a));
-    if (!has) e.push(`tuyến lan can mái trục ${ax} ${pos} quanh ${n(mid)} không có thanh nào đứng trên mặt mái`);
+  /* Soi **từng đoạn đã cắt**, không phải cả tuyến khai: tuyến x = 5 bị đầu hồi bếp cắt làm đôi, so với cả
+     tuyến thì một đầu có thanh là đã cho qua — nửa kia mất sạch vẫn lọt. Mỗi đoạn phải có trụ đứng trên mặt
+     mái, và các thanh của nó phải chạy hết đoạn (chừa nửa trụ ở hai đầu). */
+  for (const { ax, pos, a, b } of roofRailingsOf(plan).filter(r => !r.error)) {
+    const mine = roofRailBoxes.filter(q => ax === 'h'
+      ? pos >= q.z - EPS && pos <= q.z + q.d + EPS && q.x < b - EPS && q.x + q.w > a + EPS
+      : pos >= q.x - EPS && pos <= q.x + q.w + EPS && q.z < b - EPS && q.z + q.d > a + EPS);
+    const s0 = ax === 'h' ? q => q.x : q => q.z, s1 = ax === 'h' ? q => q.x + q.w : q => q.z + q.d;
+    if (!mine.some(q => Math.abs(q.y0 - walkTopOf) < EPS))
+      e.push(`đoạn lan can mái trục ${ax} ${pos} (${n(a)}–${n(b)}) không có thanh nào đứng trên mặt mái`);
+    else if (Math.min(...mine.map(s0)) > a + RAILING.post || Math.max(...mine.map(s1)) < b - RAILING.post)
+      e.push(`đoạn lan can mái trục ${ax} ${pos} (${n(a)}–${n(b)}) chỉ có thanh trong khoảng `
+             + `${n(Math.min(...mine.map(s0)))}–${n(Math.max(...mine.map(s1)))}`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
