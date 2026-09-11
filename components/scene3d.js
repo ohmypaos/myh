@@ -144,7 +144,7 @@ export function init(){
   }
 
   /* ═══════════ DỰNG KHỐI ═══════════ */
-  let group = null, LEVELS = null, roofHidden = false;
+  let group = null, LEVELS = null, roofHidden = false, furnitureHidden = false;
   let solids = [];                               // khối đặc cho đi bộ (lib/walk.js)
 
   function box(b, material, kind){
@@ -205,6 +205,7 @@ export function init(){
     }
     scene.add(group);
     applyRoofHidden();
+    applyFurnitureHidden();
   }
 
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
@@ -213,6 +214,12 @@ export function init(){
                    || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
+  }
+
+  /* Nội thất và cánh cửa là hai loại khối riêng: chỉ ẩn `furniture` để cửa vẫn là mốc
+     đọc lối đi khi xem không gian trống. */
+  function applyFurnitureHidden(){
+    group.children.forEach(m => { if (m.userData.kind === 'furniture') m.visible = !furnitureHidden; });
   }
 
   const setHtml = (id, html) => {
@@ -557,6 +564,12 @@ export function init(){
     e.target.classList.toggle('on', roofHidden);
     e.target.textContent = roofHidden ? 'Hiện mái' : 'Ẩn mái';
     applyRoofHidden();
+  });
+  on('vFurniture', 'click', e => {
+    furnitureHidden = !furnitureHidden;
+    e.target.classList.toggle('on', furnitureHidden);
+    e.target.textContent = furnitureHidden ? 'Hiện đồ' : 'Ẩn đồ';
+    applyFurnitureHidden();
   });
   on('vOverview', 'click', overviewView);
   on('vTop', 'click', topView);

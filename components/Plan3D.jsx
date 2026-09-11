@@ -27,6 +27,7 @@ export default function Plan3D() {
           <button id="vOverview">Toàn cảnh</button>
           <button id="vTop">Từ trên xuống</button>
           <button id="vRoof">Ẩn mái</button>
+          <button id="vFurniture" title="Ẩn hoặc hiện nội thất; cửa luôn giữ nguyên">Ẩn đồ</button>
           <button id="vWalk" title="Bắt đầu từ cổng chính, đi vào nhà bằng W A S D">
             Đi bộ trong nhà
           </button>
