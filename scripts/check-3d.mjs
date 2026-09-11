@@ -81,7 +81,7 @@ const CHECKS = [
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
   'Giàn phơi: đủ hai trụ, bốn tay chìa và hai thanh phơi; trụ đứng trên cốt sân, tay chìa nối đầu trụ lên ngọn, hai thanh chạy suốt tuyến và lệch đều hai bên đúng tầm chìa — mặt cắt đúng hình tam giác ngược',
-  'Bồn nước trên mái: đủ khối thân, chân và bản đế; chân đứng đúng mặt mái, đỉnh chân đỡ thân; bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
+  'Bồn nước trên mái: đủ khối thân, chân, bản đế và hai thanh kiềng; chân đứng đúng mặt mái, kiềng bắc ngang trục đỡ đúng đường tim đáy trụ (không thì bồn treo lơ lửng); bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
 
@@ -1110,12 +1110,27 @@ function check(plan){
       if (kPa > ROOF_INSULATION.xpsStrength - EPS)
         e.push(`bản đế bồn ${t.id} rộng ${n(each, 3)} m² ép ${Math.round(kPa)} kPa xuống lớp chống nóng, quá sức XPS ${ROOF_INSULATION.xpsStrength} kPa`);
     }
-    const legs = stand.filter(b => Math.abs(b.y1 - bd.y0) < EPS);
-    if (legs.length !== 4) e.push(`bồn nước ${t.id} có ${legs.length} chân chạm đáy thân, cần 4`);
+    const legs = stand.filter(b => Math.abs(b.y1 - t.legTop) < EPS);
+    if (legs.length !== 4) e.push(`bồn nước ${t.id} có ${legs.length} chân lên tới đỉnh chân ${n(t.legTop)}, cần 4`);
     else if (legs.some(q => !pads.some(p => Math.abs(p.y1 - q.y0) < EPS
                                             && q.x >= p.x - EPS && q.x + q.w <= p.x + p.w + EPS
                                             && q.z >= p.z - EPS && q.z + q.d <= p.z + p.d + EPS)))
       e.push(`có chân bồn ${t.id} không đứng trọn trên bản đế nào`);
+    /* Kiềng: hai thanh bắc **ngang trục bồn**, mặt trên đúng cốt đáy thân, và phải chạy qua **đường tim đáy
+       trụ** — chính chỗ bồn tì xuống. Thiếu kiềng thì bồn treo lơ lửng trên bốn chân ở góc: hộp bao chạm chân
+       nhưng mặt trụ ở đó đã cong lên cao hơn. Đúng lỗi đã gặp. */
+    const cradles = m.boxes.filter(b => b.id === t.id && b.kind === 'tankCradle');
+    if (cradles.length !== 2) e.push(`bồn nước ${t.id} dựng ${cradles.length} thanh kiềng, cần 2`);
+    else {
+      const mid = t.axis === 'x' ? bd.z + bd.d / 2 : bd.x + bd.w / 2;
+      for (const c of cradles) {
+        if (Math.abs(c.y1 - bd.y0) > EPS || Math.abs(c.y0 - t.legTop) > EPS)
+          e.push(`thanh kiềng bồn ${t.id} ở cốt ${n(c.y0)}–${n(c.y1)}, cần ${n(t.legTop)}–${n(bd.y0)}`);
+        const [s0, s1] = t.axis === 'x' ? [c.z, c.z + c.d] : [c.x, c.x + c.w];
+        if (mid < s0 + EPS || mid > s1 - EPS)
+          e.push(`thanh kiềng bồn ${t.id} chạy ${n(s0)}–${n(s1)}, không qua đường tim đáy trụ ${n(mid)}`);
+      }
+    }
   }
 
   /* 23 — giàn phơi, lấy từ khối đã dựng. Mặt cắt phải đúng **tam giác ngược**: hai trụ ở hai đầu tuyến đứng

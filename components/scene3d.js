@@ -39,6 +39,7 @@ const COLORS = {
   roofRailing: 0x4f4c46,     // lan can thép mép mái
   tank:        0xc6cacb,     // bồn inox — xám sáng ánh kim, tách khỏi tôn xám lạnh
   tankStand:   0x6a716e,     // giá thép và bản đế dưới bồn
+  tankCradle:  0x6a716e,     // thanh kiềng ngang đỡ đáy bồn
   rack:        0x6a716e,     // trụ giàn phơi, cùng màu giá bồn
   rackArm:     0x6a716e,     // tay chìa chéo trên đầu trụ giàn phơi
   rackBar:     0xc6cacb,     // thanh phơi inox
@@ -256,7 +257,7 @@ export function init(){
      còn lại thì nhìn xuống thấy cầu thang. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang' || k === 'roofInsulation'
                    || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling'
-                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing' || k === 'tank' || k === 'tankStand';
+                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing' || k === 'tank' || k === 'tankStand' || k === 'tankCradle';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }

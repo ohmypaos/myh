@@ -684,6 +684,15 @@ Số liệu và lý do: `3d.md` mục 3d.
       thiếu chân chạm đáy thân; tụt thân bồn 10 cm → phép 10 báo chân đâm vào thân. Soi hình trụ bằng cách tạm
       thêm hai bồn giữa mái, một trục `x` một trục `y` — dựng đúng cả hai hướng
 - [x] `npm run check` sạch, `npm run spec`, `warn` + `3d.md` mục 3d + `floor-plan.md`
+- [x] **Chủ nhà chỉnh (11/9/2026):** dời bồn sang **góc phải**, sát mép sau — thẳng trục hai vòi nước sân phơi
+      nên ống cấp chạy thẳng trong tuyến tường `x = 5`, không vòng ngang qua trần ban công. Vẫn áp sát một gối
+      của bản trần nên lý do kết cấu không đổi. Neo lưới đổi theo: bồn neo vào **cạnh gần nhất của phòng bên
+      dưới** thay vì đường lưới gần nhất — bồn rộng gần 1 m nên mép kia luôn rơi cạnh một đường vu vơ (đường
+      3.66, đầu trong bức lửng), kéo tường `x = 5` là bồn đứng yên, tách khỏi bức tường nó dựa vào
+- [x] **Sửa lỗi bồn lơ lửng.** Bốn chân chống thẳng lên đáy **hộp bao** của thân, mà hình trụ chỉ chạm cốt ấy
+      ở **một đường tim** — chân ở bốn góc hình chiếu hụt 11 cm vào mặt cong. Thêm `TANK.cradle`: mỗi đầu một
+      thanh kiềng bắc ngang hai chân, mặt trên đúng cốt đáy trụ. Phép 22 đòi đủ hai thanh, đúng cốt, và **chạy
+      qua đường tim đáy trụ**; phá thử bỏ kiềng và xoay kiềng dọc trục đều báo
 
 > **`axis` là tên đã có nghĩa.** Bản đầu đặt trục hình trụ vào trường `axis` của khối. `check-3d` coi khối nào
 > có `axis` là **lăng trụ mặt nghiêng** và đi đọc `yb`/`yt` — không có, nên nó gãy giữa chừng thay vì báo lỗi.
