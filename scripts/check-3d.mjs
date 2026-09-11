@@ -80,7 +80,7 @@ const CHECKS = [
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
-  'Giàn phơi: đủ hai trụ và các thanh phơi, trụ đứng trên cốt sân và cao đúng thiết kế, thanh nối đúng hai trụ ở đúng cao độ, không thanh nào cao hơn đầu trụ',
+  'Giàn phơi: đủ hai trụ, bốn tay chìa và hai thanh phơi; trụ đứng trên cốt sân, tay chìa nối đầu trụ lên ngọn, hai thanh chạy suốt tuyến và lệch đều hai bên đúng tầm chìa — mặt cắt đúng hình tam giác ngược',
   'Bồn nước trên mái: đủ khối thân, chân và bản đế; chân đứng đúng mặt mái, đỉnh chân đỡ thân; bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
@@ -1095,24 +1095,31 @@ function check(plan){
       e.push(`có chân bồn ${t.id} không đứng trọn trên bản đế nào`);
   }
 
-  /* 23 — giàn phơi, lấy từ khối đã dựng: hai trụ đúng hai đầu tuyến, chân chạm cốt sân, đầu đúng RACK.height;
-     mỗi cao độ một thanh, nối đủ từ trụ này sang trụ kia và không thanh nào vượt đầu trụ. */
+  /* 23 — giàn phơi, lấy từ khối đã dựng. Mặt cắt phải đúng **tam giác ngược**: hai trụ ở hai đầu tuyến đứng
+     từ cốt sân lên đầu trụ; bốn tay chìa, mỗi trụ hai tay, chân ở đầu trụ và ngọn cao hơn; hai thanh phơi chạy
+     suốt tuyến, lệch đều hai bên đúng tầm chìa và nằm trên ngọn tay. Hai thanh chồng lên nhau hay thanh tụt
+     vào giữa đều lộ ở đây. */
   for (const r of racksOf(plan)) {
     if (r.errors.length) { e.push(...r.errors); continue; }
     const mine = m.boxes.filter(b => b.id === r.id);
     const posts = mine.filter(b => b.kind === 'rack'), bars = mine.filter(b => b.kind === 'rackBar');
+    const arms = m.prisms.filter(b => b.id === r.id && b.kind === 'rackArm');
     if (posts.length !== 2) e.push(`giàn phơi ${r.id} dựng ${posts.length} trụ, cần 2`);
-    else if (posts.some(p => Math.abs(p.y0 - r.base) > EPS || Math.abs(p.y1 - r.base - RACK.height) > EPS))
-      e.push(`trụ giàn phơi ${r.id} không đứng từ cốt sân ${n(r.base)} lên ${n(r.base + RACK.height)}`);
-    if (bars.length !== RACK.levels.length) e.push(`giàn phơi ${r.id} dựng ${bars.length} thanh phơi, cần ${RACK.levels.length}`);
-    for (const lv of RACK.levels) {
-      const bar = bars.find(b => Math.abs((b.y0 + b.y1) / 2 - r.base - lv) < EPS);
-      if (!bar) { e.push(`giàn phơi ${r.id} thiếu thanh phơi ở cao độ ${n(lv)}`); continue; }
+    else if (posts.some(p => Math.abs(p.y0 - r.base) > EPS || Math.abs(p.y1 - r.headTop) > EPS))
+      e.push(`trụ giàn phơi ${r.id} không đứng từ cốt sân ${n(r.base)} lên đầu trụ ${n(r.headTop)}`);
+    if (arms.length !== 4) e.push(`giàn phơi ${r.id} dựng ${arms.length} tay chìa, cần 4`);
+    else if (arms.some(q => Math.abs(Math.min(...q.yb) - r.headTop) > EPS || Math.max(...q.yb) <= r.headTop + EPS))
+      e.push(`tay chìa giàn phơi ${r.id} không vươn chéo lên từ đầu trụ ${n(r.headTop)}`);
+    if (bars.length !== 2) { e.push(`giàn phơi ${r.id} dựng ${bars.length} thanh phơi, cần 2`); continue; }
+    for (const side of [-1, 1]) {
+      const want = r.pos + side * r.spread;
+      const bar = bars.find(b => Math.abs(((r.ax === 'h' ? b.z + b.d / 2 : b.x + b.w / 2)) - want) < EPS);
+      if (!bar) { e.push(`giàn phơi ${r.id} thiếu thanh phơi lệch ${n(side * r.spread)} khỏi tuyến`); continue; }
+      if (Math.abs((bar.y0 + bar.y1) / 2 - r.barMid) > EPS)
+        e.push(`thanh phơi ${r.id} lệch ${n(side * r.spread)} nằm ở cốt ${n((bar.y0 + bar.y1) / 2)}, cần ${n(r.barMid)}`);
       const [s0, s1] = r.ax === 'h' ? [bar.x, bar.x + bar.w] : [bar.z, bar.z + bar.d];
-      /* Thanh cắm vào mặt trong trụ nên ngắn hơn tuyến đúng một bề trụ — không được ngắn hơn thế. */
-      if (s0 > r.a + RACK.post + EPS || s1 < r.b - RACK.post - EPS)
-        e.push(`thanh phơi ${r.id} cao độ ${n(lv)} chỉ nối ${n(s0)}–${n(s1)}, tuyến ${n(r.a)}–${n(r.b)}`);
-      if (bar.y1 > r.base + RACK.height + EPS) e.push(`thanh phơi ${r.id} cao độ ${n(lv)} vượt đầu trụ`);
+      if (s0 > r.a + EPS || s1 < r.b - EPS)
+        e.push(`thanh phơi ${r.id} chỉ chạy ${n(s0)}–${n(s1)}, tuyến ${n(r.a)}–${n(r.b)}`);
     }
   }
 

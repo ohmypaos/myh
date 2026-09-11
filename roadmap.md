@@ -697,13 +697,19 @@ Chủ nhà muốn (11/9/2026) thêm giàn phơi vào sân phơi, **cạnh nhà W
       hình học suy ở `racksOf()` — hai trụ ở hai đầu, ba thanh phơi ở `RACK.levels`
 - [x] Đặt trong **dải chừa hở** `y` 28–30, chỗ mục 3b cố ý không lợp mái để còn nắng. Treo dưới mái sân phơi
       thì tiện hơn nhưng mất đúng thứ đã trả giá để giữ
-- [x] Tuyến dọc `x = 7.55`, cách mặt tường WC khách 0.30 — và cách bậc cửa D13 gần 2 m, để lối từ ban công ra
-      sân không chui dưới quần áo ướt
-- [x] Dựng 3D (trụ hộp + thanh tròn), vẽ 2D, `specMarkdown()` in bảng, `validate()` soi khai sai, neo vào lưới
+- [x] **Chủ nhà chỉnh ngay sau bản đầu:** kiểu **tam giác ngược** hai thanh thay ba thanh xếp tầng, và đặt
+      **dọc theo tường bao sau** `y = 30` thay vì dọc cạnh nhà WC khách. Hai thanh cách nhau 0.50 m theo phương
+      ngang nên treo kín cả hai mà quần áo không chạm nhau — hơn hẳn xếp tầng dù tổng mét dây ít hơn (3.90 so
+      với 4.65 m): dải hở chỉ 2.9 × 2.0 m, lại phải chừa bậc cửa D13 ở đầu tây nên tuyến chỉ dài 1.95 m
+- [x] Tuyến ngang `y = 29.35`, `x` 5.75–7.70; hai thanh ở `y` 29.10 và 29.60, cách mặt trong rào sau 0.29.
+      Đầu tây lùi qua khỏi bậc cửa D13 (hết ở 5.61) để lối từ ban công ra sân không chui dưới quần áo ướt
+- [x] Dựng 3D (trụ hộp + tay chìa lăng trụ nghiêng + thanh tròn), vẽ 2D, `specMarkdown()` in bảng, `validate()` soi khai sai, neo vào lưới
       (vị trí bám đường, **bề dài giữ nguyên** — giàn phơi là đồ mua sẵn, không co giãn theo tường)
 - [x] `check-3d` thêm **phép kiểm 23**
 - [x] Phá thử: bỏ một trụ → phép 23 báo; đặt giàn vào giữa WC khách → `validate()` báo đầu nằm trong WC KHÁCH;
-      đặt đè bậc D13 → `validate()` báo chồng bậc
+      đặt đè bậc D13 → `validate()` báo chồng bậc. Sau khi đổi sang tam giác ngược, phá thử tiếp: bỏ lệch hai
+      thanh (xếp chồng nhau) → phép 23 báo thiếu thanh lệch ±0.25; bỏ hai tay chìa → báo dựng 2 tay, cần 4;
+      tay chìa nằm ngang không vươn lên → báo không vươn chéo từ đầu trụ
 - [x] `warn`: 4.65 m dây là ít, mùa nồm phơi ngoài trời vô ích — máy sấy mới gánh việc
 
 > **Hai chỗ lọt lưới khi phá thử, đều là lỗi của phép kiểm chứ không phải của hình:**

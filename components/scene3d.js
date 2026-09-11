@@ -40,6 +40,7 @@ const COLORS = {
   tank:        0xc6cacb,     // bồn inox — xám sáng ánh kim, tách khỏi tôn xám lạnh
   tankStand:   0x6a716e,     // giá thép và bản đế dưới bồn
   rack:        0x6a716e,     // trụ giàn phơi, cùng màu giá bồn
+  rackArm:     0x6a716e,     // tay chìa chéo trên đầu trụ giàn phơi
   rackBar:     0xc6cacb,     // thanh phơi inox
   fenceWall:   0xd9d3c4,
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp

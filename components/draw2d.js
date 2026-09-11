@@ -199,16 +199,28 @@ export function init(){
     }
   }
 
-  /* Giàn phơi — nằm trong tầm mắt nên vẽ nét liền: hai trụ đặc, thanh phơi là nét mảnh nối giữa. */
+  /* Giàn phơi — mặt cắt tam giác ngược nên trên mặt bằng thấy **hai thanh phơi** lệch hai bên tuyến, hai
+     trụ nằm giữa. Nằm trong tầm mắt nên nét liền, không phải nét chấm như đồ trên cao. */
   function drawRacks(){
     for(const r of racksOf(V)){
       if(r.errors.length) continue;
-      const [x0,y0,x1,y1] = r.ax==='h' ? [r.a,r.pos,r.b,r.pos] : [r.pos,r.a,r.pos,r.b];
-      el('line',{x1:M(x0),y1:M(y0),x2:M(x1),y2:M(y1),stroke:'#7d8582',stroke_width:1.5},gF);
-      for(const p of r.posts)
+      for(const q of r.bars){
+        const [x0,y0,x1,y1] = r.ax==='h'
+          ? [q.x, q.y+q.h/2, q.x+q.w, q.y+q.h/2] : [q.x+q.w/2, q.y, q.x+q.w/2, q.y+q.h];
+        el('line',{x1:M(x0),y1:M(y0),x2:M(x1),y2:M(y1),stroke:'#7d8582',stroke_width:1.6},gF);
+      }
+      /* Tay chìa: nét mảnh nối tim trụ ra hai thanh, cho thấy hai thanh treo trên cùng một giàn. */
+      for(const p of r.posts){
+        const cx=p.x+p.w/2, cy=p.y+p.h/2;
+        const [ax0,ay0,ax1,ay1] = r.ax==='h'
+          ? [cx, cy-r.spread, cx, cy+r.spread] : [cx-r.spread, cy, cx+r.spread, cy];
+        el('line',{x1:M(ax0),y1:M(ay0),x2:M(ax1),y2:M(ay1),stroke:'#7d8582',stroke_width:1},gF);
         el('rect',{x:M(p.x),y:M(p.y),width:M(p.w),height:M(p.h),fill:'#6a716e'},gF);
-      /* Nhãn đặt về phía toạ độ nhỏ: giàn phơi hay áp sát một bức tường, đặt phía kia là chữ rơi lên tường. */
-      const t=el('text',{x:M((x0+x1)/2)-(r.ax==='h'?0:8),y:M((y0+y1)/2)+(r.ax==='h'?-6:4),font_size:12,
+      }
+      /* Nhãn về phía toạ độ nhỏ: giàn hay áp sát một bức tường, đặt phía kia là chữ rơi lên tường. */
+      const mid = (r.a+r.b)/2;
+      const [tx,ty] = r.ax==='h' ? [mid, r.pos-r.spread] : [r.pos-r.spread, mid];
+      const t=el('text',{x:M(tx)-(r.ax==='h'?0:8),y:M(ty)+(r.ax==='h'?-6:4),font_size:12,
         text_anchor:r.ax==='h'?'middle':'end',fill:'#7d8582',
         font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gF);
       t.textContent=r.id;
