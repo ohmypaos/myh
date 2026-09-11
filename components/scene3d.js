@@ -19,6 +19,7 @@ import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { roofCovering } from '../lib/envelope.js';
+import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
   from '../lib/sun.js';
 
@@ -138,6 +139,7 @@ export function init(){
 
   /* ═══════════ DỰNG KHỐI ═══════════ */
   let group = null, LEVELS = null, roofHidden = false;
+  let solids = [];                               // khối đặc cho đi bộ (lib/walk.js)
 
   function box(b, material, kind){
     const m = new THREE.Mesh(UNIT_BOX, material);
@@ -179,6 +181,7 @@ export function init(){
     }
     const massing = buildMassing(plan);
     LEVELS = massing.levels;
+    solids = walkSolids(massing);
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes)
@@ -294,7 +297,9 @@ export function init(){
   /* ═══════════ ĐI BỘ ═══════════ */
   const keys = new Set();
   let walking = false;
-  const EYE = 1.60;                              // cao mắt so với mặt sàn đang đứng
+  /* `foot` là mặt đang đứng (lib/walk.js) — sàn nhà, bậc, sân. `eyeY` đuổi theo `foot + WALK.eye`
+     chứ không nhảy thẳng, để lên xuống bậc thấy êm như bước chứ không giật. */
+  let foot = 0, eyeY = 0;
 
   const ORBIT_HINT = 'Kéo để xoay · lăn để phóng · giữ chuột phải để dời';
 
@@ -302,7 +307,8 @@ export function init(){
      có thể bị trình duyệt từ chối, đoán trước thì kẹt ở chế độ không điều khiển được gì. */
   function enterWalk(plan){
     const p = roomCenter(plan, /HÀNH LANG$/);
-    const y = (LEVELS ? LEVELS.floor : 0.45) + EYE;
+    foot = supportAt(solids, p.x, p.z, LEVELS ? LEVELS.floor : 0.45);
+    const y = eyeY = foot + WALK.eye;
 
     /* Đứng vào hành lang ở cao độ mắt trước, rồi mới xin khoá chuột. Trình duyệt có thể từ
        chối khoá (thiếu cử chỉ người dùng, iframe không cho) — khi đó vẫn đang đứng đúng chỗ,
@@ -361,17 +367,27 @@ export function init(){
 
   function moveWalk(dt){
     if (!walking) return;
-    const step = 2.4 * dt;
+    const step = WALK.speed * dt;
     const fwd   = (keys.has('KeyW') || keys.has('ArrowUp'))
                 - (keys.has('KeyS') || keys.has('ArrowDown'));
     const right = (keys.has('KeyD') || keys.has('ArrowRight'))
                 - (keys.has('KeyA') || keys.has('ArrowLeft'));
-    if (fwd)   walk.moveForward(fwd * step);
-    if (right) walk.moveRight(right * step);
-    /* Giữ mắt trong lô, và giữ nguyên cao độ: không mô phỏng va chạm hay bậc thềm. */
     const p = walk.object.position;
-    p.x = Math.max(0.3, Math.min(LOT.w - 0.3, p.x));
-    p.z = Math.max(0.3, Math.min(LOT.d - 0.3, p.z));
+
+    /* PointerLockControls chỉ biết hướng nhìn: cho nó đi thử để lấy độ dời trên mặt phẳng ngang, rồi
+       trả về chỗ cũ và để lib/walk.js quyết đi được tới đâu. */
+    if (fwd || right) {
+      const from = p.clone();
+      if (fwd)   walk.moveForward(fwd * step);
+      if (right) walk.moveRight(right * step);
+      const to = stepWalk(solids, { x: from.x, z: from.z, foot }, p.x - from.x, p.z - from.z);
+      /* Cổng mở ra ngõ nên va chạm không giữ được người trong lô — chặn ở mép lô như trước. */
+      p.x = Math.max(0.3, Math.min(LOT.w - 0.3, to.x));
+      p.z = Math.max(0.3, Math.min(LOT.d - 0.3, to.z));
+      foot = to.foot;
+    }
+    eyeY += (foot + WALK.eye - eyeY) * Math.min(1, dt * 12);
+    p.y = eyeY;
   }
 
   /* ═══════════ THANH CÔNG CỤ ═══════════ */

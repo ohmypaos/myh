@@ -43,7 +43,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A13 | WC khách: trần giả 2.70 m, ô thoáng W4 nâng lên 2.00–2.40 | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
-| B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
+| B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
 | B3 | Nội thất dạng khối trong 3D | 💤 hoãn | |
 | B4 | Tường bao dọc hành lang ngoài hạ về cao rào | ✅ xong | |
 | B5 | Góc tường vuông, hết mái nhấp nháy | ✅ xong | |
@@ -458,16 +458,30 @@ phần nắng.
 - [x] Bỏ luôn bảng `PLACES` trong `lib/sun.js` — `sunPosition()` vốn nhận `lat`/`lon` làm tham
       số nên muốn đối chiếu nơi khác vẫn làm được, không cần bảng nào
 
-### 💤 B2 · Đi bộ: va chạm và cao độ mắt
+### ✅ B2 · Đi bộ: va chạm và cao độ mắt
 
 `components/scene3d.js`, hàm `moveWalk()`: đi xuyên tường được, và cao độ mắt luôn tính từ cốt nền
-nhà (`MUC.nen + 1.60`) nên bước ra sân thì lửng lơ 45 cm.
+nhà nên bước ra sân thì lửng lơ 45 cm. Hoãn ngày 10/9/2026, chủ nhà gọi làm ngày 11/9/2026.
 
-**Cố ý hoãn** — đủ dùng để soi tỉ lệ đứng, vốn là mục đích chính của mô hình. Chủ nhà xác nhận
-giữ hoãn ngày 10/9/2026.
+- [x] `lib/walk.js` — hình học thuần như `massing.js`: người là khối trụ đứng trên mặt `foot`, soi
+      trên đúng danh sách khối đã dựng (tường, lan can, bậc, sàn) chứ không suy lại từ mặt bằng
+- [x] **Người cao 1.70 m** (chủ nhà chốt), mắt 1.58, vai rộng 0.5 m
+- [x] Cao độ mắt theo **mặt đang đứng**, không tra theo phòng: bước lên bậc tam cấp, qua ngưỡng cửa,
+      xuống sàn bếp +0.15 đều đi theo từng nấc. Bước lên được một nấc (0.20), không trèo được hai;
+      tầm mắt đuổi theo cho êm
+- [x] Va chạm trượt dọc tường, chia nhỏ bước cho khỏi xuyên tường mỏng khi khung hình giật
+- [x] `check-3d` thêm **phép kiểm 16**: đi thử qua mọi cửa và cổng cả hai chiều bằng chính `lib/walk.js`,
+      tới nơi phải đứng đúng cốt sàn phòng bên kia; đi thẳng vào từng mảnh tường nhà thì phải bị chặn
+- [x] Phá thử: tắt va chạm → phép 16 báo xuyên tường; bỏ dựng bậc → D1, D2, D13 báo vướng
 
-- [ ] Cao độ mắt tra theo phòng đang đứng (`lib/envelope.js` đã biết qua `floorOf()`)
-- [ ] Chặn va chạm theo danh sách hộp tường
+> **Vấp: kẹt sau khi bước xuống.** Bản đầu soi mỗi vị trí mới xem có vật cản trong tầm bán kính
+> không. Vừa bước khỏi ngưỡng 0.45 xuống sân thì mép ngưỡng sau lưng thành vật cao hơn tầm bước, vẫn
+> nằm sát chân — đứng im tại chỗ. Nay chỉ cản khi bước **tiến lại gần** vật.
+
+> **Hai bán kính.** Chỉ dùng bề ngang vai thì kẹt trước bậc tam cấp: tâm còn dưới sân mà vòng vai đã
+> chạm bậc thứ hai, cao hơn tầm bước. Vật thấp dưới đầu gối nên chỉ cản theo mũi chân.
+
+> **Chưa vướng nội thất** — nội thất chưa có trong 3D (B3). Kính cửa lùa không cản, coi như mở.
 
 ### 💤 B3 · Nội thất dạng khối trong 3D
 
@@ -735,8 +749,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **15** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **16** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

@@ -22,6 +22,7 @@ npm run dev
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
 | `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D: `boxes` hộp thẳng trục và `prisms` lăng trụ mặt nghiêng (mái tôn dốc, đầu hồi). Hình học thuần, không dính three.js |
+| `lib/walk.js` | Đi bộ trong 3D: người cao 1.70 m đứng trên mặt nào, vướng khối nào — hình học thuần, `check-3d` dùng chung |
 | `lib/sun.js` | Vị trí mặt trời (NOAA) |
 | `components/draw2d.js` · `scene3d.js` | Bộ vẽ. Không dính React — React chỉ dựng DOM rỗng rồi gọi `init()` |
 | `components/Plan2D.jsx` · `Plan3D.jsx` | Khung DOM cho hai bộ vẽ trên |

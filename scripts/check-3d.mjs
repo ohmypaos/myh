@@ -11,7 +11,9 @@
 import { PLANS } from '../lib/versions/index.js';
 import { LOT, STEP, ROOF, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
-import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect } from '../lib/envelope.js';
+import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness }
+  from '../lib/envelope.js';
+import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
 const AREA_EPS = 1e-4;
@@ -73,6 +75,7 @@ const CHECKS = [
   'Mép thấp nào của mái nhẹ không chảy tiếp hay rơi xuống mái khác cũng có máng, mỗi dải máng có ống xả xuống ống ngầm',
   'Tường rào có lan can: phần xây không vượt cốt xây đặc, lan can nằm gọn giữa cốt xây đặc và đỉnh rào, trên tuyến tường có thật',
   'Trần giả dựng đúng cốt khai, dưới bản mái, và cao hơn đầu mọi cửa, cửa sổ trên tường phòng ấy',
+  'Đi bộ: qua được mọi cửa và cổng cả hai chiều, tới nơi đứng đúng cốt sàn phòng bên kia; không đi xuyên được tường nhà',
 ];
 
 function check(plan){
@@ -453,6 +456,64 @@ function check(plan){
       : (Math.abs(pos - rx) < EPS || Math.abs(pos - rx - rw) < EPS) && b > ry && a < ry + rh;
     for (const o of heads.filter(o => onRoom([o.ax, o.pos, o.a, o.b])))
       if (o.head > y + EPS) e.push(`đầu ${o.id} (${n(o.head)}) cao hơn trần giả ${id} (${n(y)})`);
+  }
+
+  /* 16 — đi bộ, bằng đúng lib/walk.js mà trang 3D dùng. Mỗi cửa và cổng: đứng giữa phòng phía này,
+     đi thẳng vuông góc qua tâm lỗ sang phía kia — không được vướng, và tới nơi phải đứng đúng cốt sàn
+     phòng bên kia (bậc thiếu, bậc cao quá một nấc, ngưỡng sai cốt đều lộ ở đây). Chiều đi lên chỉ đòi
+     khi cửa có bậc hoặc chênh không quá một nấc: kho đối chiếu chưa có bậc thì sàn nhà cao 0.45 là
+     không trèo được, đúng như thật. Phía ngoài cổng là ngõ, ngang cốt sân.
+     Cửa 'open' là chỗ không có tường (như phép 5): chỉ đi thử khi đúng là không khai tường ở đó — v2…v4
+     có lối 'open' nằm trên một tường khai suốt, massing.js dựng tường ấy kín, dữ liệu kho đối chiếu.
+     Rồi chiều ngược lại: đi thẳng vào giữa từng mảnh tường nhà cao suốt — phải bị chặn trước tim. */
+  const solids = walkSolids(m);
+  const withSteps = new Set(stepsOf(plan).filter(s => !s.error).map(s => s.id));
+  const passages = [
+    ...plan.doors.filter(d => d[5] !== 'open' || !wallThickness(plan, d[1], d[2], d[3], d[4]))
+      .map(d => ({ id: d[0], ax: d[1], pos: d[2], a: d[3], b: d[4] })),
+    ...plan.gates.map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3] })),
+  ];
+  const at = (o, u, c) => (o.ax === 'h' ? [u, c] : [c, u]);
+  for (const o of passages) {
+    const mid = (o.a + o.b) / 2;
+    const half = wallThickness(plan, o.ax, o.pos, o.a, o.b) / 2;
+    /* Mỗi phía: cốt sàn, và điểm đứng — lùi vào phòng tối đa 1.2 m nhưng không chạm tường đối diện. */
+    const side = dir => {
+      const r = roomsAlong(plan.rooms, o.ax, o.pos, o.a, o.b)
+        .find(r => (Math.abs((o.ax === 'h' ? r[3] : r[2]) - o.pos) < EPS ? 1 : -1) === dir);
+      const depth = r ? (o.ax === 'h' ? r[5] : r[4]) - 0.11 - WALK.radius - 0.02 : 1.2;
+      return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(1.2, depth) };
+    };
+    const sides = { [-1]: side(-1), [1]: side(1) };
+    for (const dir of [-1, 1]) {
+      const from = sides[-dir], to = sides[dir];
+      if (to.level - from.level > WALK.climb + EPS && !withSteps.has(o.id)) continue;
+      const [x0, z0] = at(o, mid, from.c), [x1, z1] = at(o, mid, to.c);
+      const start = { x: x0, z: z0, foot: supportAt(solids, x0, z0, from.level) };
+      const r = stepWalk(solids, start, x1 - x0, z1 - z0);
+      const arrow = `${o.id} ${dir > 0 ? '→' : '←'}`;
+      if (r.hit || Math.hypot(r.x - x1, r.z - z1) > 1e-3)
+        e.push(`đi bộ ${arrow} vướng ${r.hit?.kind ?? '?'} ở ${o.ax === 'h' ? 'z' : 'x'} ${n(o.ax === 'h' ? r.z : r.x)} (cửa ở ${o.pos}, mặt tường ±${half})`);
+      else if (Math.abs(r.foot - to.level) > EPS)
+        e.push(`đi bộ ${arrow} tới nơi đứng ở cốt ${n(r.foot)}, sàn bên kia ${n(to.level)}`);
+    }
+  }
+  for (const b of m.boxes.filter(b => b.kind === 'houseWall' && b.y0 < EPS && b.y1 > WALK.body + 1)) {
+    const alongX = b.w > b.d, len = alongX ? b.w : b.d;
+    if (len < 2 * WALK.radius + 0.2) continue;
+    const pos = alongX ? b.z + b.d / 2 : b.x + b.w / 2;
+    const u = alongX ? b.x + b.w / 2 : b.z + b.d / 2;
+    for (const dir of [-1, 1]) {
+      const c0 = pos - dir * 0.5;
+      const [x0, z0] = alongX ? [u, c0] : [c0, u];
+      if (x0 < 0 || x0 > LOT.w || z0 < 0 || z0 > LOT.d) continue;
+      const foot = supportAt(solids, x0, z0, H.floor);
+      const r = stepWalk(solids, { x: x0, z: z0, foot }, alongX ? 0 : dir, alongX ? dir : 0);
+      if (((alongX ? r.z : r.x) - pos) * dir > 0) {
+        e.push(`đi bộ xuyên được tường nhà ở ${alongX ? `z ${n(pos)}, x ${n(u)}` : `x ${n(pos)}, z ${n(u)}`}`);
+        break;
+      }
+    }
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
