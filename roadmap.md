@@ -50,6 +50,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
 | A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
 | A22 | Bồn nước 1000 L trên mái, góc cuối nhà trên ban công sau | ✅ xong | |
+| A23 | Giàn phơi ở dải hở sân phơi, cạnh nhà WC khách | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -687,6 +688,30 @@ Số liệu và lý do: `3d.md` mục 3d.
 > có `axis` là **lăng trụ mặt nghiêng** và đi đọc `yb`/`yt` — không có, nên nó gãy giữa chừng thay vì báo lỗi.
 > Chỉ lộ khi phá thử làm thân bồn chồng vào chân (lúc sạch thì không có cặp nào chồng để phải tính độ đâm sâu).
 > Đổi thành `along`.
+
+### ✅ A23 · Giàn phơi ở sân phơi
+
+Chủ nhà muốn (11/9/2026) thêm giàn phơi vào sân phơi, **cạnh nhà WC khách**. `3d.md` mục 3d.
+
+- [x] `RACK` trong `lib/lot.js`; tuyến khai ở `racks` (`[mã, trục, vị trí, từ, đến]`, cùng dạng tuyến tường),
+      hình học suy ở `racksOf()` — hai trụ ở hai đầu, ba thanh phơi ở `RACK.levels`
+- [x] Đặt trong **dải chừa hở** `y` 28–30, chỗ mục 3b cố ý không lợp mái để còn nắng. Treo dưới mái sân phơi
+      thì tiện hơn nhưng mất đúng thứ đã trả giá để giữ
+- [x] Tuyến dọc `x = 7.55`, cách mặt tường WC khách 0.30 — và cách bậc cửa D13 gần 2 m, để lối từ ban công ra
+      sân không chui dưới quần áo ướt
+- [x] Dựng 3D (trụ hộp + thanh tròn), vẽ 2D, `specMarkdown()` in bảng, `validate()` soi khai sai, neo vào lưới
+      (vị trí bám đường, **bề dài giữ nguyên** — giàn phơi là đồ mua sẵn, không co giãn theo tường)
+- [x] `check-3d` thêm **phép kiểm 23**
+- [x] Phá thử: bỏ một trụ → phép 23 báo; đặt giàn vào giữa WC khách → `validate()` báo đầu nằm trong WC KHÁCH;
+      đặt đè bậc D13 → `validate()` báo chồng bậc
+- [x] `warn`: 4.65 m dây là ít, mùa nồm phơi ngoài trời vô ích — máy sấy mới gánh việc
+
+> **Hai chỗ lọt lưới khi phá thử, đều là lỗi của phép kiểm chứ không phải của hình:**
+> · "Giàn phơi phải nằm trong một cái sân" chưa đủ — **sân phơi bao trọn WC khách trên mặt bằng**, nên đặt giàn
+> vào giữa WC vẫn sạch. Thêm: không đầu nào được nằm trong một phòng kín.
+> · So tuyến giàn phơi với bậc cửa cho ra chồng nhau 0 — tuyến là **đoạn thẳng bề ngang 0**. Nay nở ra đúng bề
+> trụ rồi mới so. Cùng một cái bẫy với phép 5 của lan can rào ngày trước: chọc một điểm / một đường thì không
+> bao giờ trúng.
 
 ## B · Mô hình 3D
 

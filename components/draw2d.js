@@ -10,7 +10,7 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -196,6 +196,22 @@ export function init(){
       if(r.error) continue;
       const d = r.ax==='h' ? {x1:M(r.a),y1:M(r.pos),x2:M(r.b),y2:M(r.pos)} : {x1:M(r.pos),y1:M(r.a),x2:M(r.pos),y2:M(r.b)};
       el('line',{...d,stroke:'#c89b3c',stroke_width:3,stroke_dasharray:'3 6'},gSky);
+    }
+  }
+
+  /* Giàn phơi — nằm trong tầm mắt nên vẽ nét liền: hai trụ đặc, thanh phơi là nét mảnh nối giữa. */
+  function drawRacks(){
+    for(const r of racksOf(V)){
+      if(r.errors.length) continue;
+      const [x0,y0,x1,y1] = r.ax==='h' ? [r.a,r.pos,r.b,r.pos] : [r.pos,r.a,r.pos,r.b];
+      el('line',{x1:M(x0),y1:M(y0),x2:M(x1),y2:M(y1),stroke:'#7d8582',stroke_width:1.5},gF);
+      for(const p of r.posts)
+        el('rect',{x:M(p.x),y:M(p.y),width:M(p.w),height:M(p.h),fill:'#6a716e'},gF);
+      /* Nhãn đặt về phía toạ độ nhỏ: giàn phơi hay áp sát một bức tường, đặt phía kia là chữ rơi lên tường. */
+      const t=el('text',{x:M((x0+x1)/2)-(r.ax==='h'?0:8),y:M((y0+y1)/2)+(r.ax==='h'?-6:4),font_size:12,
+        text_anchor:r.ax==='h'?'middle':'end',fill:'#7d8582',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gF);
+      t.textContent=r.id;
     }
   }
 
@@ -661,7 +677,7 @@ export function init(){
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
     drawRooms(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
-    drawFurniture();
+    drawFurniture(); drawRacks();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
   }

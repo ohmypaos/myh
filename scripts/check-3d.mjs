@@ -9,10 +9,10 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -80,6 +80,7 @@ const CHECKS = [
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
+  'Giàn phơi: đủ hai trụ và các thanh phơi, trụ đứng trên cốt sân và cao đúng thiết kế, thanh nối đúng hai trụ ở đúng cao độ, không thanh nào cao hơn đầu trụ',
   'Bồn nước trên mái: đủ khối thân, chân và bản đế; chân đứng đúng mặt mái, đỉnh chân đỡ thân; bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
@@ -1092,6 +1093,27 @@ function check(plan){
                                             && q.x >= p.x - EPS && q.x + q.w <= p.x + p.w + EPS
                                             && q.z >= p.z - EPS && q.z + q.d <= p.z + p.d + EPS)))
       e.push(`có chân bồn ${t.id} không đứng trọn trên bản đế nào`);
+  }
+
+  /* 23 — giàn phơi, lấy từ khối đã dựng: hai trụ đúng hai đầu tuyến, chân chạm cốt sân, đầu đúng RACK.height;
+     mỗi cao độ một thanh, nối đủ từ trụ này sang trụ kia và không thanh nào vượt đầu trụ. */
+  for (const r of racksOf(plan)) {
+    if (r.errors.length) { e.push(...r.errors); continue; }
+    const mine = m.boxes.filter(b => b.id === r.id);
+    const posts = mine.filter(b => b.kind === 'rack'), bars = mine.filter(b => b.kind === 'rackBar');
+    if (posts.length !== 2) e.push(`giàn phơi ${r.id} dựng ${posts.length} trụ, cần 2`);
+    else if (posts.some(p => Math.abs(p.y0 - r.base) > EPS || Math.abs(p.y1 - r.base - RACK.height) > EPS))
+      e.push(`trụ giàn phơi ${r.id} không đứng từ cốt sân ${n(r.base)} lên ${n(r.base + RACK.height)}`);
+    if (bars.length !== RACK.levels.length) e.push(`giàn phơi ${r.id} dựng ${bars.length} thanh phơi, cần ${RACK.levels.length}`);
+    for (const lv of RACK.levels) {
+      const bar = bars.find(b => Math.abs((b.y0 + b.y1) / 2 - r.base - lv) < EPS);
+      if (!bar) { e.push(`giàn phơi ${r.id} thiếu thanh phơi ở cao độ ${n(lv)}`); continue; }
+      const [s0, s1] = r.ax === 'h' ? [bar.x, bar.x + bar.w] : [bar.z, bar.z + bar.d];
+      /* Thanh cắm vào mặt trong trụ nên ngắn hơn tuyến đúng một bề trụ — không được ngắn hơn thế. */
+      if (s0 > r.a + RACK.post + EPS || s1 < r.b - RACK.post - EPS)
+        e.push(`thanh phơi ${r.id} cao độ ${n(lv)} chỉ nối ${n(s0)}–${n(s1)}, tuyến ${n(r.a)}–${n(r.b)}`);
+      if (bar.y1 > r.base + RACK.height + EPS) e.push(`thanh phơi ${r.id} cao độ ${n(lv)} vượt đầu trụ`);
+    }
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
