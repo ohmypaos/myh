@@ -2,6 +2,10 @@
 
 Cập nhật 11/9/2026.
 
+**Hiện không còn việc nào đang mở** — 41/41 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
+nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
+
 **Cách dùng file này:** mỗi task có một mã (`A1`, `B2`…) và một trạng thái. Làm xong thì đổi
 trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đẻ ra việc mới thì thêm vào
 đúng nhóm, đừng ghi rải rác trong commit message.
@@ -49,7 +53,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
 | A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
-| A22 | Bồn nước 1000 L trên mái, góc cuối nhà trên ban công sau | ✅ xong | |
+| A22 | Bồn nước 1000 L trên mái, góc phải cuối nhà trên trần ban công sau | ✅ xong | |
 | A23 | Giàn phơi tam giác ngược ở dải hở sân phơi, dọc tường bao sau | ✅ xong | |
 | A24 | Rào mặt tiền kín 2.10, rào sau kín 1.80, bỏ lan can — lấy riêng tư | ✅ xong | |
 | **Mô hình 3D** ||||
@@ -220,7 +224,7 @@ nóng). Không làm mái tôn thông gió phía trên vì phải khoét theo SK1
 - [x] `lib/grid.js` neo vị trí mái đổ ra ngoài trong `roofInsulation` vào đường lưới như mái hiên — thử kéo `y = 28`
       sang 27.6: tham chiếu thành 27.6, trần ban công vẫn có lớp. Không neo thì tham chiếu đứng lại, `validate()` báo
       và trần ban công mất lớp
-- [ ] Không vẽ lên bản 2D — lớp phủ gần hết nửa trái bản vẽ, chỉ thêm rối; thông tin nằm ở đặc tả
+- [x] **Chốt không vẽ lên bản 2D** — lớp phủ gần hết nửa trái bản vẽ, chỉ thêm rối; thông tin nằm ở đặc tả
 
 ### ✅ A6 · Bếp lợp tôn hai mái + trần tôn
 
