@@ -518,6 +518,7 @@ export function init(){
     { key:'slab',    name:'Dày bản mái',         min:0.1, max:0.6 },
     { key:'fence',   name:'Tường rào — đỉnh rào', min:1.2, max:3.0 },
     { key:'fenceSolid', name:'Tường rào — phần xây đặc (trên là lan can)', min:0.3, max:3.0 },
+    { key:'fencePrivate', name:'Tường rào — đoạn xây kín (cổng, cạnh sau)', min:1.2, max:3.0 },
     { key:'alley',   name:'Mái hiên hành lang ngoài', min:2.0, max:4.0 },
   ];
 

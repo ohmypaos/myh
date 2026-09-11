@@ -50,7 +50,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
 | A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
 | A22 | Bồn nước 1000 L trên mái, góc cuối nhà trên ban công sau | ✅ xong | |
-| A23 | Giàn phơi ở dải hở sân phơi, cạnh nhà WC khách | ✅ xong | |
+| A23 | Giàn phơi tam giác ngược ở dải hở sân phơi, dọc tường bao sau | ✅ xong | |
+| A24 | Rào mặt tiền và rào sau xây kín 2.20, bỏ lan can — lấy riêng tư | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -718,6 +719,36 @@ Chủ nhà muốn (11/9/2026) thêm giàn phơi vào sân phơi, **cạnh nhà W
 > · So tuyến giàn phơi với bậc cửa cho ra chồng nhau 0 — tuyến là **đoạn thẳng bề ngang 0**. Nay nở ra đúng bề
 > trụ rồi mới so. Cùng một cái bẫy với phép 5 của lan can rào ngày trước: chọc một điểm / một đường thì không
 > bao giờ trúng.
+
+### ✅ A24 · Rào mặt tiền và rào sau xây kín, bỏ lan can
+
+Chủ nhà chỉnh (11/9/2026): hai cạnh lộ nhất — mặt tiền quay ra ngõ và cạnh sau quay sang nhà phía sau —
+xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` mục 2a.
+
+- [x] `HEIGHTS.fencePrivate` 2.20 (có thanh trượt ở trang 3D); đoạn khai ở `solidFences` của mặt bằng,
+      cùng dạng với `fullHeightWalls`. `massing.js` cắt đoạn ấy thành một bậc chiều cao riêng: đỉnh lên
+      `fencePrivate`, xây đặc suốt, không sinh lan can
+- [x] Bản hiện hành khai `[['h',0,0,9.5], ['h',30,0,7.9]]` — cạnh sau dừng ở `x` 7.9 vì từ đó ra ranh phải
+      đã là **tường WC khách**, vốn là tường nhà cao tới mái
+- [x] `validate()` soi: đoạn khai phải nằm trên một bức tường có thật, và bức ấy phải là **tường rào** —
+      không phòng kín nào áp vào. Neo vào lưới như tường nâng
+- [x] `check-3d` phép 14 biết đoạn kín: không thanh lan can nào được đứng trên đoạn ấy, và phần xây không
+      vượt `fencePrivate`; phần rào còn lại vẫn soi theo `fenceSolid` như cũ
+- [x] Phá thử: vẫn dựng lan can trên đoạn kín → phép 14 báo; khai đoạn kín trên tường nhà (`v 5`, `y` 24–25
+      giáp master) → `validate()` báo áp vào phòng kín; khai ở chỗ không có tường → `validate()` báo
+- [x] Đo cái giá bằng chiếu tia trên chính khối đã dựng, ghi vào `warn` và `3d.md` mục 2a
+
+> **Phép kiểm bắt lỗi khai ngay lần chạy đầu.** Bản đầu khai cạnh sau suốt `x` 0–9.5; `validate()` báo
+> "áp vào phòng kín" vì đoạn `x` 7.9–9.5 là tường WC khách. Thu về 7.9.
+
+> **Cái giá là nắng mùa đông, không phải nắng hè.** Hè nắng cao nên tường 2.20 không với tới; đông chí thì
+> chỗ giàn phơi mất hơn nửa số giờ nắng (5.7 → 2.7 h) và cửa D12 của master mất 41% (4.6 → 2.7 h) — đúng
+> mùa Bắc Giang cần nắng nhất và đúng chỗ đau nhất, vì master không có nguồn sáng nào khác. Lam chéo hay
+> kính mờ ở đoạn trên 0.80 m sẽ giữ được cả hai; chưa chốt nên chưa dựng.
+
+> **Vấp ở phép 14:** bản đầu nhận diện "thanh lan can nằm trên đoạn rào kín" bằng dung sai 0.12 quanh
+> đường tim, nên vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —
+> thanh ấy là của cạnh bên, hợp lệ. Đổi sang so tâm khối, phải lọt hẳn trong lõi bức tường (0.06).
 
 ## B · Mô hình 3D
 

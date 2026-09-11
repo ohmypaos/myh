@@ -458,19 +458,32 @@ function check(plan){
 
   /* 14 — tường rào có lan can. Mặt bằng không khai `fenceSolid` thì không được có lan can nào. Có
      khai thì: không mảnh tường rào nào cao quá cốt xây đặc; mỗi thanh lan can nằm gọn trong khoảng
-     cốt xây đặc → đỉnh rào và có tâm nằm trên đường tim một bức tường khai trong `walls`. */
+     cốt xây đặc → đỉnh rào và có tâm nằm trên đường tim một bức tường khai trong `walls`.
+     Ngoại lệ là đoạn khai `solidFences`: xây kín tới `fencePrivate`, và **không được có thanh lan can
+     nào** trên đoạn ấy — khai kín để riêng tư mà vẫn dựng lan can là hỏng đúng mục đích. */
   const railBoxes = m.boxes.filter(b => b.kind === 'railing');
+  /* Tâm khối phải nằm sát đúng đường tim đoạn khai (trong 0.06, tức lọt hẳn trong lõi bức tường 220):
+     lấy rộng hơn là vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —
+     thanh ấy là của cạnh bên, hợp lệ. */
+  const onPriv = b => (plan.solidFences || []).some(([ax, pos, a, c]) => {
+    const [mid, s0, s1] = ax === 'h' ? [b.z + b.d / 2, b.x, b.x + b.w] : [b.x + b.w / 2, b.z, b.z + b.d];
+    return Math.abs(mid - pos) < 0.06 && s1 > a - 0.12 && s0 < c + 0.12;
+  });
+  const privRail = railBoxes.find(onPriv);
+  if (privRail) e.push(`đoạn rào khai xây kín vẫn có thanh lan can quanh x ${n(privRail.x)}, z ${n(privRail.z)}`);
+  const privTall = m.boxes.find(b => b.kind === 'fenceWall' && onPriv(b) && b.y1 > L.fencePrivate + EPS);
+  if (privTall) e.push(`đoạn rào xây kín quanh x ${n(privTall.x)}, z ${n(privTall.z)} cao ${n(privTall.y1)}, quá ${n(L.fencePrivate)}`);
   if (H.fenceSolid == null) {
     if (railBoxes.length) e.push(`mặt bằng không khai fenceSolid mà có ${railBoxes.length} thanh lan can`);
   } else {
-    const tall = m.boxes.find(b => b.kind === 'fenceWall' && b.y1 > H.fenceSolid + EPS);
+    const tall = m.boxes.find(b => b.kind === 'fenceWall' && !onPriv(b) && b.y1 > H.fenceSolid + EPS);
     if (tall) e.push(`tường rào quanh x ${n(tall.x)}, z ${n(tall.z)} xây tới ${n(tall.y1)}, quá cốt xây đặc ${n(H.fenceSolid)}`);
     /* Chạm đường tim chứ không đòi tâm nằm đúng trên tim: ở góc hai tuyến lan can, thanh bị cắt còn
        mẩu lệch nửa bề dày — vẫn là lan can của bức tường ấy. */
     const onWall = b => plan.walls.some(([ax, pos, a, c]) => ax === 'h'
       ? pos >= b.z - EPS && pos <= b.z + b.d + EPS && b.x >= a - 0.2 && b.x + b.w <= c + 0.2
       : pos >= b.x - EPS && pos <= b.x + b.w + EPS && b.z >= a - 0.2 && b.z + b.d <= c + 0.2);
-    const stray = railBoxes.find(b => b.y0 < H.fenceSolid - EPS || b.y1 > L.fenceTop + EPS || !onWall(b));
+    const stray = railBoxes.find(b => !onPriv(b) && (b.y0 < H.fenceSolid - EPS || b.y1 > L.fenceTop + EPS || !onWall(b)));
     if (stray) e.push(`thanh lan can lạc chỗ quanh x ${n(stray.x)}, z ${n(stray.z)}, cao ${n(stray.y0)}–${n(stray.y1)}`);
   }
 
