@@ -623,8 +623,21 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
         thanh là cho qua, nửa kia mất sạch vẫn lọt
   - [x] Phá thử: bỏ phần cắt → phép 10 báo 37 cặp khối chồng (lan can cắm vào đầu hồi và vách tum); bỏ dựng
         một đoạn lan can → phép 21 báo đúng đoạn `v 5 (23.8–30)`
-- [ ] Tay vịn dọc khe giữa hai vế thang
+- [x] **Tay vịn dọc khe giữa hai vế thang.** Khe 0.15 m là mép hở suốt chiều dài hai vế — vế 2 cao hơn vế 1
+      đúng hai nấc, tuột chân là rơi xuống vế dưới
+  - [x] Mỗi vế một tay vịn ở mép trong, cùng hình học với tay vịn mép ngoài (`flightRail()` gom lại, dùng chung
+        cho cả hai vế và cả hai mép); mép trong vế 1 dừng ở chân thang — quá đó không còn khe
+  - [x] Trụ đầu khe trên chiếu nghỉ: hai tay vịn chết vào đây, trụ rộng bằng khe cộng hai bề dày tay vịn nên bịt
+        luôn đầu hở
+  - [x] Vẽ 2D (nét đứt hai mép khe và đầu khe), `specMarkdown()` ghi bề rộng khe và cách làm
+  - [x] `check-3d` phép 21 đòi đủ hai tay vịn chạy gần hết vế và trụ đầu khe — lấy từ khối đã dựng, không từ số khai
+  - [x] Phá thử: bỏ tay vịn vế 1 → báo `0 / 2.34 m`; bỏ tay vịn vế 2 → báo `0 / 2.86 m`; bỏ trụ → báo đầu khe để hở
 - [ ] Lớp chống nóng XPS kiểu lát rời để tháo khi xây tầng 2 — chờ chủ nhà quyết
+
+> **Phép 16 đi bộ qua tim lỗ là quá chặt với lỗ rộng.** D4 là cả cạnh hở của buồng thang, rộng 2.15 m; tim lỗ
+> rơi đúng khe giữa hai vế, nên vừa thêm tay vịn là phép 16 báo "đi bộ D4 ← vướng stairRail". Người thật đi trên
+> vế chứ không đi trong khe. Phép 16 nay thử **cả bề ngang lỗ**, qua được là đủ — cửa thường hẹp hơn tầm vai nên
+> vẫn đúng một lối như cũ. Phá thử dựng vách chắn suốt D4 thì phép 16 vẫn báo.
 
 > **Lộ ra khi phá thử neo:** neo mép `y` lớn của lỗ thang về đường nhỏ hơn rồi kéo `y` 19 ra 19.4 thì lỗ
 > thang đứng yên còn tum nở ra — trong tum thừa một dải bản mái 0.45 m, và **không phép kiểm nào báo**.

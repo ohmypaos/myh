@@ -143,6 +143,14 @@ export function init(){
       t.textContent='LÊN';
       el('line',{x1:M(g.x),y1:M(s.hole.y)+3,x2:M(s.hole.x+s.hole.w),y2:M(s.hole.y)+3,
         stroke:'#4f4c46',stroke_width:2,stroke_dasharray:'6 5'},gStep);
+      /* Tay vịn hai bên khe giữa hai vế: mép trong vế 2 chạy hết vế, mép trong vế 1 dừng ở chân thang. */
+      const gap = s.hole.y + s.width, inner1 = s.hole.y + s.hole.h - s.width;
+      if(inner1 > gap + 1e-6){
+        const R = {stroke:'#4f4c46',stroke_width:2,stroke_dasharray:'6 5'};
+        el('line',{x1:M(g.x+g.w),y1:M(gap)-3,x2:M(s.hole.x+s.hole.w),y2:M(gap)-3,...R},gStep);
+        el('line',{x1:M(g.x+g.w),y1:M(inner1)+3,x2:M(s.start1),y2:M(inner1)+3,...R},gStep);
+        el('line',{x1:M(g.x+g.w),y1:M(gap)-3,x2:M(g.x+g.w),y2:M(inner1)+3,...R},gStep);
+      }
     }
   }
 

@@ -80,7 +80,7 @@ const CHECKS = [
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
-  'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
+  'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
 
 function check(plan){
@@ -531,16 +531,31 @@ function check(plan){
       return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(want, depth) };
     };
     const sides = { [-1]: side(-1), [1]: side(1) };
+    /* Thử **cả bề ngang lỗ**, không chỉ tim lỗ. Cửa thường hẹp hơn tầm vai nên vẫn đúng một lối như cũ;
+       nhưng lỗ rộng thì tim lỗ không nhất thiết là lối đi — D4 là cả cạnh hở của buồng thang, tim lỗ rơi
+       đúng khe giữa hai vế, chỗ có tay vịn, còn người thì đi trên vế. Qua được là đủ, không bắt đi giữa.
+       Báo theo lối giữa cho thông điệp khỏi đổi. */
+    const lo = o.a + WALK.radius, hi = o.b - WALK.radius;
+    const lines = hi <= lo + EPS ? [mid]
+      : [mid, ...Array.from({ length: Math.floor((hi - lo) / 0.1) + 1 }, (_, i) => lo + i * 0.1)];
     for (const dir of [-1, 1]) {
       const from = sides[-dir], to = sides[dir];
       if (to.level - from.level > WALK.climb + EPS && !withSteps.has(o.id)) continue;
-      const [x0, z0] = at(o, mid, from.c), [x1, z1] = at(o, mid, to.c);
-      const start = { x: x0, z: z0, foot: supportAt(solids, x0, z0, from.level) };
-      const r = stepWalk(solids, start, x1 - x0, z1 - z0);
-      const arrow = `${o.id} ${dir > 0 ? '→' : '←'}`;
-      if (r.hit || Math.hypot(r.x - x1, r.z - z1) > 1e-3)
+      let bad = null;
+      for (const u of lines) {
+        const [x0, z0] = at(o, u, from.c), [x1, z1] = at(o, u, to.c);
+        const start = { x: x0, z: z0, foot: supportAt(solids, x0, z0, from.level) };
+        const r = stepWalk(solids, start, x1 - x0, z1 - z0);
+        const why = r.hit || Math.hypot(r.x - x1, r.z - z1) > 1e-3 ? 'block'
+                  : Math.abs(r.foot - to.level) > EPS ? 'level' : null;
+        if (!why) { bad = null; break; }
+        bad ??= { r, why };
+      }
+      if (!bad) continue;
+      const { r, why } = bad, arrow = `${o.id} ${dir > 0 ? '→' : '←'}`;
+      if (why === 'block')
         e.push(`đi bộ ${arrow} vướng ${r.hit?.kind ?? '?'} ở ${o.ax === 'h' ? 'z' : 'x'} ${n(o.ax === 'h' ? r.z : r.x)} (cửa ở ${o.pos}, mặt tường ±${half})`);
-      else if (Math.abs(r.foot - to.level) > EPS)
+      else
         e.push(`đi bộ ${arrow} tới nơi đứng ở cốt ${n(r.foot)}, sàn bên kia ${n(to.level)}`);
     }
   }
@@ -850,7 +865,9 @@ function check(plan){
         — rồi đi ngược lại xuống tới sàn. Vướng lan can, vách tum, bản mái hay bậc cao quá tầm bước đều lộ ở đây;
      c) khoảng đầu: trên tâm mọi mặt bậc không có khối nào (kể cả tấm polycarbonate) thấp hơn STAIR.headroom;
      d) tum: mọi điểm trong lỗ thang có mái tum hoặc tấm lấy sáng bên trên; tâm cửa tum thủng;
-     e) lan can mái: chân đúng mặt mái, đỉnh đúng cao lan can, mỗi tuyến khai có thanh. */
+     e) lan can mái: chân đúng mặt mái, đỉnh đúng cao lan can, mỗi đoạn đã cắt có thanh;
+     f) khe giữa hai vế: mỗi mép trong có tay vịn chạy hết vế, cao đúng STAIR.rail trên mũi bậc, và có trụ ở
+        đầu khe — mép hở không tay vịn là rơi thẳng xuống vế dưới. */
   const walkTopOf = walkTop;
   const allSolid = [...m.boxes, ...m.prisms].filter(b => b.kind !== 'furniture' && b.kind !== 'doorLeaf');
   for (const s of stairsOf(plan)) {
@@ -906,6 +923,28 @@ function check(plan){
       const down = walkRoute([...route].reverse(), walkTopOf);
       if (down.stuck) e.push(`đi bộ xuống thang ${s.id} vướng ${down.stuck.hit?.kind ?? '?'} ở x ${n(down.stuck.x)}, z ${n(down.stuck.z)}`);
       else if (Math.abs(down.p.foot - base) > EPS) e.push(`đi bộ xuống thang ${s.id} tới nơi ở cốt ${n(down.p.foot)}, sàn ${n(base)}`);
+    }
+
+    /* Khe giữa hai vế: hai mép trong đều là mép hở. Đòi tay vịn dọc từng mép, chạy gần hết bề dài vế, và một
+       khối bịt đầu khe. Lấy từ khối đã dựng, không từ số khai. */
+    const well = s.hole.h - 2 * s.width;
+    if (well > EPS) {
+      const rails = [...m.boxes, ...m.prisms].filter(b => b.kind === 'stairRail' && b.id === s.id);
+      const xs0 = s.landing.x + s.landing.w;
+      const sides = [
+        { name: 'vế 2', edge: s.hole.y + s.width, from: xs0, to: s.hole.x + s.hole.w },
+        { name: 'vế 1', edge: s.hole.y + s.hole.h - s.width, from: xs0, to: s.start1 },
+      ];
+      for (const { name, edge, from, to } of sides) {
+        const run = rails.filter(b => b.w > b.d && b.z < edge + RAILING.rail + EPS && b.z + b.d > edge - RAILING.rail - EPS
+                                      && b.x < to - EPS && b.x + b.w > from + EPS);
+        const cover = run.length ? Math.min(...run.map(b => b.x + b.w)) - Math.max(...run.map(b => b.x)) : 0;
+        if (cover < (to - from) * 0.9)
+          e.push(`cầu thang ${s.id}: mép trong ${name} giáp khe rộng ${n(well)} m chỉ có tay vịn ${n(cover)} / ${n(to - from)} m`);
+      }
+      const head = rails.find(b => b.x + b.w <= xs0 + EPS && b.z < sides[0].edge + EPS && b.z + b.d > sides[1].edge - EPS
+                                   && b.y1 > s.landingTop + STAIR.rail - EPS);
+      if (!head) e.push(`cầu thang ${s.id}: đầu khe giữa hai vế để hở, không có trụ vịn trên chiếu nghỉ`);
     }
 
     for (const b of mine) {

@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 18:09:15 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 18:18:17 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -181,7 +181,7 @@ Cao bậc suy ra từ mặt sàn tới mặt mái đi lại được chia đều
 |---|---|---|---:|---|---:|---:|---:|---|
 | CT1 | CẦU THANG LÊN MÁI | 0.11 · 16.90 · 3.92 · 18.95 | 0.95 | 10 + 12 | 0.171 | 0.26 | 2.16 | 0.45 → 4.21 |
 
-Lan can thang cao 0.90 m dọc mép vế 2 giáp phòng khách (trên bức lửng cao 1.00 m) và ở mép lỗ thang trên mặt mái.
+Lan can thang cao 0.90 m dọc mép vế 2 giáp phòng khách (trên bức lửng cao 1.00 m) và ở mép lỗ thang trên mặt mái. Khe giữa hai vế rộng 0.15 m: mỗi vế một tay vịn ở mép trong, chết vào một trụ ở đầu khe trên chiếu nghỉ.
 
 ### Tum
 
