@@ -93,7 +93,7 @@ và không đua trên mái thấp hơn, mỗi dải máng một **ống xả** �
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (hai tường
 bên ban công sau: tường trái đỡ trần ban công, tường phải có cửa D13). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
-riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
+riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
 đọc trước khi sửa.
 
 ## Hướng

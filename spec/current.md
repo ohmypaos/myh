@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 09:42:41 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 09:49:11 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -69,7 +69,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | W1 | dọc | 5.0 | 12.60 | 14.40 | 1.80 | Phòng khách ← Sân chính |
 | W2 | ngang | 18.0 | 5.30 | 6.30 | 1.00 | Bếp ← Sân chính |
 | W3 | dọc | 8.5 | 19.20 | 21.20 | 2.00 | Bếp ← Hành lang ngoài |
-| W4 | dọc | 7.5 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 1.90, kèm quạt hút |
+| W4 | dọc | 7.5 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 2.00, kèm quạt hút |
 
 ## 5. Lấy sáng trên mái
 
@@ -148,6 +148,12 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 
 - R2 BẾP + NHÀ ĂN — cao hơn sân **0.15 m**
 - R5 WC KHÁCH — cao hơn sân **0.15 m**
+
+### Trần giả
+
+Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọt lòng; bản mái và tường giữ nguyên cốt.
+
+- R5 WC KHÁCH — trần cao **2.70 m** tính từ sàn phòng (cốt 2.85 so với sân)
 
 ## 7. Tường
 
@@ -266,7 +272,8 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - **Bếp nấu tách sang nhánh dọc**, chậu rửa giữ ở nhánh ngang — hết nấu và rửa chen nhau
 - Chậu rửa vẫn quay ra sân phơi, bếp nấu quay vào trong
 - WC khách 1.6 → **2.0 × 2.0 m**, hai tường trong xuống 100 mm
-- W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 1.90 — không nhìn ra được
+- W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 2.00 — không nhìn ra được
+- **Trần WC khách hạ còn 2.70 m** (trần giả dưới bản mái; trước cao 3.60 vì sàn hạ mà mái giữ cốt) — ô thoáng W4 nâng lên theo, bệ 1.90 → 2.00, mép trên 2.40
 - D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
 - **Bậc tam cấp** cho D1, D2, D13 — 2 bậc ngoài, nấc trên là sàn nhà; mỗi nấc 15 cm, tính từ mặt tường. D1 mặt bậc 30 cm, rộng hơn cửa 0.3 m mỗi bên; cửa phụ D2, D13 gọn hơn — mặt bậc 25 cm, dư 0.2 m mỗi bên
 - Sàn bếp **hạ còn +0.15 so với sân** — D9, D10 chỉ còn một nấc ở ngưỡng, khỏi dựng bậc; mái bếp giữ cốt nên trần cách sàn 3.60 m

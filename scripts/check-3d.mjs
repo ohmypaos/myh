@@ -72,6 +72,7 @@ const CHECKS = [
   'Mái nhẹ kề nhau thì nối liền mạch cùng cao độ hoặc gá thấp hẳn bên dưới, và không hạ xuống dưới đầu lỗ mở nào nó phủ',
   'Mép thấp nào của mái nhẹ không chảy tiếp hay rơi xuống mái khác cũng có máng, mỗi dải máng có ống xả xuống ống ngầm',
   'Tường rào có lan can: phần xây không vượt cốt xây đặc, lan can nằm gọn giữa cốt xây đặc và đỉnh rào, trên tuyến tường có thật',
+  'Trần giả dựng đúng cốt khai, dưới bản mái, và cao hơn đầu mọi cửa, cửa sổ trên tường phòng ấy',
 ];
 
 function check(plan){
@@ -429,6 +430,29 @@ function check(plan){
       : pos >= b.x - EPS && pos <= b.x + b.w + EPS && b.z >= a - 0.2 && b.z + b.d <= c + 0.2);
     const stray = railBoxes.find(b => b.y0 < H.fenceSolid - EPS || b.y1 > L.fenceTop + EPS || !onWall(b));
     if (stray) e.push(`thanh lan can lạc chỗ quanh x ${n(stray.x)}, z ${n(stray.z)}, cao ${n(stray.y0)}–${n(stray.y1)}`);
+  }
+
+  /* 15 — trần giả. Tra thẳng từ số khai và danh sách lỗ mở, không gọi dropCeilingsOf(): phòng khai
+     trần giả phải có đúng một tấm nằm trong phòng ở cốt sàn + cao khai, dưới mặt dưới bản mái, và
+     không lỗ mở nào trên bốn tường của phòng cao quá mặt dưới tấm — hạ trần mà quên cửa là trần cắt
+     ngang cửa. */
+  for (const [id, h] of Object.entries(plan.dropCeilings || {})) {
+    const r = plan.rooms.find(x => x[0] === id);
+    if (!r) continue;                                   // validate() đã báo
+    const [, , rx, ry, rw, rh] = r;
+    const y = (plan.floorLevels?.[id] ?? H.floor) + h;
+    const tiles = m.boxes.filter(b => b.kind === 'dropCeiling'
+      && b.x >= rx - EPS && b.x + b.w <= rx + rw + EPS && b.z >= ry - EPS && b.z + b.d <= ry + rh + EPS);
+    if (tiles.length !== 1 || Math.abs(tiles[0].y0 - y) > EPS) {
+      e.push(`trần giả ${id} phải có một tấm ở cốt ${n(y)}, dựng ${tiles.map(b => n(b.y0)).join(', ') || 'không có'}`);
+      continue;
+    }
+    if (tiles[0].y1 > L.ceiling + EPS) e.push(`trần giả ${id} đâm vào bản mái (${n(tiles[0].y1)} > ${n(L.ceiling)})`);
+    const onRoom = ([ax, pos, a, b]) => ax === 'h'
+      ? (Math.abs(pos - ry) < EPS || Math.abs(pos - ry - rh) < EPS) && a < rx + rw && b > rx
+      : (Math.abs(pos - rx) < EPS || Math.abs(pos - rx - rw) < EPS) && b > ry && a < ry + rh;
+    for (const o of heads.filter(o => onRoom([o.ax, o.pos, o.a, o.b])))
+      if (o.head > y + EPS) e.push(`đầu ${o.id} (${n(o.head)}) cao hơn trần giả ${id} (${n(y)})`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

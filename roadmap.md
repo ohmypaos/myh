@@ -40,6 +40,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A4 | Đưa mái bàn trà, mái tôn bếp, mái sân phơi vào `lib/versions/current.js` | ✅ xong | |
 | A11 | Mái sân chính 4.5 × 6 m liền dải với mái hành lang và mái sân phơi, máng xối trong 3D | ✅ xong | |
 | A12 | Tường rào 1.80 m, xây đặc 0.80 m + lan can song thoáng; tường D13 lên trần; cổng chính 3.6 m | ✅ xong | |
+| A13 | WC khách: trần giả 2.70 m, ô thoáng W4 nâng lên 2.00–2.40 | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
@@ -212,7 +213,7 @@ chờ A4.
 - [x] WC khách 1.6 × 2.0 → **2.0 × 2.0 m** tim tường, nới sang trái: `x` 7.5–9.5. Dải hở sân
       phơi (A7) còn 2.5 × 2.0 m
 - [x] Hai tường trong (bắc, tây) 220 → **100 mm** vì phòng nhỏ; hai tường ranh lô giữ 220
-- [x] Trần giữ 3.30 m — đã tính hạ xuống 2.60 rồi bỏ
+- [x] Trần giữ 3.30 m — đã tính hạ xuống 2.60 rồi bỏ (A13 sau đó làm trần giả 2.70)
 - [x] W4 rộng 0.8 m, bệ 0.90 → **ô thoáng 0.6 × 0.4 m, bệ 1.90 → mép trên 2.30**, kính mờ lật, kèm
       quạt hút. Khai ở `heights.only.W4`; `lib/massing.js` nay đọc bệ / mép trên riêng cho từng
       cửa sổ, trước chỉ cửa đi làm được
@@ -429,6 +430,19 @@ Chủ nhà muốn (11/9/2026) hạ tường rào, kết hợp lan can thoáng đ
 > **Lộ tầm nhìn.** Rào thoáng từ 0.80 m trở lên nên từ ngõ và nhà bên nhìn thấy sân và ban công. Rào
 > mặt tiền quay ra đường thường còn chịu quy định địa phương về phần xây đặc — nên hỏi trước khi xin
 > phép xây.
+
+### ✅ A13 · Trần WC khách, ô thoáng W4
+
+Chủ nhà thấy (11/9/2026) ô thoáng WC khách hơi thấp và trần quá cao cho một WC. Trần thật ra cách sàn
+WC **3.60 m** chứ không phải 3.30: sàn WC hạ còn +0.15 ở A9 mà bản mái giữ cốt.
+
+- [x] **Trần giả 2.70 m** tính từ sàn WC — khai `dropCeilings:{R5:2.70}`. Bản mái và tường WC giữ nguyên:
+      hạ cả khối thì mép thấp mái sân phơi (3.20, áp tường bắc WC) mất chỗ tựa, máng sát tường hỏng
+- [x] W4 bệ 1.90 → **2.00**, mép trên 2.30 → **2.40** — còn cách trần 0.30 m
+- [x] `dropCeilingsOf()` trong `lib/envelope.js`; `massing.js` dựng tấm `dropCeiling` phủ lọt lòng, 3D
+      "Ẩn mái" giấu cùng; `validate()` báo khai sai phòng; `specMarkdown()` in mục Trần giả
+- [x] `check-3d` thêm **phép kiểm 15**: tấm đúng cốt, dưới bản mái, cao hơn đầu mọi cửa trên tường phòng
+- [x] Phá thử: hạ trần giả xuống 2.20 → phép 15 báo đầu W4 cao hơn trần
 
 ---
 
@@ -721,8 +735,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **14** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **15** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường
