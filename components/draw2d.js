@@ -778,9 +778,7 @@ export function init(){
     el('rect',{x:0,y:ty,width:M(9.5),height:200,fill:'#fff',stroke:'#141414',stroke_width:2.5},TB);
     el('line',{x1:0,y1:ty+62,x2:M(9.5),y2:ty+62,stroke:'#141414',stroke_width:1.4},TB);
     el('line',{x1:M(6.4),y1:ty,x2:M(6.4),y2:ty+200,stroke:'#141414',stroke_width:1.4},TB);
-    // tên ngắn: bỏ tiền tố "vN — " và cắt ở dấu phẩy, cho vừa ô khung tên
-    const short = V.label.replace(/^v\d+\s*—\s*/,'').split(',')[0];
-    tt(16, ty+40, `MẶT BẰNG TẦNG TRỆT — ${V.id.toUpperCase()}: ${short.toUpperCase()}`, 23, 700);
+    tt(16, ty+40, 'MẶT BẰNG TẦNG TRỆT', 23, 700);
     const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3');
     const sdKin   = sumClear(kinRooms, WALLS);
     const sdChinh = sumClear(kinRooms.filter(r=>r[0][0]==='L'), WALLS);
