@@ -17,9 +17,9 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `MIN_CLEAR` |
-| `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
-| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `MIN_CLEAR` |
+| `lib/plan.js` | Diện tích thông thủy và **16 phép kiểm** `validate()` |
+| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ, cầu thang lên mái, tum, lan can mái — suy từ cửa, tường và số khai, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
 | `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D: `boxes` hộp thẳng trục và `prisms` lăng trụ mặt nghiêng (mái tôn dốc, đầu hồi). Hình học thuần, không dính three.js |
 | `lib/walk.js` | Đi bộ trong 3D: người cao 1.70 m đứng trên mặt nào, vướng khối nào — hình học thuần, `check-3d` dùng chung |
@@ -55,13 +55,13 @@ trong cùng bản vẽ. Không sửa, trừ khi đó là **lỗi của chính b�
 
 **1. Sửa `lib/versions/current.js`.**
 File là một snapshot đầy đủ (rooms, walls, doors, windows, skylights, gates, strips, furn,
-roofs, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
+roofs, stairs, tum, roofRailings, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
 mới — đó là phần hiện trên cột phải của bản vẽ.
 
 **2. Chạy bộ kiểm tra — phải sạch trước khi đi tiếp.**
-`validate()` trong `lib/plan.js` có 14 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
+`validate()` trong `lib/plan.js` có 16 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
 trên tường, phòng kín có cửa, nội thất không chồng nhau và không nằm trong vùng quét cánh
-cửa, bậc nằm gọn trong sân…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
+cửa, bậc nằm gọn trong sân, cầu thang khớp lỗ thang…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
 Các bản trong kho đối chiếu còn lỗi là bình thường — chúng là bước trung gian.
 
 **3. Sinh lại đặc tả — không bao giờ gõ tay.**
@@ -98,8 +98,14 @@ mặt tường / dầm đỡ. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (hai tường
 bên ban công sau: tường trái đỡ trần ban công, tường phải có cửa D13). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
-riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
-đọc trước khi sửa.
+riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và tường có mái hiên (`overhangs`).
+
+**Cầu thang lên mái** (chuẩn bị tầng 2 sau khoảng 5 năm, chốt 11/9/2026) khai ở `stairs`: lọt lòng buồng thang
+(cũng là lỗ khoét bản mái), bề rộng vế, mặt bậc, số nấc hai vế — cao bậc suy ra. **Tum** khai ở `tum` (vùng, cửa ra
+mái, mỗi cửa trên một cạnh), **lan can mép mái** ở `roofRailings` (tuyến). Tường khai `'low'` là bức lửng cao
+`STAIR.parapet`. Hình học suy ở `lib/envelope.js`; bản hiện hành không còn giếng trời, cửa trời hay ô thoáng nào trên
+mái — `skylights` rỗng, chỉ có lỗ thang. `3d.md` mục 3d.
+Lý do của từng lựa chọn nằm ở `3d.md` — đọc trước khi sửa.
 
 ## Hướng
 

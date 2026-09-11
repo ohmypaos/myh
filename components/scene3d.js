@@ -27,6 +27,16 @@ import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayL
 const COLORS = {
   houseWall:   0xefece4,
   partitionWall:0xb8c3c5,   // vách nhựa ngăn phòng, không phải tường xây
+  lowWall:     0xefece4,     // bức lửng giữa phòng khách và buồng thang — trát sơn như tường nhà
+  stair:       0xe2dccd,     // bản thang, chiếu nghỉ
+  stairRail:   0x4f4c46,     // lan can thang, lan can mép lỗ thang
+  tumWall:     0xefece4,     // tường gạch tum trát sơn, cùng màu tường nhà
+  tumRoof:     0xb9bcb8,     // mái tôn tum
+  tumDoor:     0x8d6e4f,     // cánh cửa tum ra mái
+  tumCurb:     0xefece4,     // gờ chắn nước ngưỡng cửa tum
+  tumFascia:   0x6a716e,     // diềm gập bọc mép mái tum — sẫm để viền mái đọc thành một nét gọn
+  tumCanopy:   0x6a716e,     // ô văng trên cửa tum, cùng màu diềm
+  roofRailing: 0x4f4c46,     // lan can thép mép mái
   fenceWall:   0xd9d3c4,
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,
@@ -204,13 +214,15 @@ export function init(){
     for (const b of massing.boxes)
       group.add(box(b, materialOf(b), b.kind));
     for (const p of massing.prisms) {
-      const m = new THREE.Mesh(prismGeometry(p), solidMats[p.kind] || solidMats.houseWall);
-      m.castShadow = m.receiveShadow = true;
+      /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
+      const sash = p.kind === 'sash' || p.kind === 'louver';
+      const m = new THREE.Mesh(prismGeometry(p), sash ? glassMat : solidMats[p.kind] || solidMats.houseWall);
+      m.castShadow = !sash; m.receiveShadow = true;
       m.userData.kind = p.kind;
       group.add(m);
     }
     for (const b of massing.glass) {
-      const m = box(b, glassMat, 'glass');
+      const m = box(b, glassMat, b.kind || 'glass');
       m.castShadow = false;                    // kính không đổ bóng: để vệt nắng lọt xuống
       group.add(m);
     }
@@ -220,9 +232,11 @@ export function init(){
   }
 
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
-     được vào trong bếp. Đầu hồi là tường, giữ nguyên. */
+     được vào trong bếp. Đầu hồi là tường, giữ nguyên. Tum và lan can mái đứng trên mái nên giấu cùng —
+     còn lại thì nhìn xuống thấy cầu thang. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang' || k === 'roofInsulation'
-                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling';
+                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling'
+                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }

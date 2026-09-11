@@ -47,6 +47,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A17 | Vách ngăn nội bộ phòng thờ, phòng ngủ, hành lang và WC chung là vách nhựa tới trần | ✅ xong | Không chịu lực; tường bao và vách tiếp xúc sân/mưa vẫn xây |
 | A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
+| A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
+| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ⬜ chưa làm | XPS lát rời chờ chủ nhà quyết |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -553,6 +555,53 @@ mục 3, 3a.
 - [x] Phần trời lỗ bếp: W2, D9, D10 không đổi, W3 nhích lên (3d.md mục 3)
 - [x] `note`, `changes`, `warn`, `npm run spec`, `npm run check` sạch
 - [x] Chủ nhà chốt, commit
+
+### ✅ A20 · Cầu thang lên mái, tum, lan can mái
+
+Chủ nhà thấy (11/9/2026) nhiều ô cửa trên trần không hợp khi sau này làm tầng 2. Hỏi ra: **tầng 2 sau khoảng 5 năm,
+chỉ trên nhà chính**; gia đình chỉ thờ thổ địa thần tài. Chốt: làm thang lên mái ngay ở chỗ phòng thờ cũ, tum khung
+thép lợp tôn, lan can thép quanh mép mái, bỏ hết SK1–SK3; bỏ vách phòng khách – phòng thờ (chủ nhà đề xuất), giữ
+bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
+
+- [x] `current.js`: phòng khách 5 × 4.85, `L3` thành CẦU THANG, hành lang từ `y` 16.85; tường `'low'`; cửa D4 mở
+      thông; W5 ô kính mờ PN1; kệ tivi 2.5 m + kệ thần tài; `stairs`, `tum`, `roofRailings`
+- [x] `lib/lot.js`: `STAIR`, `TUM`, `ROOF_RAILING`, `FURNITURE.shrine`
+- [x] `lib/envelope.js`: `stairsOf()`, `tumOf()`, `roofRailingsOf()`, `roofHoles()`, `roofWalkTop()`
+- [x] `lib/massing.js`: bức lửng, bậc răng cưa, lan can thang (có lăng trụ nghiêng), tum, lan can mái; khoét lỗ thang
+      khỏi bản mái và lớp chống nóng
+- [x] `validate()` **phép 16**; `check-3d` phép 3, 6, 20 tính lỗ thang và tum, thêm **phép 21** (đi bộ lên mái và xuống)
+- [x] 2D: bậc, chiếu nghỉ, đường LÊN, tum, lan can mái, bức lửng, kệ thần tài; 3D: màu, "Ẩn mái" giấu tum; đặc tả
+- [x] Chủ nhà chỉnh sau bản đầu: bỏ luôn SK4 (WC chung dùng quạt hút nối ống lên mái); tum có cửa ra cả hai phía —
+      `tum.doors` thành danh sách, phép 21 đi ra vào qua từng cửa; lan can mái bao luôn mái hiên cửa chính
+- [x] Chủ nhà chỉnh tiếp: lan can thang song thoáng thay tấm đặc; kệ thờ + kệ tivi một khối, kệ thờ sát tường trái
+      nhiều tầng (tủ đồ thờ dưới), vách ngăn với kệ tivi lên trần — `FURNITURE.shrine`, phép 17 cho kệ thờ chạm trần
+- [x] Kệ tivi: thử kệ ô thoáng lên trần tới mép hành lang — nhìn bí, bỏ; chốt kệ thấp hai tầng (`tvShelf`: tủ để đồ
+      dưới, mặt kệ tivi / loa trên) dài tới đầu trong bức lửng
+- [x] Bỏ ô kính mờ W5 của PN1 — mất riêng tư; PN1 không còn ánh sáng tự nhiên (ghi `warn`)
+- [x] Hai cửa tum có cánh, khoá, mở ra phía mái: `tum.doors` thêm bản lề và chiều mở, `validate()` đòi mở ra ngoài,
+      3D dựng cánh `tumDoor`, 2D vẽ cung quét, phép 21 soi mỗi cửa một cánh phía ngoài tum
+- [x] Tum xây tường gạch 100 thay vách tôn: bỏ dải lam hở + cột góc, thay ô thoáng lam sát mái trên hai vách dài
+- [x] PN1 hai ô thoáng cửa lật kính mờ W5, W6 đặt cao ra buồng thang (đoạn chiếu nghỉ, đầu trên vế 1); cửa tum đổi sang
+      mở vào trong để chốt từ trong nhà — `validate()` và phép 21 đòi cánh nằm phía trong tum
+- [x] Ô thoáng PN1 thu còn 0.40 × 0.30, bệ 2.40, dồn về phía cửa PN1; cánh kính lật cố định dựng trong 3D — `hopper` trong
+      `heights.only`, `massing.js` dựng lăng trụ `sash` thay tấm kính phẳng, `check-3d` phép 5 soi tấm lật khớp lỗ và độ mở
+- [x] Gờ chắn nước 0.10 ở ngưỡng hai cửa tum (`tumCurb`, cánh đứng trên gờ); mái tum đua 0.40 ba phía, cạnh trên ranh
+      lô không đua (`tumOf().roof`) — phép 21 soi gờ và độ đua, đi bộ vẫn bước qua gờ
+- [x] Tum gọn một cửa: tường đông áp sát đầu vế 2 thay lan can mép lỗ, cửa ngay đầu vế 2 ra thẳng mái, cánh mở ra
+      (không có chiếu tới), then chốt mặt trong; nấc cuối lên gờ chắn nước — vế 2 thêm một nấc (10 + 12, cao 0.171).
+      `tumOf()` đòi tường và cửa ở đầu thang; phép 21 soi cánh không quét lên lỗ thang
+- [x] Mái tum vát dốc về phía đông — chủ nhà không cần, giữ mái phẳng đua 0.40
+- [x] Ô thoáng tum gắn 4 lá kính cố định xếp nghiêng chéo xuống ra ngoài (`TUM.louvers`, lăng trụ `louver`); phép 21 soi
+      số lá, nằm trong dải ô thoáng, nghiêng đúng chiều, lá trên chồng mép lá dưới
+- [x] Mái tum đua 0.40 nhìn thô → đua 0.18 bọc diềm gập (`tumFascia`), ô văng 0.6 trên cửa (`tumCanopy`); phép 21 soi
+      diềm và ô văng. Đã cân nhắc tường chắn mái (máng giấu dễ tắc lá) và mái bê tông (nặng, khó dỡ)
+- [x] Chủ nhà chốt, commit
+
+### ⬜ A21 · Việc tồn sau A20
+
+- [ ] Neo thang, tum, lan can mái vào lưới (E2) — kéo thanh trượt `y` 16.85 thì thang đang đứng yên
+- [ ] Tay vịn dọc khe giữa hai vế thang
+- [ ] Lớp chống nóng XPS kiểu lát rời để tháo khi xây tầng 2 — chờ chủ nhà quyết
 
 ## B · Mô hình 3D
 

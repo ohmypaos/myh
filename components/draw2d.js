@@ -9,7 +9,8 @@ import { MIN_CLEAR, FURNITURE } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
+         stairsOf, tumOf, roofRailingsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -69,7 +70,7 @@ export function init(){
       const o = M(t)/2;
       const r = ax==='h' ? {x:M(a)-o, y:M(pos)-o, width:M(b-a)+2*o, height:M(t)}
                          : {x:M(pos)-o, y:M(a)-o, width:M(t), height:M(b-a)+2*o};
-      el('rect',{...r, fill:material==='plastic'?'#778083':'#141414'},gWall);
+      el('rect',{...r, fill:material==='plastic'?'#778083':material==='low'?'#9c968a':'#141414'},gWall);
     }
     // khoét lỗ cửa, cửa sổ, cổng
     const hole = (ax,pos,a,b,t=0.24)=>{
@@ -118,6 +119,66 @@ export function init(){
                              : {x1:M(t),y1:M(s.a),x2:M(t),y2:M(s.b)};
         el('line',{...d,stroke:'#8d8778',stroke_width:1.2},gStep);
       }
+    }
+  }
+
+  /* Cầu thang — mặt bậc và chiếu nghỉ (lib/envelope.js), đường đi lên vẽ từ chân vế 1 qua chiếu nghỉ tới đầu vế 2,
+     mũi tên ở đầu trên kèm chữ LÊN. Nét đứt dọc mép vế 2 giáp phòng khách là lan can trên bức lửng. */
+  function drawStairs(){
+    const S = {stroke:'#8d8778', stroke_width:1.4};
+    for(const s of stairsOf(V)){
+      if(s.error) continue;
+      const g = s.landing;
+      el('rect',{x:M(g.x),y:M(g.y),width:M(g.w),height:M(g.h),fill:'#ebe6d8',...S},gStep);
+      for(const t of s.treads)
+        el('rect',{x:M(t.x),y:M(t.y),width:M(t.w),height:M(t.h),fill:'#f3efe4',...S},gStep);
+      const c1 = s.hole.y + s.hole.h - s.width/2, c2 = s.hole.y + s.width/2, xl = g.x + s.width/2;
+      const x0 = s.start1 - 0.1, x1 = s.hole.x + s.hole.w - 0.15;
+      el('path',{d:`M${M(x0)} ${M(c1)}L${M(xl)} ${M(c1)}L${M(xl)} ${M(c2)}L${M(x1)} ${M(c2)}`,
+        stroke:'#5d5a52',stroke_width:2,fill:'none'},gStep);
+      el('path',{d:`M${M(x1)} ${M(c2)}l-16 -9M${M(x1)} ${M(c2)}l-16 9`,stroke:'#5d5a52',stroke_width:2,fill:'none'},gStep);
+      el('circle',{cx:M(x0),cy:M(c1),r:5,fill:'#5d5a52'},gStep);
+      const t=el('text',{x:M(x0)-8,y:M(c1)+6,font_size:15,text_anchor:'end',fill:'#5d5a52',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gStep);
+      t.textContent='LÊN';
+      el('line',{x1:M(g.x),y1:M(s.hole.y)+3,x2:M(s.hole.x+s.hole.w),y2:M(s.hole.y)+3,
+        stroke:'#4f4c46',stroke_width:2,stroke_dasharray:'6 5'},gStep);
+    }
+  }
+
+  /* Tum và lan can mái — nằm trên mái nên vẽ nét chấm như mái nhẹ. Lan can mái là nét chấm màu đất chạy dọc tim
+     tường bao, cho khỏi lẫn với tường đen bên dưới. */
+  function drawTum(){
+    const t = tumOf(V);
+    if(t){
+      el('rect',{x:M(t.x0),y:M(t.y0),width:M(t.x1-t.x0),height:M(t.y1-t.y0),fill:'none',
+        stroke:'#6f6a5e',stroke_width:2.2,stroke_dasharray:'14 6 3 6'},gSky);
+      /* Mép mái tum đua ra — nét chấm mảnh bao ngoài; ô văng trên cửa — viền chấm như mái hiên. */
+      el('rect',{x:M(t.roof.x0),y:M(t.roof.y0),width:M(t.roof.x1-t.roof.x0),height:M(t.roof.y1-t.roof.y0),fill:'none',
+        stroke:'#8d8778',stroke_width:1.4,stroke_dasharray:'3 5'},gSky);
+      for(const c of t.canopies)
+        el('rect',{x:M(c.rect.x),y:M(c.rect.y),width:M(c.rect.w),height:M(c.rect.h),fill:'none',
+          stroke:'#6f6a5e',stroke_width:2,stroke_dasharray:'3 7'},gSky);
+      for(const d of t.doors){
+        const ln = d.ax==='h' ? {x1:M(d.a),y1:M(d.pos),x2:M(d.b),y2:M(d.pos)} : {x1:M(d.pos),y1:M(d.a),x2:M(d.pos),y2:M(d.b)};
+        el('line',{...ln,stroke:'#fdfdfb',stroke_width:5},gSky);
+        /* Cánh mở ra ngoài tum: nét cánh từ bản lề, cung quét tới đầu kia lỗ. */
+        const r = d.b-d.a, hu = d.hinge==='a' ? d.a : d.b, fu = d.hinge==='a' ? d.b : d.a;
+        const P = (u,n) => d.ax==='h' ? [M(u),M(n)] : [M(n),M(u)];
+        const [hx,hy]=P(hu,d.pos), [ex,ey]=P(hu,d.pos+d.open*r), [sx,sy]=P(fu,d.pos);
+        el('line',{x1:hx,y1:hy,x2:ex,y2:ey,stroke:'#6f6a5e',stroke_width:2},gSky);
+        const cw = (ex-hx)*(sy-hy)-(ey-hy)*(sx-hx) > 0 ? 0 : 1;
+        el('path',{d:`M${sx} ${sy}A${M(r)} ${M(r)} 0 0 ${cw} ${ex} ${ey}`,stroke:'#6f6a5e',stroke_width:1.2,
+          stroke_dasharray:'5 4',fill:'none'},gSky);
+      }
+      const tx=el('text',{x:M(t.x1)-10,y:M(t.y1)-10,font_size:15,text_anchor:'end',fill:'#6f6a5e',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gSky);
+      tx.textContent='TUM XÂY (trên mái)';
+    }
+    for(const r of roofRailingsOf(V)){
+      if(r.error) continue;
+      const d = r.ax==='h' ? {x1:M(r.a),y1:M(r.pos),x2:M(r.b),y2:M(r.pos)} : {x1:M(r.pos),y1:M(r.a),x2:M(r.pos),y2:M(r.b)};
+      el('line',{...d,stroke:'#c89b3c',stroke_width:3,stroke_dasharray:'3 6'},gSky);
     }
   }
 
@@ -203,16 +264,30 @@ export function init(){
   function drawFurniture(){
     const fr=(x,y,w,h,o={})=>el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),rx:3,...o},gF);
     for(const [k,x,y,w,h] of FURN){
-      if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='wash'||k==='washRaised'||k==='dishwasher'){
+      if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='shrine'||k==='wash'||k==='washRaised'||k==='dishwasher'){
         if(k==='washRaised'){                      // bệ sân nâng dưới máy
           const p=FURNITURE.washPlinth.pad;
           fr(x-p,y-p,w+2*p,h+2*p,{fill:FILL.yard,stroke:'#a6a096'});
         }
-        fr(x,y,w,h, k==='altar'?{fill:'#f0e6d2'}:k==='washRaised'?{fill:'#d8e7eb'}:{});
+        fr(x,y,w,h, k==='altar'||k==='shrine'?{fill:'#f0e6d2'}:k==='washRaised'?{fill:'#d8e7eb'}:{});
+        if(k==='shrine'){                          // vách ngăn cao tới trần phía kệ tivi
+          el('line',{x1:M(x+w),y1:M(y),x2:M(x+w),y2:M(y+h),stroke:'#5c5c5c',stroke_width:5},gF);
+          const t=el('text',{x:M(x+w/2),y:M(y+h/2)+5,font_size:13,text_anchor:'middle',fill:'#6f6a5e',stroke:'none',
+            font_family:'ui-sans-serif,system-ui,sans-serif'},gF);
+          t.textContent='THỜ';
+        }
         if(k==='cab') for(let i=1;i<3;i++)
           el('line',{x1:M(x),y1:M(y+h*i/3),x2:M(x+w),y2:M(y+h*i/3),stroke:'#b9b9b9'},gF);
         if(k==='wash'||k==='washRaised'||k==='dishwasher')
           el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.min(w,h)*0.28),fill:'#f7f7f5'},gF);
+      } else if(k==='tvShelf'){                    // kệ tivi thấp hai tầng
+        fr(x,y,w,h);
+        const horiz=w>=h;
+        if(horiz) el('line',{x1:M(x),y1:M(y+h/2),x2:M(x+w),y2:M(y+h/2),stroke:'#b9b9b9'},gF);
+        else      el('line',{x1:M(x+w/2),y1:M(y),x2:M(x+w/2),y2:M(y+h),stroke:'#b9b9b9'},gF);
+        const t=el('text',{x:M(x+w/2),y:M(y+h/2)+5,font_size:13,text_anchor:'middle',fill:'#6f6a5e',stroke:'none',
+          font_family:'ui-sans-serif,system-ui,sans-serif'},gF);
+        t.textContent='KỆ TV';
       } else if(k==='tap') {
         const horiz=w>h, cx=M(x+w/2), cy=M(y+h/2);
         if(horiz){
@@ -568,7 +643,7 @@ export function init(){
                font_size:17,text_anchor:'middle'});
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
-    drawRooms(); drawSteps(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs();
+    drawRooms(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
     drawFurniture();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');

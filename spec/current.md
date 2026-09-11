@@ -1,11 +1,11 @@
-# Đặc tả mặt bằng — Hiện hành — mái bếp trùm hành lang ngoài
+# Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 15:09:54 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 17:52:26 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu.
+Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu. Cầu thang chữ U lên mái ở chỗ phòng thờ cũ, thông với phòng khách qua bức lửng; tum xây gọn che đầu thang, một cửa ra thẳng mái, lan can thép quanh mép mái kể cả mái hiên trước — chuẩn bị cho tầng 2 sau khoảng 5 năm.
 
 ---
 
@@ -14,11 +14,11 @@ Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái
 | Mục | Tim tường | Sử dụng |
 |---|---:|---:|
 | Lô đất 9.5 × 30 | 285.00 m² | — |
-| **Khối nhà chính** | **80.00 m²** | 72.87 m² |
-| **Toàn bộ phần kín** | **107.70 m²** | 98.16 m² |
+| **Khối nhà chính** | **80.00 m²** | 72.95 m² |
+| **Toàn bộ phần kín** | **107.70 m²** | 98.25 m² |
 | Hành lang ngoài (có mái, hở) | 7.00 m² | — |
 | Sân trống | 170.30 m² | — |
-| Tường chiếm chỗ | 9.54 m² | — |
+| Tường chiếm chỗ | 9.45 m² | — |
 
 Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
@@ -27,14 +27,14 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | # | Phòng | x₁ | y₁ | x₂ | y₂ | Tim tường | DT tim | Sử dụng | DT sd | Loại |
 |---|---|---:|---:|---:|---:|---|---:|---|---:|---|
 | L1 | SÂN PHỤ | 0.0 | 0.0 | 5.0 | 12.0 | 5.0 × 12.0 | 60.00 | 4.89 × 11.78 | 57.60 | Sân |
-| L2 | PHÒNG KHÁCH | 0.0 | 12.0 | 5.0 | 17.0 | 5.0 × 5.0 | 25.00 | 4.78 × 4.84 | 23.14 | Phòng |
-| L3 | PHÒNG THỜ | 0.0 | 17.0 | 4.0 | 19.0 | 4.0 × 2.0 | 8.00 | 3.84 × 1.90 | 7.30 | Phòng |
+| L2 | PHÒNG KHÁCH | 0.0 | 12.0 | 5.0 | 16.9 | 5.0 × 4.8 | 24.25 | 4.78 × 4.69 | 22.42 | Phòng |
+| L3 | CẦU THANG | 0.0 | 16.9 | 4.0 | 19.0 | 4.0 × 2.1 | 8.60 | 3.89 × 2.05 | 7.97 | Lưu thông |
 | L4 | PHÒNG NGỦ 1 | 0.0 | 19.0 | 4.0 | 22.0 | 4.0 × 3.0 | 12.00 | 3.84 × 2.90 | 11.14 | Phòng |
 | L5 | THAY ĐỒ / KHO MASTER | 0.0 | 22.0 | 2.4 | 24.0 | 2.4 × 2.0 | 4.80 | 2.24 × 1.90 | 4.26 | Tủ âm |
 | L6 | WC CHUNG | 2.4 | 22.0 | 4.0 | 24.0 | 1.6 × 2.0 | 3.20 | 1.50 × 1.90 | 2.85 | Vệ sinh |
 | L7 | PHÒNG NGỦ MASTER | 0.0 | 24.0 | 5.0 | 28.0 | 5.0 × 4.0 | 20.00 | 4.78 × 3.84 | 18.36 | Phòng |
 | L8 | BAN CÔNG SAU | 0.0 | 28.0 | 5.0 | 30.0 | 5.0 × 2.0 | 10.00 | 4.78 × 1.78 | 8.51 | Sân |
-| L9 | HÀNH LANG | 4.0 | 17.0 | 5.0 | 24.0 | 1.0 × 7.0 | 7.00 | 0.84 × 6.95 | 5.84 | Lưu thông |
+| L9 | HÀNH LANG | 4.0 | 16.9 | 5.0 | 24.0 | 1.0 × 7.2 | 7.15 | 0.84 × 7.10 | 5.96 | Lưu thông |
 | R1 | SÂN CHÍNH | 5.0 | 0.0 | 9.5 | 18.0 | 4.5 × 18.0 | 81.00 | 4.39 × 17.78 | 78.05 | Sân |
 | R2 | BẾP + NHÀ ĂN | 5.0 | 18.0 | 8.5 | 25.0 | 3.5 × 7.0 | 24.50 | 3.34 × 6.78 | 22.65 | Phòng |
 | R3 | HÀNH LANG NGOÀI | 8.5 | 18.0 | 9.5 | 25.0 | 1.0 × 7.0 | 7.00 | 0.84 × 7.00 | 5.88 | Lưu thông |
@@ -42,7 +42,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | R5 | WC KHÁCH | 7.9 | 28.0 | 9.5 | 30.0 | 1.6 × 2.0 | 3.20 | 1.44 × 1.84 | 2.65 | Vệ sinh |
 
 **Kiểm tra:** cột trái 150.00 + cột phải 135.00 = **285.00 m²** (WC khách nằm trong sân phơi, không cộng riêng)
-**Chuỗi dọc lô chính:** 12.0 + 5.0 + 2.0 + 3.0 + 2.0 + 4.0 + 2.0 = **30.0**
+**Chuỗi dọc lô chính:** 12.0 + 4.9 + 2.1 + 3.0 + 2.0 + 4.0 + 2.0 = **30.0**
 
 ## 3. Bảng cửa
 
@@ -50,8 +50,8 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 |---|---|---:|---:|---:|---:|---|---|---|
 | D1 | ngang | 12.0 | 0.90 | 4.10 | 3.20 | 4 cánh | — | Sân phụ ↔ Phòng khách — CỬA CHÍNH 4 cánh, tâm x = 2.5 |
 | D2 | dọc | 5.0 | 15.50 | 16.50 | 1.00 | Mở quay | bản lề đầu nhỏ, mở − | Sân chính ↔ Phòng khách — bản lề phía cửa chính |
-| D3 | ngang | 17.0 | 4.00 | 5.00 | 1.00 | Mở thông | — | Phòng khách ↔ Hành lang — thông suốt, KHÔNG có cánh cửa |
-| D4 | dọc | 4.0 | 17.15 | 17.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ Phòng thờ — sát mép bắc |
+| D3 | ngang | 16.9 | 4.00 | 5.00 | 1.00 | Mở thông | — | Phòng khách ↔ Hành lang — thông suốt, KHÔNG có cánh cửa |
+| D4 | dọc | 4.0 | 16.85 | 19.00 | 2.15 | Mở thông | — | Hành lang ↔ Cầu thang — thông suốt, chân thang ở đầu bắc hành lang |
 | D5 | dọc | 4.0 | 19.15 | 19.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ Phòng ngủ 1 — sát mép bắc |
 | D6 | dọc | 4.0 | 22.15 | 22.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ WC chung — cửa cánh 0.80 m mở vào WC, gioăng kín mùi; vùng quét chừa trống |
 | D8 | ngang | 24.0 | 4.00 | 4.90 | 0.90 | Mở quay | bản lề đầu lớn, mở + | Hành lang ↔ Master — mở vào phòng |
@@ -70,15 +70,8 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | W2 | ngang | 18.0 | 5.30 | 6.30 | 1.00 | Bếp ← Sân chính |
 | W3 | dọc | 8.5 | 19.20 | 21.20 | 2.00 | Bếp ← Hành lang ngoài |
 | W4 | dọc | 7.9 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 2.00, kèm quạt hút |
-
-## 5. Lấy sáng trên mái
-
-| Mã | Tên | x | y | Kích thước | Ghi chú |
-|---|---|---:|---:|---|---|
-| SK1 | GIẾNG TRỜI HÀNH LANG | 4.10 | 17.40 | 0.8 × 6.2 | Hành lang — nguồn sáng duy nhất, hành lang không có cửa sổ nào |
-| SK2 | CỬA TRỜI | 2.30 | 19.60 | 1.3 × 1.3 | Phòng ngủ 1 — cửa trời có cánh lật, đặt lệch khỏi đầu giường |
-| SK3 | CỬA TRỜI | 1.60 | 17.50 | 1.0 × 1.0 | Phòng thờ — cửa trời có cánh lật, đặt trước kệ thờ |
-| SK4 | Ô THOÁNG | 2.60 | 22.60 | 0.8 × 0.7 | WC chung — ô thoáng kèm quạt hút |
+| W5 | ngang | 19.0 | 3.00 | 3.40 | 0.40 | Phòng ngủ 1 ← Cầu thang — ô thoáng nhỏ, cánh kính mờ lật cố định ngả vào phòng, sát cửa PN1 |
+| W6 | ngang | 19.0 | 3.50 | 3.90 | 0.40 | Phòng ngủ 1 ← Cầu thang — ô thoáng nhỏ, cánh kính mờ lật cố định ngả vào phòng, sát cửa PN1 |
 
 ## 6. Cổng, bậc, mái
 
@@ -107,7 +100,7 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 
 ### Lớp chống nóng mái
 
-Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, PHÒNG THỜ, PHÒNG NGỦ 1, THAY ĐỒ / KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt gạch. Diện tích lát **95.31 m²**, mặt gạch cốt **4.11** (bản mái 4.00, chưa tính vữa tạo dốc).
+Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, CẦU THANG, PHÒNG NGỦ 1, THAY ĐỒ / KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt gạch. Diện tích lát **95.66 m²**, mặt gạch cốt **4.11** (bản mái 4.00, chưa tính vữa tạo dốc).
 
 | Lớp (dưới lên) | Dày (m) | Ghi chú |
 |---|---:|---|
@@ -180,6 +173,33 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF1 | RF1-P3 | y = 15.60 | 5.11 | 9.47 | 4.36 | 3.26 |
 | RF1 | RF1-P4 | y = 16.80 | 5.11 | 9.47 | 4.36 | 3.38 |
 
+### Cầu thang lên mái
+
+Cao bậc suy ra từ mặt sàn tới mặt mái đi lại được chia đều số nấc; nấc cuối mỗi vế lên chiếu nghỉ / mặt mái, nên số mặt bậc ít hơn số nấc một. Bản thang dày 0.12 m dưới mặt bậc, gầm thang hở. Lỗ thang cũng là lỗ khoét bản mái.
+
+| Mã | Tên | Lỗ thang x₁ · y₁ · x₂ · y₂ | Rộng vế | Nấc (vế 1 + vế 2) | Cao bậc | Mặt bậc | Chiếu nghỉ | Từ cốt → tới cốt |
+|---|---|---|---:|---|---:|---:|---:|---|
+| CT1 | CẦU THANG LÊN MÁI | 0.11 · 16.90 · 3.92 · 18.95 | 0.95 | 10 + 12 | 0.171 | 0.26 | 2.16 | 0.45 → 4.21 |
+
+Lan can thang cao 0.90 m dọc mép vế 2 giáp phòng khách (trên bức lửng cao 1.00 m) và ở mép lỗ thang trên mặt mái.
+
+### Tum
+
+Tường gạch 100 trát sơn, mái tôn, ô lấy sáng polycarbonate, ô thoáng lá kính gắn tường xếp nghiêng sát mái. Vùng 0.00 · 16.85 · 3.97 · 19.00 (tim vách), sàn là mặt mái cốt 4.11, mặt dưới mái tum 6.81; tường dày 100 mm, ô thoáng cao 0.30 m sát mái trên hai vách dài, gắn 4 lá kính cố định xếp nghiêng chéo xuống ra ngoài (lá trên chồng mép lá dưới — mưa hắt, lá cây không vào). Mái tum đua ngắn 0.18 m ra khỏi mặt ngoài tường (cạnh trên ranh lô không đua), mép bọc diềm gập cao 0.12 m. Trên cửa có ô văng đua 0.60 m, dài hơn cửa 0.20 m mỗi bên. Cửa ra mái có cánh mở vào trong tum, chốt từ trong nhà, ngưỡng có gờ chắn nước cao 0.10 m, cao 2.20 m tính từ mặt mái:vách x = 3.97, y 16.98–17.78. Ô polycarbonate đậy trọn lỗ thang. Dỡ đi khi xây tầng 2.
+
+### Lan can mái
+
+Lan can thép sơn, trụ bắt nở vào đỉnh tường, cao 1.10 m từ mặt mái cốt 4.11.
+
+| Trục | Vị trí | Từ | Đến | Dài |
+|---|---:|---:|---:|---:|
+| ngang | 10.73 | 0.00 | 5.00 | 5.00 |
+| dọc | 0.00 | 10.73 | 16.85 | 6.12 |
+| dọc | 0.00 | 19.00 | 30.00 | 11.00 |
+| ngang | 30.00 | 0.00 | 5.00 | 5.00 |
+| dọc | 5.00 | 10.73 | 18.80 | 8.07 |
+| dọc | 5.00 | 24.20 | 30.00 | 5.80 |
+
 ### Tường xây lên hết chiều cao nhà
 
 Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dưới đây khai riêng dù chỉ áp vào sân.
@@ -216,11 +236,11 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | ngang | 28.0 | 0.0 | 5.0 | 220 |
 | dọc | 5.0 | 12.0 | 28.0 | 220 |
 | dọc | 5.0 | 28.0 | 30.0 | 220 |
-| ngang | 17.0 | 0.0 | 4.0 | 100 |
+| ngang | 16.9 | 0.0 | 3.7 | 100 |
 | ngang | 19.0 | 0.0 | 4.0 | 100 |
 | ngang | 22.0 | 0.0 | 4.0 | 100 |
 | ngang | 24.0 | 0.0 | 5.0 | 100 |
-| dọc | 4.0 | 17.0 | 24.0 | 100 |
+| dọc | 4.0 | 19.0 | 24.0 | 100 |
 | dọc | 2.4 | 22.0 | 24.0 | 100 |
 | ngang | 18.0 | 5.0 | 8.5 | 220 |
 | ngang | 25.0 | 5.0 | 8.5 | 220 |
@@ -235,8 +255,8 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | sofa | 0.25 | 13.30 | 2.60 | 0.85 |
 | sofa | 0.25 | 14.15 | 0.85 | 1.20 |
 | tbl | 1.40 | 14.55 | 1.30 | 0.80 |
-| cab | 0.11 | 16.45 | 3.89 | 0.50 |
-| altar | 0.15 | 17.15 | 0.60 | 1.70 |
+| shrine | 0.11 | 16.30 | 0.70 | 0.50 |
+| tvShelf | 0.81 | 16.30 | 2.85 | 0.50 |
 | bedw | 0.25 | 19.90 | 2.00 | 1.60 |
 | cab | 3.30 | 20.30 | 0.60 | 1.50 |
 | cab | 0.10 | 22.10 | 0.60 | 1.75 |
@@ -274,6 +294,12 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Hành lang ngoài hứng mưa tạt nhiều hơn.** Mái bếp kéo sang nên khoảng hở giữa đỉnh rào 1.80 và đáy dầm mép mái rộng 1.85 m ở hai đầu, 2.9 m dưới nóc, quay Đông Nam — mưa gió tạt vào lối đi và tường đông bếp; thấy ướt thì thêm diềm tôn hoặc lam ở đầu hồi phía rào. Cột C4 dưới nóc cao ~4.7 m đứng trên rào chỉ xây đặc 0.80 — kỹ sư kết cấu xem lại tiết diện và liên kết chân cột.
 
+**Cầu thang và tum — nghĩ cho tầng 2.** Móng, cột, dầm nhà chính phải tính cho 2 tầng cộng tum ngay bây giờ; tường gạch tum phải đứng trên dầm, không xây thẳng lên bản mái; bản mái sẽ thành sàn tầng 2, lỗ thang đổ sẵn dầm bo. Sau khi bỏ giếng trời, **đầu nam hành lang (gần master) tối hơn**: chỉ còn ánh sáng từ tum rọi xuống buồng thang. **Phòng ngủ 1 chỉ còn ánh sáng mượn** qua hai ô thoáng nhỏ W5, W6 ra buồng thang — không cửa sổ ra trời, ban ngày tối; hợp làm phòng ngủ phụ, phòng khách ở lại. Cánh lật cố định nên không đóng được: tiếng động và ánh đèn đêm ở cầu thang vẫn qua ô. Muốn đóng được thì làm cánh lật có tay chốt thay vì cố định. **Cửa tum ra thẳng mái, không có chiếu tới**: cánh phải mở ra phía mái (mở vào là quét lên bậc), chốt bằng then ở mặt trong cánh. Người đi lên đứng trên bậc cuối mới mở được cửa — lắp tay nắm và đèn ở đầu thang, đừng để đồ trước cửa phía mái. Gờ chắn nước 10 cm ở ngưỡng, ô văng 0.6 m che trên cửa, cửa mở ra được gió ép vào khuôn; vẫn cần gioăng và mặt mái trước cửa dốc ra ngoài. Ô thoáng tum gắn lá kính xếp nghiêng chéo xuống, lá trên chồng mép lá dưới, lại nằm dưới mái đua — mưa hắt và lá cây không vào; lá kính bám bụi, thỉnh thoảng phải lau. Buồng thang thông phòng khách nên hơi lạnh máy lạnh bay lên tum — mở máy lạnh thì đóng cửa đầu thang. Lớp chống nóng XPS trên mái sẽ nằm dưới sàn tầng 2 sau 5 năm; cân nhắc kiểu lát rời để tháo được — chưa chốt.
+
+**WC chung không còn ô thoáng.** Quạt hút âm trần nối ống PVC lên mái, đầu ống có chụp chắn mưa và đi xuyên lớp chống thấm có cổ ống — sau này đi tiếp lên theo hộp kỹ thuật tầng 2. Chọn quạt có van một chiều để gió mái không thổi ngược mùi vào.
+
+**Mái hiên cửa chính thành một phần sân thượng.** Bản công xôn 1.2 m không cột nay có người đi lại và lan can bắt ở mép ngoài — kỹ sư kết cấu phải tính lại tải và neo trụ lan can; lan can mép công xôn chịu lực đẩy ngang lớn nhất.
+
 **Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
 
 **Sơn chống nóng tường trái — không đổi hình khối, đừng quên:** sơn mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo.
@@ -282,7 +308,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 ## 10. Kết quả bộ kiểm tra
 
-**Sạch — qua toàn bộ 15 phép kiểm.**
+**Sạch — qua toàn bộ 16 phép kiểm.**
 
 1. Cột trái lấp kín phần lô của nó, không hở không chồng
 2. Cột phải lấp kín phần lô còn lại
@@ -299,6 +325,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 13. Nội thất không nằm trong vùng quét cánh cửa
 14. Bậc, mái hiên, tường nâng, cốt sàn riêng, lớp chống nóng mái khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
 15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần; cột đỡ mái nằm trong lô, dưới một mái nhẹ, không đứng giữa nội thất
+16. Cầu thang lên mái: vế và chiếu nghỉ khớp lỗ thang, cao bậc và mặt bậc trong giới hạn, nằm gọn trong phòng, không vướng nội thất hay cánh cửa; có tum trùm kín lỗ thang, cửa tum trên vách; có lan can mép mái đứng trên mái bê tông
 
 ---
 
@@ -317,9 +344,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | mái bếp trùm hành lang ngoài | 107.7 |
+| current ← | cầu thang lên mái, tum | 107.7 |
 
-### Thay đổi ở Hiện hành — mái bếp trùm hành lang ngoài
+### Thay đổi ở Hiện hành — cầu thang lên mái, tum
 
 - Ban công sau 1.0 → **2.0 m sâu** (5.0 × 2.0 = 10.00 m²) — nay ngồi được, không chỉ để thoáng
 - Nhà chính 17.0 → **18.0 m**; sân phụ bù lại 13.0 → 12.0 m
@@ -328,7 +355,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - Chậu rửa vẫn quay ra sân phơi, bếp nấu quay vào trong
 - WC khách chốt **1.6 × 2.0 m**, áp tường sau; hai tường trong xuống 100 mm
 - **WC chung thu còn 1.6 × 2.0 m**, cửa cánh mở vào trong có gioăng kín mùi; bỏ tủ âm PN1, dải kho cũ thành **phòng thay đồ/kho Master 2.4 × 2.0 m** với hai tủ cao 2.0 m chữ L; vách nhựa kín tới trần, cửa cánh 0.80 m mở về Master
-- **Toàn bộ vách ngăn nội bộ** phòng thờ, phòng ngủ, hành lang và WC chung đổi thành **vách nhựa cao đến trần**, không chịu lực; tường bao và tường tiếp xúc sân/mưa vẫn xây
+- **Toàn bộ vách ngăn nội bộ** phòng ngủ, hành lang và WC chung đổi thành **vách nhựa cao đến trần**, không chịu lực; tường bao và tường tiếp xúc sân/mưa vẫn xây
 - W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 2.00 — không nhìn ra được
 - **Trần WC khách hạ còn 2.70 m** (trần giả dưới bản mái; trước cao 3.60 vì sàn hạ mà mái giữ cốt) — ô thoáng W4 nâng lên theo, bệ 1.90 → 2.00, mép trên 2.40
 - D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
@@ -348,7 +375,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Mái sân phơi** dốc một mái phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng
 - **Bàn trà ngoài sân dời ra sát W1**, thẳng giữa cửa sổ, vẫn dưới mái sân chính — trước đứng chắn lối vào cửa bếp D9
 - **Sofa phòng khách xếp chữ L** ở góc tây bắc, cạnh dài quay về kệ tivi — thay hai ghế đối diện nhau; lối từ cửa chính sang hành lang chừa trống ~2 m phía đông
-- **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
+- **Kệ thờ + kệ tivi một khối** tựa bức lửng y = 16.85, quay ra cửa chính — thay phòng thờ. Kệ thờ 0.7 m phía trong sát tường trái: tủ đồ thờ dưới, ba tầng thờ trên, **vách ngăn với kệ tivi kéo lên trần**; liền bên là **kệ tivi thấp hai tầng** 2.85 m chạy tới đầu trong bức lửng — tầng dưới tủ để đồ, tầng trên để tivi, loa; phía trên kệ để thoáng nhìn qua lan can về cầu thang
 - **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18.05, 21.5, 24.95), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái bếp phần trùm hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80. C3, C5 lùi 5 cm vào hẳn dưới mái bếp để lên tới dầm mái bếp; dầm mái sân chính và mái sân phơi dừng ở mặt cột. C4 dưới nóc cao ~4.7 m
 - **Dầm biên thép hộp 50 × 100** dọc mọi mép mái nhẹ không tựa tường — tuyến tường rào phải (nghiêng theo mái, đi qua đầu cột), mép trước mái sân chính, mép dải hở mái sân phơi, hai chỗ mái bếp đua chồng lên mái sân chính và mái sân phơi (mỗi mái một dầm, đứng sát nhau); ở mép có máng thì dầm lùi vào sau máng. Cột hạ đỉnh xuống đáy dầm
 - **Xà gồ mái sân chính** — 4 thanh thép hộp 40 × 80, bước 1.20 m, chạy vuông góc dốc mái từ tường phòng khách tới dầm dọc tường rào; tấm tôn không còn vượt nhịp trống 4.5 m
@@ -356,3 +383,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
 - **Sân giếng sát tường bếp** — dành một khoảng 1.5 m ngay ngoài D10, hai vòi âm tường giãn nhau trên tường nhà chính; mái sân phơi giữ nguyên. Một máy giặt/sấy 0.60 × 0.60 m ở góc giữa tường bếp và tường nhà chính, kê trên bệ sân 0.68 × 0.68 m cao 0.15 m để nước rửa sân không ảnh hưởng máy; bỏ máy rửa bát
 - **Lớp chống nóng mái kiểu mái ngược** — chống thấm + tấm XPS 50 mm + vải địa kỹ thuật + vữa cán 40 mm lưới thép + gạch lát, phủ mọi sàn mái bê tông (nhà chính, WC khách), trần ban công sau và mái hiên cửa chính, tới mặt ngoài tường; chừa giếng trời. Mặt mái 4.00 → 4.11. Chọn thay gạch lỗ chống nóng (trữ nhiệt rồi nhả vào buổi tối, ngay trên phòng ngủ) và thay mái tôn trên sàn mái (phải khoét theo giếng trời; lợp sát trần thì khe gió không lùa được)
+- **Cầu thang chữ U lên mái** thay phòng thờ (chuẩn bị tầng 2 sau khoảng 5 năm): hai vế rộng 0.95 m, 22 nấc cao ≈ 0.171, mặt bậc 0.26, chiếu nghỉ sát tường trái; chân thang ở đầu bắc hành lang. Bỏ vách phòng khách – phòng thờ, thay bằng **bức lửng 1 m** kèm **lan can song thoáng** (không tấm đặc cho khỏi bí) — phòng khách nhận sáng và gió từ tum. Phòng khách 5 × 5 → 5 × 4.85
+- **Tum tường gạch** (không vách tôn / nhựa), mái tôn, trên buồng thang; mặt dưới mái tum 2.70 m trên mặt mái, ô thoáng 0.30 m sát mái gắn **4 lá kính xếp nghiêng chéo xuống** — gió qua, mưa hắt và lá cây không vào, ô polycarbonate đậy trọn lỗ thang, tum **gọn, tường áp sát đầu thang, một cửa** ngay đầu vế 2 — lên hết thang là ra thẳng mái; cánh mở ra phía mái, **then chốt mặt trong** — không ai từ mái vào nhà tự do — ngưỡng có **gờ chắn nước** cao 0.10 m làm nấc cuối của thang; **mái tum đua ngắn 0.18 m bọc diềm gập** ba phía (phía ranh lô trái không đua) cho gọn, **ô văng 0.6 m** che trên cửa; dỡ khi xây tầng 2
+- **Lan can thép 1.1 m** quanh mép mái nhà chính, **bao luôn mái hiên cửa chính** — mái thành sân thượng: phơi đồ, bồn nước, bảo trì lớp chống nóng
+- **Bỏ giếng trời hành lang SK1, hai cửa trời SK2, SK3 và ô thoáng WC chung SK4** — xây tầng 2 là phải bịt; mái bê tông không còn lỗ nào ngoài lỗ thang. WC chung dùng quạt hút nối ống lên mái. Phòng ngủ 1 lấy gió, sáng qua **hai ô thoáng nhỏ W5, W6** (0.40 × 0.30 m, bệ 2.40) ra buồng thang, dồn về phía cửa PN1 — **cánh kính mờ lật cố định** ngả vào phòng, người bên thang đứng thấp hơn bệ chỉ nhìn thấy trần. Thay ô kính cố định và ô lật to đã thử, nhìn vào dễ quá

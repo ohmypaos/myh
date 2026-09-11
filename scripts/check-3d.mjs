@@ -9,10 +9,10 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, FURNITURE, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, FURNITURE, STAIR, TUM, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
-import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf }
-  from '../lib/envelope.js';
+import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
+         stairsOf, tumOf, roofHoles, roofWalkTop } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -80,6 +80,7 @@ const CHECKS = [
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
+  'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
 
 function check(plan){
@@ -109,8 +110,11 @@ function check(plan){
      mái bê tông. Mốc suy từ **số khai** (đỉnh mái nhà, nóc mái nhẹ cao nhất cộng bề dày tấm lợp)
      chứ không lấy từ khối đã dựng — lấy từ khối dựng thì phép kiểm tự nói đúng mọi lúc. */
   const insulationT = ROOF_INSULATION.xps + ROOF_INSULATION.screed + ROOF_INSULATION.tile;
-  const design = Math.max(L.houseTop + (plan.roofInsulation ? insulationT : 0),
-                          ...lightRoofs(plan).map(r => r.high + ROOF.sheet));
+  /* Tum và lan can mái đứng trên mặt mái: cộng từ số khai (TUM, ROOF_RAILING), không từ khối. */
+  const walkTop = L.houseTop + (plan.roofInsulation ? insulationT : 0);
+  const design = Math.max(walkTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet),
+                          plan.tum ? walkTop + TUM.clear + ROOF.sheet : 0,
+                          plan.roofRailings?.length ? walkTop + ROOF_RAILING.height : 0);
   for (const b of all)
     if (b.y1 > design + EPS)
       e.push(`hộp ${b.kind} cao ${n(b.y1)} > đỉnh thiết kế ${n(design)}`);
@@ -177,6 +181,21 @@ function check(plan){
       && overlap(b.y0, b.y1, y0, y1) > EPS);
     if (rail) e.push(`${o.id} bị lan can chắn lối, cao ${n(rail.y0)}–${n(rail.y1)}`);
   }
+  /* Cửa sổ cánh lật (`hopper`): đúng một tấm kính nghiêng, chân ở bệ, đỉnh ở mép trên lỗ, phủ đủ bề ngang lỗ, nằm phía
+     khai và ngả đúng độ mở tính từ mặt tường. */
+  for (const [id, ax, pos, a, b] of plan.windows) {
+    const hop = (H.only[id] || {}).hopper;
+    if (!hop) continue;
+    const sashes = m.prisms.filter(p => p.kind === 'sash' && p.id === id);
+    if (sashes.length !== 1) { e.push(`${id} cánh lật: ${sashes.length} tấm, phải 1`); continue; }
+    const s = sashes[0], t = wallThickness(plan, ax, pos, a, b), face = pos + Math.sign(hop) * t / 2;
+    const sill = base([id, ax, pos, a, b]) + (H.only[id].sill ?? H.sill), head = base([id, ax, pos, a, b]) + (H.only[id].head ?? H.head);
+    const [u0, u1, n0, n1] = ax === 'h' ? [s.x, s.x + s.w, s.z, s.z + s.d] : [s.z, s.z + s.d, s.x, s.x + s.w];
+    const nearFace = hop > 0 ? n0 : n1, farEdge = hop > 0 ? n1 : n0;
+    if (Math.abs(u0 - a) > EPS || Math.abs(u1 - b) > EPS || Math.abs(nearFace - face) > EPS || Math.abs(farEdge - face - hop) > EPS
+        || Math.abs(Math.min(...s.yb) - sill) > EPS || Math.abs(Math.max(...s.yt) - head) > EPS)
+      e.push(`${id} cánh lật dựng lệch lỗ, mặt tường hoặc độ mở`);
+  }
 
   /* 6 — diện tích mái. Bắt được cả mảnh thiếu lẫn mảnh chồng của phép khoét giếng trời. */
   const enclosed = plan.rooms.filter(r => r[6] !== 'yard' && r[0] !== 'R3');
@@ -187,7 +206,8 @@ function check(plan){
     const c = roofOver(plan, r) ? clearRect(plan, r)
                                 : { x: r[2], y: r[3], w: r[4], h: r[5] };
     want += c.w * c.h;
-    for (const [, , sx, sy, sw, sh] of plan.skylights)
+    /* Lỗ khoét: giếng trời và lỗ cầu thang lên mái. */
+    for (const { x: sx, y: sy, w: sw, h: sh } of roofHoles(plan))
       want -= overlap(c.x, c.x + c.w, sx, sx + sw) * overlap(c.y, c.y + c.h, sy, sy + sh);
   }
   /* Bếp lợp tôn nên không có bản bê tông, nhưng vẫn phải được che kín: trần tôn tính vào đây,
@@ -573,7 +593,9 @@ function check(plan){
       e.push(`${at} không có bệ sân nâng đúng ${WP.rise} m`);
     const expectedLow = kind === 'washRaised' ? f + WP.rise : f;
     if (kind !== 'tap' && Math.abs(low - expectedLow) > EPS) e.push(`${at} chân ở cốt ${n(low)}, phải ở ${n(expectedLow)}`);
-    if (!(high > low) || high > L.ceiling - 0.3) e.push(`${at} cao tới ${n(high)}, sát trần ${n(L.ceiling)}`);
+    /* Kệ thờ cố ý kéo lên tận trần — chạm trần được, không đâm qua. */
+    const ceilingCap = kind === 'shrine' ? f + H.ceiling + EPS : L.ceiling - 0.3;
+    if (!(high > low) || high > ceilingCap) e.push(`${at} cao tới ${n(high)}, sát trần ${n(L.ceiling)}`);
   }
   const stray = furnBoxes.filter(b => !(b.item >= 0 && b.item < (plan.furn || []).length));
   if (stray.length) e.push(`${stray.length} khối nội thất không thuộc món khai nào`);
@@ -816,9 +838,182 @@ function check(plan){
         return true;
       });
 
-    for (const [id, , sx, sy, sw, sh] of plan.skylights)
+    for (const { id, x: sx, y: sy, w: sw, h: sh } of roofHoles(plan))
       for (const [x, z] of [[sx + sw / 2, sy + sh / 2], [sx + 0.02, sy + 0.02], [sx + sw - 0.02, sy + sh - 0.02]])
         if (insBoxes.some(b => inP(b, x, z))) { e.push(`lớp chống nóng phủ lên ${id}`); break; }
+  }
+
+  /* 21 — cầu thang lên mái, tum, lan can mái. Soi trên khối đã dựng bằng đúng lib/walk.js của trang 3D:
+     a) khối bậc đủ số, mặt bậc cách đều một nấc không quá STAIR.maxRise, nấc cuối lên đúng mặt mái đi lại được
+        (tra từ số khai, không từ stairsOf());
+     b) đi bộ: từ sàn trước chân vế 1, lên hết vế 1, ngang chiếu nghỉ, lên hết vế 2 ra mặt mái, qua cửa tum ra ngoài
+        — rồi đi ngược lại xuống tới sàn. Vướng lan can, vách tum, bản mái hay bậc cao quá tầm bước đều lộ ở đây;
+     c) khoảng đầu: trên tâm mọi mặt bậc không có khối nào (kể cả tấm polycarbonate) thấp hơn STAIR.headroom;
+     d) tum: mọi điểm trong lỗ thang có mái tum hoặc tấm lấy sáng bên trên; tâm cửa tum thủng;
+     e) lan can mái: chân đúng mặt mái, đỉnh đúng cao lan can, mỗi tuyến khai có thanh. */
+  const walkTopOf = walkTop;
+  const allSolid = [...m.boxes, ...m.prisms].filter(b => b.kind !== 'furniture' && b.kind !== 'doorLeaf');
+  for (const s of stairsOf(plan)) {
+    if (s.error) continue;
+    const mine = m.boxes.filter(b => b.kind === 'stair' && b.id === s.id);
+    const [r1, r2] = s.risers;
+    if (mine.length !== r1 + r2 - 1) e.push(`cầu thang ${s.id} dựng ${mine.length} khối, cần ${r1 + r2 - 1}`);
+    const base = floorOf(plan, plan.rooms.find(r => r[0] === s.room), H.floor);
+    const levelsUp = [...new Set(mine.map(b => +b.y1.toFixed(6)))].sort((a, b) => a - b);
+    /* Nấc cuối lên mặt mái, hoặc lên mặt gờ chắn nước ngưỡng cửa tum nếu thang ra thẳng cửa tum. */
+    const stairTop = walkTopOf + (plan.tum ? TUM.curb : 0);
+    const rises = [base, ...levelsUp, stairTop].map((y, i, a) => (i ? y - a[i - 1] : null)).slice(1);
+    if (Math.max(...rises) - Math.min(...rises) > 1e-3 || Math.max(...rises) > STAIR.maxRise + EPS)
+      e.push(`cầu thang ${s.id} bậc không đều hoặc quá cao: ${rises.map(n).join(' / ')}`);
+
+    const W = s.width, hole = s.hole;
+    const c1 = hole.y + hole.h - W / 2, c2 = hole.y + W / 2, xl = hole.x + W / 2;
+    const xStart = s.start1 + WALK.radius + 0.05, xOut = hole.x + hole.w + 0.45;
+    const t = tumOf(plan);
+    const route = [[xStart, c1], [xl, c1], [xl, c2], [xOut, c2]];
+    /* Mỗi cửa tum: từ chỗ vừa lên tới mặt mái, đi tới ngang tâm cửa rồi thẳng ra ngoài 0.5 m. */
+    const exits = (t ? t.doors : []).map(d => {
+      const dm = (d.a + d.b) / 2;
+      const out = Math.abs(d.pos - (d.ax === 'h' ? t.y0 : t.x0)) < EPS ? -1 : 1;
+      return { d, pts: d.ax === 'h' ? [[xOut, c2], [dm, c2], [dm, d.pos + out * 0.5]]
+                                    : [[xOut, c2], [xOut, dm], [d.pos + out * 0.5, dm]] };
+    });
+    const solids21 = walkSolids(m).filter(q => q.kind !== 'furniture' && q.kind !== 'doorLeaf');
+    const walkRoute = (pts, foot) => {
+      let p = { x: pts[0][0], z: pts[0][1], foot: supportAt(solids21, pts[0][0], pts[0][1], foot) };
+      for (const [x, z] of pts.slice(1)) {
+        const r = stepWalk(solids21, p, x - p.x, z - p.z);
+        if (r.hit || Math.hypot(r.x - x, r.z - z) > 1e-3) return { stuck: r };
+        p = r;
+      }
+      return { p };
+    };
+    const up = walkRoute(route, base);
+    if (up.stuck) e.push(`đi bộ lên thang ${s.id} vướng ${up.stuck.hit?.kind ?? '?'} ở x ${n(up.stuck.x)}, z ${n(up.stuck.z)}, cốt ${n(up.stuck.foot)}`);
+    else if (Math.abs(up.p.foot - walkTopOf) > EPS) e.push(`đi bộ lên thang ${s.id} tới nơi ở cốt ${n(up.p.foot)}, mặt mái ${n(walkTopOf)}`);
+    else {
+      for (const { d, pts } of exits) {
+        const where = `cửa tum trục ${d.ax} ${d.pos}`;
+        const go = walkRoute(pts, walkTopOf);
+        const back = go.stuck ? null : walkRoute([...pts].reverse(), walkTopOf);
+        const bad = go.stuck || back?.stuck;
+        if (bad) e.push(`đi bộ qua ${where} vướng ${bad.hit?.kind ?? '?'} ở x ${n(bad.x)}, z ${n(bad.z)}`);
+        else if (Math.abs(go.p.foot - walkTopOf) > EPS || Math.abs(back.p.foot - walkTopOf) > EPS)
+          e.push(`đi bộ qua ${where} tới nơi ở cốt ${n(go.p.foot)}, mặt mái ${n(walkTopOf)}`);
+        else if (go.p.x > t.x0 && go.p.x < t.x1 && go.p.z > t.y0 && go.p.z < t.y1)
+          e.push(`đi bộ qua ${where} vẫn còn ở trong tum — cửa không nằm trên vách`);
+      }
+      const down = walkRoute([...route].reverse(), walkTopOf);
+      if (down.stuck) e.push(`đi bộ xuống thang ${s.id} vướng ${down.stuck.hit?.kind ?? '?'} ở x ${n(down.stuck.x)}, z ${n(down.stuck.z)}`);
+      else if (Math.abs(down.p.foot - base) > EPS) e.push(`đi bộ xuống thang ${s.id} tới nơi ở cốt ${n(down.p.foot)}, sàn ${n(base)}`);
+    }
+
+    for (const b of mine) {
+      const cx = b.x + b.w / 2, cz = b.z + b.d / 2;
+      const over = [...allSolid, ...m.glass].filter(q => q !== b && q.y0 > b.y1 + EPS
+        && cx > q.x && cx < q.x + q.w && cz > q.z && cz < q.z + q.d).map(q => q.axis ? spanAt(q, q.axis === 'x' ? cx : cz)[0] : q.y0);
+      if (over.length && Math.min(...over) - b.y1 < STAIR.headroom - EPS) {
+        e.push(`cầu thang ${s.id} quanh x ${n(cx)}, z ${n(cz)}: khoảng đầu ${n(Math.min(...over) - b.y1)} m`);
+        break;
+      }
+    }
+
+    if (!t) { e.push(`cầu thang ${s.id} lên mái mà không có tum`); continue; }
+    const covers = [...m.boxes.filter(b => b.kind === 'tumRoof'), ...m.glass.filter(g => g.kind === 'tumGlass')];
+    miss: for (let x = hole.x + 0.03; x < hole.x + hole.w; x += 0.2)
+      for (let z = hole.y + 0.03; z < hole.y + hole.h; z += 0.2)
+        if (!covers.some(q => x >= q.x - EPS && x <= q.x + q.w + EPS && z >= q.z - EPS && z <= q.z + q.d + EPS)) {
+          e.push(`lỗ thang ${s.id} hở trời ở x ${n(x)}, z ${n(z)} — tum không trùm`);
+          break miss;
+        }
+  }
+  const tm = tumOf(plan);
+  /* Cửa tum phải là lỗ thật trên vách: tâm lỗ không có vách, và ngay trên đầu cửa có lanh tô vách tum — khai cửa
+     lệch khỏi vách thì không có lanh tô nào, đi bộ vẫn qua vì chẳng có gì chắn. */
+  if (tm && !tm.doors.length) e.push('tum không có cửa ra mái');
+  /* Mái tum đua ra khỏi mặt ngoài tường đủ TUM.eave ở mọi cạnh không nằm trên ranh lô, và không đua ra ngoài lô. */
+  if (tm) {
+    /* Diềm gập: mỗi cạnh có đua một dải, cao đúng TUM.fascia, mặt trên bằng mặt tôn, áp mép ngoài mái. Ô văng: mỗi cửa một
+       tấm phía ngoài tum, phủ bề ngang cửa cộng lề hai bên, đua đủ, nằm giữa đầu cửa và mặt dưới mái tum. */
+    const fas = m.boxes.filter(b => b.kind === 'tumFascia');
+    const eaveSides = [tm.x0 > EPS, tm.x1 < LOT.w - EPS, tm.y0 > EPS, tm.y1 < LOT.d - EPS].filter(Boolean).length;
+    if (fas.length !== eaveSides) e.push(`mái tum có ${fas.length} dải diềm, phải ${eaveSides} (mỗi cạnh có đua một dải)`);
+    if (fas.some(b => Math.abs(b.y1 - tm.top) > EPS || Math.abs(b.y1 - b.y0 - TUM.fascia) > EPS))
+      e.push('diềm mái tum sai cao độ — mặt trên phải bằng mặt tôn');
+    for (const d of tm.doors) {
+      const out = Math.abs(d.pos - (d.ax === 'h' ? tm.y0 : tm.x0)) < EPS ? -1 : 1;
+      const face = d.pos + out * TUM.wall / 2, head = tm.base + TUM.door;
+      const ok = m.boxes.some(b => b.kind === 'tumCanopy' && b.y0 >= head - EPS && b.y1 <= tm.under + EPS && (d.ax === 'v'
+        ? Math.abs((out > 0 ? b.x : b.x + b.w) - face) < EPS && b.w >= TUM.canopy - EPS && b.z <= d.a - TUM.canopyMargin + EPS && b.z + b.d >= d.b + TUM.canopyMargin - EPS
+        : Math.abs((out > 0 ? b.z : b.z + b.d) - face) < EPS && b.d >= TUM.canopy - EPS && b.x <= d.a - TUM.canopyMargin + EPS && b.x + b.w >= d.b + TUM.canopyMargin - EPS));
+      if (!ok) e.push(`cửa tum trục ${d.ax} ${d.pos} không có ô văng phía ngoài phủ đủ cửa`);
+    }
+    /* Lá kính ô thoáng: nằm gọn trong dải ô thoáng và bề dày tường, thấp ở mặt ngoài tum; mỗi ô đủ TUM.louvers lá, lá
+       trên chồng mép lá dưới (không có khe thẳng cho mưa hắt). */
+    const ventLo = tm.under - TUM.ventGap - TUM.vent, ventHi = tm.under - TUM.ventGap;
+    const lv = m.prisms.filter(p => p.kind === 'louver');
+    const groups = {};
+    for (const p of lv) (groups[`${n(p.x)}|${n(p.z)}`] ||= []).push(p);
+    if (!lv.length) e.push('tum không có lá kính ô thoáng');
+    for (const g of Object.values(groups)) {
+      const p0 = g[0], wallZ = p0.z + p0.d / 2, outSmall = Math.abs(wallZ - tm.y0) < EPS;
+      if (g.length !== TUM.louvers) e.push(`ô thoáng tum quanh x ${n(p0.x)}, z ${n(wallZ)} có ${g.length} lá kính, phải ${TUM.louvers}`);
+      if (g.some(p => p.y0 < ventLo - EPS || p.y1 > ventHi + EPS || Math.abs(p.d - TUM.wall) > EPS))
+        e.push(`lá kính ô thoáng tum quanh x ${n(p0.x)}, z ${n(wallZ)} ra ngoài dải ô thoáng hoặc bề dày tường`);
+      if (g.some(p => (outSmall ? p.yt[0] > p.yt[1] : p.yt[1] > p.yt[0])))
+        e.push(`lá kính ô thoáng tum quanh x ${n(p0.x)}, z ${n(wallZ)} không nghiêng xuống ra phía ngoài`);
+      const sorted = [...g].sort((p, q) => q.y1 - p.y1);
+      for (let i = 1; i < sorted.length; i++)
+        if (Math.min(...sorted[i - 1].yb) > Math.max(...sorted[i].yt) + EPS) {
+          e.push(`lá kính ô thoáng tum quanh x ${n(p0.x)}, z ${n(wallZ)} hở khe thẳng giữa hai lá`);
+          break;
+        }
+    }
+    const tr = m.boxes.filter(b => b.kind === 'tumRoof');
+    const bx = tr.length && [Math.min(...tr.map(b => b.x)), Math.max(...tr.map(b => b.x + b.w)),
+                             Math.min(...tr.map(b => b.z)), Math.max(...tr.map(b => b.z + b.d))];
+    const hw = TUM.wall / 2, need = (u, edge) => (Math.abs(u) < EPS || Math.abs(u - edge) < EPS ? 0 : TUM.eave);
+    if (!bx) e.push('tum không có mái');
+    else if (bx[0] > tm.x0 - hw - need(tm.x0, LOT.w) + EPS || bx[1] < tm.x1 + hw + need(tm.x1, LOT.w) - EPS
+          || bx[2] > tm.y0 - hw - need(tm.y0, LOT.d) + EPS || bx[3] < tm.y1 + hw + need(tm.y1, LOT.d) - EPS)
+      e.push(`mái tum đua không đủ ${TUM.eave} m ra khỏi mặt tường`);
+    else if (bx[0] < -hw - EPS || bx[1] > LOT.w + hw + EPS || bx[2] < -hw - EPS || bx[3] > LOT.d + hw + EPS)
+      e.push('mái tum đua ra ngoài ranh lô');
+  }
+  for (const d of tm ? tm.doors : []) {
+    const dm = (d.a + d.b) / 2, y = tm.base + 1.0;
+    const [px, pz] = d.ax === 'h' ? [dm, d.pos] : [d.pos, dm];
+    if (m.boxes.some(b => b.kind === 'tumWall' && inside(b, px, y, pz))) e.push(`cửa tum trục ${d.ax} ${d.pos} bị vách tum bịt`);
+    if (!m.boxes.some(b => b.kind === 'tumWall' && inside(b, px, tm.base + TUM.door + 0.01, pz)))
+      e.push(`cửa tum trục ${d.ax} ${d.pos} không nằm trên vách tum nào`);
+    /* Cánh cửa: đúng một cánh chạm lỗ cửa ở đầu bản lề, không đè lên lỗ thang (cánh quét lên bậc là nguy), chân ở mặt
+       gờ chắn nước, cao đúng đầu cửa. */
+    const hingeU = d.hinge === 'a' ? d.a : d.b;
+    const leaves = m.boxes.filter(b => b.kind === 'tumDoor' && (d.ax === 'h'
+      ? hingeU >= b.x - EPS && hingeU <= b.x + b.w + EPS && Math.min(Math.abs(b.z - d.pos), Math.abs(b.z + b.d - d.pos)) < TUM.wall
+      : hingeU >= b.z - EPS && hingeU <= b.z + b.d + EPS && Math.min(Math.abs(b.x - d.pos), Math.abs(b.x + b.w - d.pos)) < TUM.wall));
+    /* Lỗ thang tra từ số khai, không từ cánh đã dựng — cánh dựng theo `open` khai nên so với chính nó không bao giờ lộ. */
+    const overHole = b => roofHoles(plan).some(q => overlap(b.x, b.x + b.w, q.x, q.x + q.w) > EPS && overlap(b.z, b.z + b.d, q.y, q.y + q.h) > EPS);
+    if (leaves.length !== 1) e.push(`cửa tum trục ${d.ax} ${d.pos} có ${leaves.length} cánh, phải 1`);
+    else if (overHole(leaves[0]) || Math.abs(leaves[0].y0 - tm.base - TUM.curb) > EPS || Math.abs(leaves[0].y1 - tm.base - TUM.door) > EPS)
+      e.push(`cánh cửa tum trục ${d.ax} ${d.pos} quét lên lỗ thang hoặc sai cao độ`);
+    /* Gờ chắn nước: phủ trọn bề ngang lỗ ngay trên đường tim, cao đúng TUM.curb trên mặt mái. */
+    const curb = m.boxes.find(b => b.kind === 'tumCurb' && inside(b, px, tm.base + TUM.curb / 2, pz));
+    if (!curb) e.push(`cửa tum trục ${d.ax} ${d.pos} không có gờ chắn nước`);
+    else if ((d.ax === 'h' ? curb.w : curb.d) < d.b - d.a - EPS || Math.abs(curb.y1 - tm.base - TUM.curb) > EPS)
+      e.push(`gờ chắn nước cửa tum trục ${d.ax} ${d.pos} hụt bề ngang lỗ hoặc sai cao`);
+  }
+  const roofRailBoxes = m.boxes.filter(b => b.kind === 'roofRailing');
+  /* Mọi thanh nằm gọn giữa mặt mái và đỉnh lan can (tay vịn thì ở trên cùng); mỗi tuyến khai có thanh đứng
+     chân đúng mặt mái — lan can lơ lửng hay cắm xuống bản mái đều lộ. */
+  const badRail = roofRailBoxes.find(b => b.y0 < walkTopOf - EPS || b.y1 > walkTopOf + ROOF_RAILING.height + EPS);
+  if (badRail) e.push(`lan can mái quanh x ${n(badRail.x)}, z ${n(badRail.z)} cao ${n(badRail.y0)}–${n(badRail.y1)}, ra ngoài khoảng mặt mái ${n(walkTopOf)} → đỉnh lan can`);
+  for (const [ax, pos, a, b] of plan.roofRailings || []) {
+    const mid = (a + b) / 2;
+    const has = roofRailBoxes.some(q => Math.abs(q.y0 - walkTopOf) < EPS && (ax === 'h'
+      ? pos >= q.z - EPS && pos <= q.z + q.d + EPS && q.x < b && q.x + q.w > a
+      : pos >= q.x - EPS && pos <= q.x + q.w + EPS && q.z < b && q.z + q.d > a));
+    if (!has) e.push(`tuyến lan can mái trục ${ax} ${pos} quanh ${n(mid)} không có thanh nào đứng trên mặt mái`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
