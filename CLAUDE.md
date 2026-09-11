@@ -17,7 +17,7 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần), `MIN_CLEAR` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `MIN_CLEAR` |
 | `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
@@ -85,7 +85,10 @@ Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào t
 **Mái phụ lợp tôn** khai ở `roofs` của mặt bằng: vùng phủ theo tim tường, dạng (`flat`, `mono:y`,
 `gable:y`) và cao độ **mặt dưới**; độ dốc suy từ cao độ với nhịp, không khai tay. Mái trùm trọn
 một phòng kín thì phòng đó bỏ bản bê tông, thay bằng trần tôn ở cốt `ceiling`, và đỉnh các bức
-tường chỉ đỡ phòng ấy tự bám mặt dưới mái — đầu hồi tam giác ra theo, không khai. `lib/massing.js`
+tường chỉ đỡ phòng ấy tự bám mặt dưới mái — đầu hồi tam giác ra theo, không khai (phòng hở như hành
+lang ngoài có mái trùm thì không). Hai mái kề nhau hoặc nối phẳng cùng cao độ, hoặc gá thấp hẳn bên
+dưới (mái trên được đua chồng lên, khai `eave`); **máng xối** suy ở mép thấp không nối sang mái khác
+và không đua trên mái thấp hơn, mỗi dải máng một **ống xả** áp tường bao — không khai. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (tường
 trái ban công sau, đỡ trần ban công). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn

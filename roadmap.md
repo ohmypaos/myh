@@ -38,6 +38,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A9 | Bậc tam cấp, mái hiên cửa chính, sàn bếp và WC khách hạ còn +0.15 — **đã vào `current.js`** | ✅ xong | |
 | A10 | Đổ trần ban công sau, tường trái ban công lên mái — thay lam D12, **đã vào `current.js`** | ✅ xong | |
 | A4 | Đưa mái bàn trà, mái tôn bếp, mái sân phơi vào `lib/versions/current.js` | ✅ xong | |
+| A11 | Mái sân chính 4.5 × 6 m liền dải với mái hành lang và mái sân phơi, máng xối trong 3D | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
@@ -354,6 +355,46 @@ và ban công. Chốt thay lam. `3d.md` mục 2a.
 - [x] Lớp chống nóng mái (A5) phủ luôn trần ban công
 - [x] Bỏ phần lam khỏi A4
 
+### ✅ A11 · Mái sân chính liền dải, máng xối
+
+Chủ nhà muốn (11/9/2026) mái hành lang ngoài liền mạch với mái sân phơi và mái sân chính, mái sân
+chính rộng hết 4.5 m lô phụ và chạy hết chiều dài nhà chính, và thấy được máng nước trong 3D. Số
+liệu, lý do, cái giá: `3d.md` mục 3.
+
+- [x] `RF1` đổi thành **mái sân chính** `x` 5–9.5, `y` 12–18, dốc 10% ra phía cổng, mặt dưới 3.50 → 2.90
+- [x] Mái hành lang ngoài vào `roofs` thành `RF4`, tôn hai mái 3.50 → nóc 3.85 — hai đầu cùng cốt
+      3.50 với mép cao mái sân chính và mái sân phơi. Tấm phẳng `alleyRoof` 2.80 chỉ còn dựng cho kho
+      đối chiếu; thanh trượt `alley` giấu khi mặt bằng có mái nhẹ trùm R3
+- [x] `roofOver()` chỉ nhận **phòng kín** (`roofCovering()` cho mọi phòng): mái trùm hành lang hở
+      không đội tường rào lên, không đòi cốt trần
+- [x] `roofPanels()` cắt tấm ở đầu tường trên mép mái (tính cả phần kéo góc), lùi / đua theo từng
+      đoạn — mái sân chính qua khỏi góc bếp chạy thẳng tới mái hành lang, không hở khe 0.11 m
+- [x] `gutters()` suy máng ở mép thấp, trừ đoạn nối phẳng; `massing.js` dựng hộp `gutter`, 3D tô màu
+      và "Ẩn mái" giấu cùng; 2D vẽ dải máng và gộp tấm mái theo phía nóc; `specMarkdown()` in bảng máng
+- [x] `check-3d` phép kiểm 12 viết lại: soi từng điểm dọc mép chung, cho nối phẳng hoặc gá thấp hẳn;
+      thêm **phép kiểm 13** — mép thấp nào không chảy sang mái khác cũng có máng
+- [x] Phá thử: nâng RF4 lệch 2 cm ở chỗ nối → phép 12 báo cả RF1 lẫn RF3 (phép 10 báo luôn máng
+      đâm mái); bỏ một máng → phép 13 báo đúng mép `y = 12`
+- [x] Tính lại phần trời và nắng phòng khách, ghi vào `warn` và `3d.md` mục 3
+- [x] `npm run check` sạch, `npm run spec`
+
+**Chủ nhà chỉnh tiếp (11/9/2026)** sau khi xem bản đầu:
+
+- [x] **Mái bếp không máng** — khai `eave: 0.20` trong `roofs`, `roofPanels()` đua mép thấp thêm chừng
+      đó; `gutters()` bỏ máng ở đoạn ngay bên dưới có mái thấp hơn đỡ nước
+- [x] **Mái sân phơi gãy khúc ở thẳng tường bếp** — dốc 17% gặp mái hành lang 10%. Đổi mái sân phơi
+      sang 10% (3.50 → 3.20), cả dải cùng một độ dốc
+- [x] **Ống xả** — `downpipes()` suy từ dải máng, ống ở đầu sát tường bao, cắm xuống dưới cốt sân vào
+      ống ngầm; dựng 3D (`downpipe`), chấm trên 2D, bảng trong đặc tả. Máng dưới mép tự do nay treo
+      giữa mép thay vì ngoài mép, để hai đoạn máng mái sân phơi nối đầu nhau được
+- [x] `check-3d` phép 12 soi thêm mái chồng nhau trên mặt bằng; phép 13 nhận nước rơi xuống mái
+      thấp hơn và đòi mỗi dải máng có ống xả
+- [x] Phá thử: mái bếp đua 1.5 m cắm xuống mái sân chính → phép 12 báo; bỏ ống xả → phép 13 báo
+
+> **Cái giá lớn nhất: phòng khách.** W1 còn 27% phần trời (mái bàn trà 92%), D2 25% (54%); nắng
+> trực tiếp lên W1 + D2 ngày đông chí còn 18% so với không mái (mái bàn trà 70%). Ngày 10/9 chính
+> chỗ này là lý do chọn mái sát góc thay mái dọc tường nhà chính.
+
 ---
 
 ## B · Mô hình 3D
@@ -645,8 +686,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **12** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **13** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

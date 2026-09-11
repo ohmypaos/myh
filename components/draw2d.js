@@ -9,7 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf, roofPanels } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels, gutters, downpipes } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -133,10 +133,28 @@ export function init(){
 
   /* Mái nhẹ — nằm trên đầu nên vẽ viền chấm như mái hiên, thêm vạch nóc và mũi tên chỉ chiều
      nước chảy. Vẽ theo tấm đã dựng (lib/envelope.js) chứ không theo vùng khai: mép mái lùi vào
-     hay đua ra theo tường, khác nhau tới cả gang tay. */
+     hay đua ra theo tường, khác nhau tới cả gang tay. Tấm dựng bị cắt vụn theo đầu tường (mép lùi
+     từng đoạn), nên gộp lại theo mái và phía nóc rồi vẽ khung bao — không thì hiện vạch cắt lạ. */
   function drawRoofs(){
-    const seen = new Set();
+    const groups = new Map();
     for(const p of roofPanels(V)){
+      const k = `${p.id}:${p.part}`, q = groups.get(k);
+      if(!q) groups.set(k, {...p});
+      else Object.assign(q, {x0:Math.min(q.x0,p.x0), x1:Math.max(q.x1,p.x1),
+                             y0:Math.min(q.y0,p.y0), y1:Math.max(q.y1,p.y1)});
+    }
+    /* Máng xối — dải đặc mảnh dọc mép thấp. */
+    for(const gt of gutters(V)){
+      const {x,y,w,h} = gt.rect;
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'#8d8778',fill_opacity:.5},gSky);
+    }
+    /* Ống xả — chấm tròn đặc ở chân máng, áp tường bao. */
+    for(const pp of downpipes(V)){
+      const {x,y,w,h} = pp.rect;
+      el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.max(w,h)/2)+2,fill:'#5d5a52'},gSky);
+    }
+    const seen = new Set();
+    for(const p of groups.values()){
       const x=Math.min(p.x0,p.x1), y=Math.min(p.y0,p.y1), w=Math.abs(p.x1-p.x0), h=Math.abs(p.y1-p.y0);
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'none',
         stroke:'#6f6a5e',stroke_width:2,stroke_dasharray:'10 7'},gSky);
@@ -155,7 +173,11 @@ export function init(){
       }
       if(seen.has(p.id)) continue;              // mái hai mái: nhãn một lần ở tấm đầu
       seen.add(p.id);
-      const t=el('text',{x:M(x+w/2),y:M(y)+26,font_size:18,text_anchor:'middle',fill:'#6f6a5e',
+      /* Mái hẹp (hành lang ngoài, 1 m) không chứa nổi nhãn nằm ngang — dựng đứng dọc mái. */
+      const narrow = w < 1.6;
+      const [tx,ty] = narrow ? [M(x+w)-14, M(y+h/2)] : [M(x+w/2), M(y)+26];
+      const t=el('text',{x:tx,y:ty,font_size:18,text_anchor:'middle',fill:'#6f6a5e',
+        transform:narrow?`rotate(-90 ${tx} ${ty})`:null,
         font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gSky);
       t.textContent=p.name;
     }

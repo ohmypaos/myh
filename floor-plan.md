@@ -13,7 +13,7 @@
 | [`spec/current.md`](./spec/current.md) | **Đặc tả bản hiện hành** — phòng, tường, cửa, cửa sổ, lấy sáng mái, nội thất |
 | `spec/v1.md` … `spec/v11.md` | Đặc tả các bản trong kho đối chiếu |
 | File này | Hiện trạng gốc (v1) và đánh giá — **lý do** dẫn tới chuỗi thay đổi |
-| [`3d.md`](./3d.md) | Ghi chú thiết kế mô hình 3D: hướng nắng, cao độ, ba mái phụ lợp tôn |
+| [`3d.md`](./3d.md) | Ghi chú thiết kế mô hình 3D: hướng nắng, cao độ, mái phụ lợp tôn và máng xối |
 | [`roadmap.md`](./roadmap.md) | Việc còn dang dở, trạng thái từng task — trong đó có những gì đang chờ chủ nhà quyết |
 | `original-drawing.png` | Bản vẽ gốc của chủ nhà |
 
@@ -35,7 +35,7 @@ Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không s�
 | [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 5 lỗi |
 | [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 2 lỗi |
 | [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 2 lỗi |
-| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách 2 × 2 m; bậc tam cấp, mái hiên cửa chính; ba mái tôn phụ, bếp lợp tôn** (v12 + sửa sau) | **108.50** | **sạch 15/15** |
+| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách 2 × 2 m; bậc tam cấp, mái hiên cửa chính; bếp lợp tôn, mái tôn liền dải sân chính – hành lang – sân phơi** (v12 + sửa sau) | **108.50** | **sạch 15/15** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.

@@ -18,6 +18,7 @@ import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../l
 import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
+import { roofCovering } from '../lib/envelope.js';
 import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
   from '../lib/sun.js';
 
@@ -31,6 +32,8 @@ const COLORS = {
   alleyRoof:   0xbdb6a6,
   overhang:    0xc9c2b2,
   metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
+  gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
+  downpipe:    0x6a716e,     // ống xả đứng áp tường bao
   ceiling:     0xe4e0d4,
   step:        0xe2dccd,
   glass:       0xa9cfe0,
@@ -193,10 +196,10 @@ export function init(){
     applyRoofHidden();
   }
 
-  /* "Ẩn mái" phải giấu cả mái tôn và trần tôn của bếp, không thì bấm xong vẫn không nhìn được
-     vào trong bếp. Đầu hồi là tường, giữ nguyên. */
+  /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
+     được vào trong bếp. Đầu hồi là tường, giữ nguyên. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang'
-                   || k === 'metalRoof' || k === 'ceiling';
+                   || k === 'metalRoof' || k === 'gutter' || k === 'ceiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }
@@ -442,7 +445,11 @@ export function init(){
     if (!host) return;
     host.replaceChildren();
     const eff = { ...HEIGHTS, ...CFG.heights };
-    for (const r of HEIGHT_ROWS)
+    /* Mặt bằng nào khai mái nhẹ trùm hành lang ngoài thì cao độ mái ấy nằm trong `roofs`, thanh
+       trượt HEIGHTS.alley không chạm tới — giấu đi cho khỏi kéo mà không thấy gì đổi. */
+    const r3 = plan.rooms.find(r => r[0] === 'R3');
+    const rows = HEIGHT_ROWS.filter(r => r.key !== 'alley' || !(r3 && roofCovering(plan, r3)));
+    for (const r of rows)
       slider(host, { name: r.name, value: eff[r.key], min: r.min, max: r.max, step: 0.05,
         onInput: v => { CFG.heights[r.key] = v; rebuild(); } });
   }

@@ -69,7 +69,8 @@ const CHECKS = [
   'Bậc cần có đều dựng được, đều nhau, bậc cao nhất áp mặt tường cửa và thấp hơn ngưỡng đúng một nấc',
   'Không hai khối đặc nào chồng lên nhau — chồng là có mặt trùng, nhấp nháy khi xoay',
   'Góc tường kín — chỗ hai tường gặp nhau không khuyết ô nửa bề dày',
-  'Mái nhẹ gá thấp dưới mái kề nó, và không hạ xuống dưới đầu lỗ mở nào nó phủ',
+  'Mái nhẹ kề nhau thì nối liền mạch cùng cao độ hoặc gá thấp hẳn bên dưới, và không hạ xuống dưới đầu lỗ mở nào nó phủ',
+  'Mép thấp nào của mái nhẹ không chảy tiếp hay rơi xuống mái khác cũng có máng, mỗi dải máng có ống xả xuống ống ngầm',
 ];
 
 function check(plan){
@@ -278,23 +279,51 @@ function check(plan){
   if (gaps.size) e.push(`góc tường khuyết ở ${[...gaps].slice(0, 4).join('; ')}${gaps.size > 4 ? ` … (${gaps.size} góc)` : ''}`);
 
   /* 12 — mái nhẹ. Hai chuyện dễ sai khi kéo thanh trượt hay chỉnh cao độ mái:
-     a) hai mái gặp nhau ngang cốt — nước mái trên đổ thẳng vào mép mái dưới, không có chỗ đặt
-        máng xối. Mái bàn trà và mái sân phơi đều phải gá **thấp hẳn** dưới mép mái bếp.
+     a) hai mái kề nhau lệch cốt **một chút** — mái trên chưa đủ cao để đặt máng xối dưới mép nó,
+        mà cũng không nối phẳng được với mái dưới: nước đổ thẳng vào khe. Chỉ hai cách là đúng: nối
+        **liền mạch** (cùng cao độ suốt mép chung — mái hành lang ngoài vào mái sân chính, sân phơi)
+        hoặc gá **thấp hẳn** bên dưới (mái sân chính, sân phơi dưới mép mái bếp). Soi từng điểm dọc
+        mép chung chứ không so cao độ cả tấm: mái dốc thì cả tấm cao thấp đủ kiểu.
      b) mái tụt xuống dưới đầu một lỗ mở nó phủ — bịt mất cửa. */
   const panels = m.prisms.filter(p => p.kind === 'metalRoof');
-  const sideBySide = (a, b) => {
-    const dx = Math.max(a.x - (b.x + b.w), b.x - (a.x + a.w));
-    const dz = Math.max(a.z - (b.z + b.d), b.z - (a.z + a.d));
-    return dx < 0.2 && dz < 0.2 && (dx > -EPS || dz > -EPS);
-  };
+  const gapOf = (a0, a1, b0, b1) => Math.max(a0 - b1, b0 - a1);
   for (let i = 0; i < panels.length; i++)
     for (let j = i + 1; j < panels.length; j++) {
       const a = panels[i], b = panels[j];
-      if (a.id === b.id || !sideBySide(a, b)) continue;
-      const lo = Math.max(...a.yt), hi = Math.min(...b.yb);
-      const lo2 = Math.max(...b.yt), hi2 = Math.min(...a.yb);
-      if (!(lo < hi - EPS || lo2 < hi2 - EPS))
-        e.push(`mái ${a.id} và ${b.id} gặp nhau ngang cốt — không mái nào gá thấp hẳn dưới mái kia`);
+      if (a.id === b.id) continue;
+      /* Mép chung: sát nhau (hở dưới 0.2 m) theo một trục, chồng lên nhau dọc trục kia. */
+      const dx = gapOf(a.x, a.x + a.w, b.x, b.x + b.w), dz = gapOf(a.z, a.z + a.d, b.z, b.z + b.d);
+      const alongX = dz > -EPS && dz < 0.2 && -dx > EPS, alongZ = dx > -EPS && dx < 0.2 && -dz > EPS;
+      /* Chồng lên nhau trên mặt bằng (mái bếp đua ra trên mái sân chính): khắp phần chồng, một mái
+         phải nằm hẳn dưới mái kia. */
+      if (dx < -EPS && dz < -EPS) {
+        const kinds = new Set();
+        const [x0, x1] = [Math.max(a.x, b.x), Math.min(a.x + a.w, b.x + b.w)];
+        const [z0, z1] = [Math.max(a.z, b.z), Math.min(a.z + a.d, b.z + b.d)];
+        for (let k = 0; k <= 10; k++) for (let l = 0; l <= 10; l++) {
+          const x = x0 + (x1 - x0) * k / 10, z = z0 + (z1 - z0) * l / 10;
+          const [al, ah] = spanAt(a, a.axis === 'x' ? x : z), [bl, bh] = spanAt(b, b.axis === 'x' ? x : z);
+          kinds.add(ah < bl - EPS ? 'aBelow' : bh < al - EPS ? 'bBelow' : 'bad');
+        }
+        if (kinds.size > 1 || kinds.has('bad'))
+          e.push(`mái ${a.id} và ${b.id} chồng nhau trên mặt bằng mà không mái nào nằm hẳn dưới mái kia`);
+        continue;
+      }
+      if (!alongX && !alongZ) continue;
+      const [s, t] = alongX ? [Math.max(a.x, b.x), Math.min(a.x + a.w, b.x + b.w)]
+                            : [Math.max(a.z, b.z), Math.min(a.z + a.d, b.z + b.d)];
+      /* Toạ độ mép của mỗi tấm quay về phía tấm kia. */
+      const [ea, eb] = alongX ? (a.z < b.z ? [a.z + a.d, b.z] : [a.z, b.z + b.d])
+                              : (a.x < b.x ? [a.x + a.w, b.x] : [a.x, b.x + b.w]);
+      const at = (p, u, c) => spanAt(p, p.axis === 'x' ? (alongX ? u : c) : (alongX ? c : u));
+      const kinds = new Set();
+      for (let k = 0; k <= 20; k++) {
+        const u = s + (t - s) * k / 20;
+        const [al, ah] = at(a, u, ea), [bl, bh] = at(b, u, eb);
+        kinds.add(Math.abs(al - bl) < 1e-3 ? 'flush' : ah < bl - EPS ? 'aBelow' : bh < al - EPS ? 'bBelow' : 'bad');
+      }
+      if (kinds.size > 1 || kinds.has('bad'))
+        e.push(`mái ${a.id} và ${b.id} kề nhau mà không nối phẳng, cũng không mái nào gá thấp hẳn dưới mái kia`);
     }
   const heads = [
     ...plan.doors.filter(d => d[5] !== 'open')
@@ -313,6 +342,59 @@ function check(plan){
       if (under < o.head - EPS)
         e.push(`mái ${p.id} ở cốt ${n(under)} thấp hơn đầu ${o.id} (${n(o.head)})`);
     }
+  }
+
+  /* 13 — máng xối và ống xả. Soi trên khối đã dựng, không gọi lại gutters(): dọc mép thấp của từng
+     tấm mái, mỗi điểm phải hoặc là chỗ cắt bên trong cùng một mái (tấm cùng mã nằm kề), hoặc chảy
+     tiếp sang mái khác cùng cao độ, hoặc rơi xuống một mái thấp hơn ngay bên dưới, hoặc có hộp máng
+     phủ đường mép với miệng ngang mặt dưới mái. */
+  const gutterBoxes = m.boxes.filter(b => b.kind === 'gutter');
+  const inPlan = (q, x, z) => x > q.x + EPS && x < q.x + q.w - EPS && z > q.z + EPS && z < q.z + q.d - EPS;
+  for (const p of panels) {
+    if (!p.axis || Math.abs(p.yb[1] - p.yb[0]) < EPS) continue;
+    const far = p.yb[1] < p.yb[0], h = Math.min(...p.yb), out = far ? 1 : -1;
+    const along = p.axis === 'z' ? 'x' : 'z';
+    const c = p.axis === 'z' ? (far ? p.z + p.d : p.z) : (far ? p.x + p.w : p.x);
+    const [a, b] = along === 'x' ? [p.x, p.x + p.w] : [p.z, p.z + p.d];
+    /* q nằm phía `side` của đường mép (+1 = phía toạ độ lớn) và phủ điểm u dọc mép. */
+    const meets = (q, u, side) => {
+      const [n0, n1, qa, qb] = along === 'x' ? [q.z, q.z + q.d, q.x, q.x + q.w] : [q.x, q.x + q.w, q.z, q.z + q.d];
+      return u > qa - EPS && u < qb + EPS && Math.abs((side > 0 ? n0 : n1) - c) < 1e-6;
+    };
+    for (let k = 0; k < 9; k++) {
+      const u = a + (b - a) * (k + 0.5) / 9;
+      const pt = along === 'x' ? [u, c] : [c, u];
+      const drop = along === 'x' ? [u, c + out * 0.01] : [c + out * 0.01, u];
+      const covers = g => {
+        const [n0, n1, ga, gb] = along === 'x' ? [g.z, g.z + g.d, g.x, g.x + g.w] : [g.x, g.x + g.w, g.z, g.z + g.d];
+        return u > ga - EPS && u < gb + EPS && c > n0 - EPS && c < n1 + EPS;
+      };
+      const ok = panels.some(q => q !== p && meets(q, u, out) &&
+                   (q.id === p.id || Math.abs(spanAt(q, q.axis === 'x' ? pt[0] : pt[1])[0] - h) < 1e-3))
+              || panels.some(q => q.id !== p.id && inPlan(q, ...drop)
+                   && spanAt(q, q.axis === 'x' ? drop[0] : drop[1])[1] < h - EPS)
+              || gutterBoxes.some(g => covers(g) && Math.abs(g.y1 - h) < 1e-3);
+      if (!ok) {
+        e.push(`mép thấp mái ${p.id} ở ${along === 'x' ? 'z' : 'x'} ${n(c)} không có máng xối quanh ${along} ${n(u)}`);
+        break;
+      }
+    }
+  }
+  /* Mỗi dải máng (hộp máng cùng mái nối đầu nhau) phải có một ống xả: đỉnh ống áp đáy một hộp máng
+     của dải, nằm lọt dưới hộp ấy, và cắm xuống dưới cốt sân. */
+  const pipes = m.boxes.filter(b => b.kind === 'downpipe');
+  const runs = [];
+  for (const g of gutterBoxes) {
+    const joined = runs.filter(r => r.some(o => o.id === g.id && overlap(o.x - EPS, o.x + o.w + EPS, g.x, g.x + g.w) > 0
+                                                              && overlap(o.z - EPS, o.z + o.d + EPS, g.z, g.z + g.d) > 0));
+    const merged = [g, ...joined.flat()];
+    for (const r of joined) runs.splice(runs.indexOf(r), 1);
+    runs.push(merged);
+  }
+  for (const r of runs) {
+    const ok = pipes.some(p => p.y0 < -EPS && r.some(g => Math.abs(p.y1 - g.y0) < 1e-3
+      && p.x >= g.x - EPS && p.x + p.w <= g.x + g.w + EPS && p.z >= g.z - EPS && p.z + p.d <= g.z + g.d + EPS));
+    if (!ok) e.push(`dải máng mái ${r[0].id} quanh x ${n(r[0].x)}, z ${n(r[0].z)} không có ống xả xuống ống ngầm`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
