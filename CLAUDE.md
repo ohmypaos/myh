@@ -17,7 +17,7 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `MIN_CLEAR` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `MIN_CLEAR` |
 | `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
@@ -107,13 +107,15 @@ riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và
 Suy ra: cạnh sau lô (ban công sau, sân phơi) quay **Tây Nam** — nắng chiều gắt;
 cạnh phải (bếp, hành lang ngoài) quay **Đông Nam**; tường bao trái quay **Tây Bắc**.
 
-## Đã chốt, không nằm trong mô hình
+## Chống nóng
 
-Hai việc chống nóng chủ nhà chốt ngày 10/9/2026 **không đổi hình khối** nên không có gì để dựng —
-chúng sống trong `warn` của mặt bằng và trong `3d.md` mục 2c, đừng tưởng là còn thiếu:
-
-- **Sơn chống nóng mặt ngoài tường trái** ngay lúc xây, khi lô bên cạnh còn trống.
-- **Lát lớp chống nóng trên sàn mái bê tông** nhà chính, kể cả phần trần ban công sau.
+- **Sơn chống nóng mặt ngoài tường trái** ngay lúc xây, khi lô bên cạnh còn trống (chốt 10/9/2026).
+  **Không đổi hình khối** nên không có gì để dựng — chỉ sống trong `warn` và `3d.md` mục 2c, đừng
+  tưởng là còn thiếu.
+- **Lớp chống nóng sàn mái bê tông** — **có trong mô hình** (chốt cụ thể 11/9/2026): mái ngược, chống
+  thấm + XPS 50 mm + vữa cán + gạch, mặt mái lên 4.11. Khai `roofInsulation` trong mặt bằng: mọi bản mái
+  bê tông phủ phòng kín tự có lớp, bản mái đổ ra ngoài thì khai từng cái (bản hiện hành: trần ban công
+  sau và mái hiên cửa chính). Cấu tạo ở `ROOF_INSULATION`; vùng phủ suy ở `lib/envelope.js` + `lib/massing.js`.
 
 Chi tiết và trạng thái từng việc: `roadmap.md`.
 

@@ -9,7 +9,7 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, POST, BEAM, PURLIN, FURNITURE, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, FURNITURE, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf }
   from '../lib/envelope.js';
@@ -79,6 +79,7 @@ const CHECKS = [
   'Nội thất: khối của mỗi món nằm gọn trong chỗ khai và phủ gần trọn nó, chân chạm sàn phòng chứa nó, thấp hơn trần. Cánh cửa: cửa quay 1 cánh, cửa 4 cánh 4 cánh, áp mép lỗ, đứng phía mở, cao đúng đầu cửa',
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
+  'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
 ];
 
 function check(plan){
@@ -107,7 +108,9 @@ function check(plan){
   /* 3 — cao quá đỉnh thiết kế. Không còn là đỉnh mái nhà: nóc mái tôn bếp cố ý nhô cao hơn mặt
      mái bê tông. Mốc suy từ **số khai** (đỉnh mái nhà, nóc mái nhẹ cao nhất cộng bề dày tấm lợp)
      chứ không lấy từ khối đã dựng — lấy từ khối dựng thì phép kiểm tự nói đúng mọi lúc. */
-  const design = Math.max(L.houseTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet));
+  const insulationT = ROOF_INSULATION.xps + ROOF_INSULATION.screed + ROOF_INSULATION.tile;
+  const design = Math.max(L.houseTop + (plan.roofInsulation ? insulationT : 0),
+                          ...lightRoofs(plan).map(r => r.high + ROOF.sheet));
   for (const b of all)
     if (b.y1 > design + EPS)
       e.push(`hộp ${b.kind} cao ${n(b.y1)} > đỉnh thiết kế ${n(design)}`);
@@ -747,6 +750,75 @@ function check(plan){
       });
       if (!rests) e.push(`đầu xà gồ ${p.id} không tựa tường hoặc dầm`);
     }
+  }
+
+  /* 20 — lớp chống nóng mái. Tra từ số khai và khối đã dựng, không gọi roofInsulationOf(). Lấy mẫu dày
+     (bước 0.1 m, lệch khỏi bội số 5 cm để không rơi đúng ranh mảnh) trên từng bản mái bê tông và bản mái
+     đổ ra ngoài được khai: điểm nào không nằm dưới một khối nhô cao hơn mặt mái phải có **đúng một** mảnh
+     lớp — thiếu là hở chống thấm, hai là chồng. Ngược lại mỗi mảnh lớp phải có bên dưới một bản đỡ ở cốt
+     mái (bản mái được phủ, hoặc đỉnh tường nhà) — lát ra mái hiên không khai hay ra ngoài khối nhà là lộ.
+     Và không mảnh nào phủ giếng trời. */
+  const insBoxes = m.boxes.filter(b => b.kind === 'roofInsulation');
+  if (!plan.roofInsulation) {
+    if (insBoxes.length) e.push(`mặt bằng không khai roofInsulation mà có ${insBoxes.length} mảnh lớp chống nóng`);
+  } else {
+    const top = L.houseTop + insulationT;
+    const off = insBoxes.find(b => Math.abs(b.y0 - L.houseTop) > EPS || Math.abs(b.y1 - top) > EPS);
+    if (off) e.push(`lớp chống nóng quanh x ${n(off.x)}, z ${n(off.z)} ở cốt ${n(off.y0)}–${n(off.y1)}, phải ${n(L.houseTop)}–${n(top)}`);
+
+    const near = (b, ax, pos) => ax === 'h' ? Math.abs(b.z - pos) < 0.2 || Math.abs(b.z + b.d - pos) < 0.2
+                                            : Math.abs(b.x - pos) < 0.2 || Math.abs(b.x + b.w - pos) < 0.2;
+    const covered = [
+      ...m.boxes.filter(b => b.kind === 'roof'),
+      ...m.boxes.filter(b => b.kind === 'overhang'
+        && (plan.roofInsulation.overhangs || []).some(([ax, pos]) => near(b, ax, pos))),
+    ];
+    const raised = [...m.boxes, ...m.prisms]
+      .filter(b => b.kind !== 'roofInsulation' && b.y1 > L.houseTop + EPS && b.y0 < top - EPS);
+    const inP = (q, x, z) => x > q.x + EPS && x < q.x + q.w - EPS && z > q.z + EPS && z < q.z + q.d - EPS;
+    const onP = (q, x, z) => x >= q.x - EPS && x <= q.x + q.w + EPS && z >= q.z - EPS && z <= q.z + q.d + EPS;
+    const grid = (b, f) => {
+      for (let x = b.x + 0.037; x < b.x + b.w; x += 0.1)
+        for (let z = b.z + 0.041; z < b.z + b.d; z += 0.1) if (f(x, z)) return;
+    };
+
+    for (const s of covered)
+      grid(s, (x, z) => {
+        if (raised.some(q => inP(q, x, z))) return false;
+        const k = insBoxes.filter(b => inP(b, x, z)).length;
+        if (k === 1) return false;
+        e.push(`lớp chống nóng ${k ? `chồng ${k} mảnh` : 'hở'} ở x ${n(x)}, z ${n(z)} trên bản ${s.kind}`);
+        return true;
+      });
+
+    /* Mép lớp phải ra tới mặt ngoài tường: ngay ngoài mép mỗi bản được phủ (0.03 m — lọt trong nửa tường 100),
+       chỗ nào là đỉnh tường nhà ở cốt mái thì cũng phải có lớp. Dừng ở tim tường thì hở nửa bề dày — đã phá thử
+       đúng kiểu đó, các mẫu bên trong bản mái không thấy. */
+    const tops = m.boxes.filter(b => b.kind === 'houseWall' && Math.abs(b.y1 - L.houseTop) < EPS);
+    ring: for (const s of covered) {
+      const pts = [];
+      for (let u = s.x + 0.037; u < s.x + s.w; u += 0.1) pts.push([u, s.z - 0.03], [u, s.z + s.d + 0.03]);
+      for (let u = s.z + 0.041; u < s.z + s.d; u += 0.1) pts.push([s.x - 0.03, u], [s.x + s.w + 0.03, u]);
+      for (const [x, z] of pts) {
+        if (!tops.some(q => inP(q, x, z)) || raised.some(q => inP(q, x, z))) continue;
+        if (!insBoxes.some(b => inP(b, x, z))) {
+          e.push(`lớp chống nóng dừng trước mặt ngoài tường ở x ${n(x)}, z ${n(z)} — đỉnh tường nhà để trần`);
+          break ring;
+        }
+      }
+    }
+
+    const bases = [...covered, ...tops];
+    for (const b of insBoxes)
+      grid(b, (x, z) => {
+        if (bases.some(q => onP(q, x, z))) return false;
+        e.push(`lớp chống nóng ở x ${n(x)}, z ${n(z)} không có bản mái hay đỉnh tường nhà bên dưới`);
+        return true;
+      });
+
+    for (const [id, , sx, sy, sw, sh] of plan.skylights)
+      for (const [x, z] of [[sx + sw / 2, sy + sh / 2], [sx + 0.02, sy + 0.02], [sx + sw - 0.02, sy + sh - 0.02]])
+        if (insBoxes.some(b => inP(b, x, z))) { e.push(`lớp chống nóng phủ lên ${id}`); break; }
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

@@ -1,6 +1,6 @@
-# Đặc tả mặt bằng — Hiện hành — sân giếng sát bếp, bố trí lại khu giặt
+# Đặc tả mặt bằng — Hiện hành — lớp chống nóng mái XPS
 
-> Sinh tự động từ `lib/versions/current.js` lúc 13:48:40 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 14:43:21 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -102,8 +102,22 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 
 | Trục | Vị trí | Từ | Đến | Đua ra | Ghi chú |
 |---|---:|---:|---:|---:|---|
-| ngang | 12.0 | -0.1 | 5.1 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, che bậc D1 |
+| ngang | 12.0 | -0.1 | 5.1 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, công xôn không cột, che bậc D1 |
 | ngang | 28.0 | -0.1 | 5.1 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
+
+### Lớp chống nóng mái
+
+Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, PHÒNG THỜ, PHÒNG NGỦ 1, THAY ĐỒ / KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt gạch. Diện tích lát **95.31 m²**, mặt gạch cốt **4.11** (bản mái 4.00, chưa tính vữa tạo dốc).
+
+| Lớp (dưới lên) | Dày (m) | Ghi chú |
+|---|---:|---|
+| Bản mái BTCT | 0.25 | |
+| Vữa tạo dốc | thay đổi | dốc về chỗ thoát nước; không dựng trong 3D |
+| Chống thấm | — | gốc xi măng hoặc màng dán nguội; **không** khò bitum nóng, **không** sơn gốc dầu — dung môi làm chảy XPS |
+| Tấm XPS | 0.05 | cường độ nén ≥ 300 kPa, ghép so le; phủ kín ngay, không để phơi nắng; không nhầm xốp trắng EPS |
+| Vải địa kỹ thuật | — | ngăn vữa chảy vào khe tấm |
+| Vữa cán lưới thép | 0.04 | khe co giãn cách nhau ≤ 3.0 m, chèn keo đàn hồi |
+| Gạch lát | 0.02 | |
 
 ### Mái nhẹ
 
@@ -259,7 +273,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
 
-**Hai việc chống nóng không đổi hình khối, đừng quên khi thi công:** sơn chống nóng mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo; lát lớp chống nóng trên toàn bộ sàn mái bê tông nhà chính, kể cả phần trần ban công sau. Mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái nên đó mới là chỗ đáng tiền.
+**Sơn chống nóng tường trái — không đổi hình khối, đừng quên:** sơn mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo.
+
+**Lớp chống nóng mái — chỗ đáng tiền nhất** (mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái). XPS được che kín thì bền cỡ 30–50 năm; thứ hỏng trước là chống thấm và gạch, nên khi thi công: chống thấm nằm **dưới** XPS, không khò bitum nóng hay sơn gốc dầu; phủ vữa ngay, không để tấm phơi nắng; mua đúng XPS ô kín, không phải xốp trắng EPS; tạo dốc từ lớp dưới cho nước không đọng dưới gạch; vữa cán chia khe co giãn ≤ 3 m — gạch mái bong chủ yếu vì thiếu khe; quanh giếng trời xây gờ cao hơn mặt gạch. Dột thì phải dỡ gạch và XPS mới sửa được lớp chống thấm.
 
 ## 10. Kết quả bộ kiểm tra
 
@@ -278,7 +294,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 11. Hai lỗ mở trên cùng tường không chồng nhau
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
-14. Bậc, mái hiên, tường nâng, cốt sàn riêng khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
+14. Bậc, mái hiên, tường nâng, cốt sàn riêng, lớp chống nóng mái khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
 15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần; cột đỡ mái nằm trong lô, dưới một mái nhẹ, không đứng giữa nội thất
 
 ---
@@ -298,9 +314,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | sân giếng sát bếp, bố trí lại khu giặt | 107.7 |
+| current ← | lớp chống nóng mái XPS | 107.7 |
 
-### Thay đổi ở Hiện hành — sân giếng sát bếp, bố trí lại khu giặt
+### Thay đổi ở Hiện hành — lớp chống nóng mái XPS
 
 - Ban công sau 1.0 → **2.0 m sâu** (5.0 × 2.0 = 10.00 m²) — nay ngồi được, không chỉ để thoáng
 - Nhà chính 17.0 → **18.0 m**; sân phụ bù lại 13.0 → 12.0 m
@@ -336,3 +352,4 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Góc làm việc master** — thay bàn 1.3 × 1.5 m bằng 2 bàn 0.6 × 1.2 m nối nhau dọc tường phải, kèm 2 ghế làm việc riêng
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
 - **Sân giếng sát tường bếp** — dành một khoảng 1.5 m ngay ngoài D10, hai vòi âm tường giãn nhau trên tường nhà chính; mái sân phơi giữ nguyên. Một máy giặt/sấy 0.60 × 0.60 m ở góc giữa tường bếp và tường nhà chính, kê trên bệ sân 0.68 × 0.68 m cao 0.15 m để nước rửa sân không ảnh hưởng máy; bỏ máy rửa bát
+- **Lớp chống nóng mái kiểu mái ngược** — chống thấm + tấm XPS 50 mm + vải địa kỹ thuật + vữa cán 40 mm lưới thép + gạch lát, phủ mọi sàn mái bê tông (nhà chính, WC khách), trần ban công sau và mái hiên cửa chính, tới mặt ngoài tường; chừa giếng trời. Mặt mái 4.00 → 4.11. Chọn thay gạch lỗ chống nóng (trữ nhiệt rồi nhả vào buổi tối, ngay trên phòng ngủ) và thay mái tôn trên sàn mái (phải khoét theo giếng trời; lợp sát trần thì khe gió không lùa được)

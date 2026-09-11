@@ -34,6 +34,7 @@ const COLORS = {
   roof:        0xc9c2b2,
   alleyRoof:   0xbdb6a6,
   overhang:    0xc9c2b2,
+  roofInsulation:0xc39b82,  // gạch lát trên lớp chống nóng mái — tông gạch nhạt, tách khỏi bê tông
   metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
   gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
   downpipe:    0x6a716e,     // ống xả đứng áp tường bao
@@ -118,6 +119,16 @@ export function init(){
 
   const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);   // một hộp dùng chung, co giãn theo scale
 
+  /* Bản bê tông — mái nhà, mái hiên cửa chính, trần ban công — không tô một màu cho cả hộp: mặt dưới là trần
+     trát sơn, **cùng màu trần** dù đứng trong phòng, dưới hiên hay ngoài ban công; cạnh bản trát sơn như tường;
+     chỉ mặt trên để màu bê tông (có lớp chống nóng thì gạch đã phủ lên). Tô cả hộp màu bê tông thì trần hiên và
+     trần ban công xám lệch hẳn trần trong nhà, cạnh bản thành vệt xám trên mặt tiền trắng.
+     Thứ tự mặt của BoxGeometry: +x, −x, +y, −y, +z, −z. */
+  const SLAB_MATS = [solidMats.houseWall, solidMats.houseWall, solidMats.roof, solidMats.ceiling,
+                     solidMats.houseWall, solidMats.houseWall];
+  const materialOf = b => b.kind === 'roof' || b.kind === 'overhang'
+    ? SLAB_MATS : solidMats[b.tone || b.kind] || solidMats.houseWall;
+
   /* ═══════════ MŨI TÊN CHỈ BẮC ═══════════ */
   function northArrow(){
     const g = new THREE.Group();
@@ -191,7 +202,7 @@ export function init(){
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes)
-      group.add(box(b, solidMats[b.tone || b.kind] || solidMats.houseWall, b.kind));
+      group.add(box(b, materialOf(b), b.kind));
     for (const p of massing.prisms) {
       const m = new THREE.Mesh(prismGeometry(p), solidMats[p.kind] || solidMats.houseWall);
       m.castShadow = m.receiveShadow = true;
@@ -210,7 +221,7 @@ export function init(){
 
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
      được vào trong bếp. Đầu hồi là tường, giữ nguyên. */
-  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang'
+  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang' || k === 'roofInsulation'
                    || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });

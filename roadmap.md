@@ -31,7 +31,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A1 | Che nắng tây cho master — chốt **đổ trần ban công + tường trái lên mái** (thay lam đứng) | ✅ xong | |
 | A2 | Mái phụ — chốt **mái bàn trà sân chính**, bỏ mái che xe | ✅ xong | |
 | A3 | Tường trái Tây Bắc — chốt **sơn chống nóng lúc xây** | ✅ xong | |
-| A5 | Chống nóng mái — chốt **lát lớp chống nóng** | ✅ xong | |
+| A5 | Chống nóng mái — chốt **mái ngược XPS** (chống thấm + XPS 50 mm + vữa cán + gạch), **đã vào `current.js`** | ✅ xong | |
 | A6 | Bếp — chốt **lợp tôn hai mái + trần tôn**, không đổ mái bê tông | ✅ xong | |
 | A7 | Mái sân phơi — chốt **tôn dốc một mái**, chừa dải hở thẳng hàng ban công | ✅ xong | |
 | A8 | WC khách 1.6 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
@@ -104,7 +104,8 @@ lịch sử, commit message phải nói rõ đổi gì và vì sao. Quy trình b
 "Đổi thiết kế": 15 phép kiểm phải sạch, rồi `npm run spec`.
 
 A1–A3, A5–A7 là **quyết định**, chủ nhà chốt hết ngày 10/9/2026. Số liệu và lý do nằm ở
-`3d.md` mục 2a, 2c, 3, 3a, 3b — ở đây chỉ ghi kết quả. A3 và A5 không đổi hình khối, nên A4 gồm
+`3d.md` mục 2a, 2c, 3, 3a, 3b — ở đây chỉ ghi kết quả. A3 không đổi hình khối; A5 lúc chốt cũng
+tưởng là không, tới 11/9/2026 chốt cụ thể lớp XPS thì mặt mái lên 0.11 m và đã dựng. A4 gồm
 ba thứ: mái bàn trà (A2), mái tôn bếp (A6), mái sân phơi (A7) — đã làm xong. Che nắng D12 (A1)
 đổi từ lam sang đổ trần ban công — toàn hộp nên đã làm luôn ở A10.
 
@@ -182,10 +183,38 @@ Việc **lộ ra khi tính A3**: mái bằng bê tông ~85 m² (không tính b�
 gấp ~4 lần tường trái.
 
 **Chốt: lát lớp chống nóng trên sàn mái bê tông nhà chính** (tấm cách nhiệt hoặc gạch chống
-nóng). Không làm mái tôn thông gió phía trên vì phải khoét theo SK1–SK4. Không đổi hình khối.
-`3d.md` mục 2c.
+nóng). Không làm mái tôn thông gió phía trên vì phải khoét theo SK1–SK4. `3d.md` mục 2c.
 
 - [x] Chủ nhà chốt
+- [x] **Chốt cụ thể (11/9/2026): mái ngược XPS** — chống thấm → XPS 50 mm → vải địa kỹ thuật → vữa cán
+      40 mm lưới thép, khe co giãn ≤ 3 m → gạch lát. So với mái tôn sát trần (khe gió không lùa, hiệu quả
+      chỉ ngang lát) và gạch lỗ (trữ nhiệt nhả vào tối) — bảng so ở `3d.md` mục 2c
+- [x] `ROOF_INSULATION` trong `lib/lot.js`; khai `roofInsulation:{overhangs:[['h',28.0]]}` trong `current.js` —
+      mọi bản mái bê tông phủ phòng kín (nhà chính, WC khách) tự có lớp, trần ban công sau khai thêm; mái hiên
+      cửa chính lúc đầu chừa, chủ nhà chốt phủ luôn — `overhangs:[['h',12.0], ['h',28.0]]`. `roofInsulationOf()` trong `lib/envelope.js`, `validate()` báo khai mái đổ ra ngoài không có thật
+- [x] `lib/massing.js` dựng khối `roofInsulation` cốt 4.00–4.11: bản mái theo tim + trần ban công + mọi đỉnh tường
+      nhà ở cốt mái, chừa giếng trời và chân đầu hồi bếp — 65 mảnh, 95.31 m² (kể cả mái hiên); 3D tô màu gạch, "Ẩn mái" giấu cùng;
+      `specMarkdown()` in bảng cấu tạo
+- [x] `check-3d` thêm **phép kiểm 20**: đúng cốt và bề dày, phủ kín bản mái được phủ, ra tới mặt ngoài tường, không
+      lát ra ngoài bản đỡ, không phủ giếng trời
+- [x] Phá thử: bỏ khoét giếng trời → phép 20 báo lát không có bản đỡ; bỏ trừ đầu hồi → phép 10 báo chồng tường; dừng
+      lớp ở tim tường → phép 20 báo đỉnh tường để trần; lát mái đổ ra ngoài không khai (thử trên mái hiên cửa chính,
+      lúc chưa khai) → phép 20 báo không có bản đỡ
+- [x] Mái hiên cửa chính **không cần cột** — công xôn 1.2 m, dày 0.25, lớp chống nóng thêm ~1.3 kN/m²; thép chịu lực
+      ở lớp trên neo vào bản mái nhà, kỹ sư kết cấu chốt. Tính sơ bộ ở `3d.md` mục 3c. Trần ban công gác hai tường bên, không phải công xôn
+- [x] Bản bê tông tô theo mặt trong 3D: mặt dưới màu trần, cạnh màu tường, mặt trên bê tông — trần hiên, trần ban công
+      cùng màu trần trong nhà (chủ nhà thấy lệch màu)
+
+> **Vấp ở phép 20:** bản đầu chỉ lấy mẫu bên trong bản mái nên dừng lớp ở tim tường vẫn sạch. Thêm vòng mẫu ngay
+> ngoài mép thì lộ luôn một chỗ hở thật ở bản dựng: góc hai tường nâng bên ban công kéo tới mặt ngoài rào sau
+> (`z` 30.00–30.11) mà trần ban công chỉ đổ tới tim. Đổi vùng phủ từ "mở phòng ra nửa bề dày tường" sang "cộng mọi
+> đỉnh tường nhà ở cốt mái".
+- [x] Cảnh báo thi công vào `warn`: chống thấm dưới XPS, không bitum nóng / sơn gốc dầu, không để tấm phơi nắng,
+      không nhầm EPS, khe co giãn, gờ quanh giếng trời
+- [x] `lib/grid.js` neo vị trí mái đổ ra ngoài trong `roofInsulation` vào đường lưới như mái hiên — thử kéo `y = 28`
+      sang 27.6: tham chiếu thành 27.6, trần ban công vẫn có lớp. Không neo thì tham chiếu đứng lại, `validate()` báo
+      và trần ban công mất lớp
+- [ ] Không vẽ lên bản 2D — lớp phủ gần hết nửa trái bản vẽ, chỉ thêm rối; thông tin nằm ở đặc tả
 
 ### ✅ A6 · Bếp lợp tôn hai mái + trần tôn
 
@@ -842,8 +871,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **18** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **20** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18 và 19, A5 thêm 20); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường
