@@ -5,12 +5,13 @@ import { LOT } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
-import { MIN_CLEAR, FURNITURE } from '../lib/lot.js';
+import { MIN_CLEAR, FURNITURE, SWITCH } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf } from '../lib/envelope.js';
+import { mountSwitchBoard } from './switchBoard.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -55,7 +56,7 @@ export function init(){
 
 
   // các lớp vẽ — tạo lại mỗi lần đổi phiên bản
-  let gRoom,gStep,gWall,gHole,gSky,gF,gW,gD,gDim,gL,gT,TB;
+  let gRoom,gStep,gWall,gHole,gSky,gF,gLight,gW,gD,gDim,gL,gT,TB;
 
   /* ═══════════ CÁC LỚP VẼ ═══════════ */
 
@@ -253,6 +254,75 @@ export function init(){
         text_anchor:r.ax==='h'?'middle':'end',fill:'#7d8582',
         font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gF);
       t.textContent=r.id;
+    }
+  }
+
+  /* Bảng công tắc (lib/envelope.js switchesOf) — ô chữ nhật mảnh áp mặt tường phía nó quay vào, kèm mã. Cụm đèn nào
+     đang bật thì kẻ nét đứt từ mọi bảng có hạt của cụm ấy tới từng đèn trong cụm: bật một cụm là đọc ra ngay nó do
+     công tắc nào điều khiển, hai chiều thì thấy hai bó dây. Vẽ trước đèn để ký hiệu đèn nằm trên nét dây. */
+  function drawSwitches(){
+    const C = '#9a6b00', sw = switchesOf(V), plates = sw.plates.filter(p=>!p.errors.length);
+    const lamps = new Map(lightsOf(V).filter(l=>!l.errors.length).map(l=>[l.id,l]));
+    const at = o => o.ax==='h' ? [M(o.u), M(o.face)] : [M(o.face), M(o.u)];
+    for(const g of sw.groups){
+      if(!board.isGroupOn(g.id)) continue;
+      for(const p of plates.filter(p=>g.plates.includes(p.id))){
+        const [px,py] = at(p);
+        for(const id of g.lights){
+          const l = lamps.get(id);
+          if(!l) continue;
+          const [lx,ly] = l.mount==='wall' ? at(l) : [M(l.x), M(l.y)];
+          el('line',{x1:px,y1:py,x2:lx,y2:ly,stroke:'#d19a00',stroke_width:1.8,stroke_dasharray:'8 5'},gLight);
+        }
+      }
+    }
+    for(const p of plates){
+      const [px,py] = at(p), w = M(SWITCH.width)+6, t = 10;
+      const r = p.ax==='h' ? {x:px-w/2, y:p.dir>0?py:py-t, width:w, height:t}
+                           : {x:p.dir>0?px:px-t, y:py-w/2, width:t, height:w};
+      const lit = p.groups.some(id=>board.isGroupOn(id));
+      el('rect',{...r, fill:lit?'#ffd54a':'#fff', stroke:C, stroke_width:1.8},gLight);
+      const [tx,ty] = p.ax==='h' ? [px, py + p.dir*(p.dir>0?28:18)] : [px + p.dir*16, py+4];
+      const txt = el('text',{x:tx, y:ty, font_size:11, fill:C, font_weight:700,
+        text_anchor: p.ax==='h' ? 'middle' : (p.dir>0 ? 'start' : 'end'),
+        font_family:'ui-sans-serif,system-ui,sans-serif'},gLight);
+      txt.textContent = p.id;
+    }
+  }
+
+  /* Đèn (lib/envelope.js lightsOf). Ký hiệu điện quen dùng: đèn trần là vòng tròn gạch chéo cỡ đúng thân đèn, đèn thả
+     là vòng tròn có chấm giữa, đèn tường là nửa vòng tròn áp mặt tường, bụng quay về phía rọi. Đèn có cấp chống nước
+     (ngoài trời, chống ẩm) tô vàng đậm. Mã đèn nhỏ cạnh ký hiệu. */
+  function drawLights(){
+    const C = '#9a6b00';
+    for(const l of lightsOf(V)){
+      if(l.errors.length) continue;
+      const T = l.spec, fill = T.ip ? '#f2c14e' : '#fff6d6';
+      const r = Math.max(M(T.size/2), 8);
+      const mark = gLight.childNodes.length;
+      let cx, cy;
+      if(l.mount === 'wall'){
+        [cx, cy] = l.ax==='h' ? [M(l.u), M(l.face)] : [M(l.face), M(l.u)];
+        const sweep = l.dir > 0 ? 1 : 0;
+        const d = l.ax==='v'
+          ? `M${cx} ${cy-r}A${r} ${r} 0 0 ${sweep} ${cx} ${cy+r}Z`
+          : `M${cx+r} ${cy}A${r} ${r} 0 0 ${sweep} ${cx-r} ${cy}Z`;
+        el('path',{d, fill, stroke:C, stroke_width:1.8},gLight);
+      } else {
+        [cx, cy] = [M(l.x), M(l.y)];
+        el('circle',{cx, cy, r, fill, stroke:C, stroke_width:1.8},gLight);
+        if(l.mount === 'pendant') el('circle',{cx, cy, r:4, fill:C},gLight);
+        else {
+          const k = r*0.7;
+          el('path',{d:`M${cx-k} ${cy-k}L${cx+k} ${cy+k}M${cx+k} ${cy-k}L${cx-k} ${cy+k}`, stroke:C, stroke_width:1.4},gLight);
+        }
+      }
+      /* Đèn đang bật (bảng công tắc): quầng vàng dưới ký hiệu. */
+      if(board.isLampOn(l.id))
+        gLight.insertBefore(el('circle',{cx, cy, r:r+12, fill:'#ffd54a', fill_opacity:.55},gLight), gLight.childNodes[mark]);
+      const t = el('text',{x:cx+r+3, y:cy-r+2, font_size:12, fill:C, font_weight:700,
+        font_family:'ui-sans-serif,system-ui,sans-serif'},gLight);
+      t.textContent = l.id;
     }
   }
 
@@ -710,6 +780,7 @@ export function init(){
     [...scene.children].forEach(c => { if(c !== defs) c.remove(); });
     gRoom = g(); gStep = g(); gWall = g(); gHole = g(); gSky = g();
     gF    = g({stroke:'#5c5c5c', stroke_width:1.6, fill:'#fff'});
+    gLight = g();
     gW    = g(); gD = g();
     gDim  = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
     gL    = g({font_family:'ui-sans-serif,system-ui,sans-serif',text_anchor:'middle'});
@@ -718,7 +789,7 @@ export function init(){
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
     drawRooms(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
-    drawFurniture(); drawRacks();
+    drawFurniture(); drawRacks(); drawSwitches(); drawLights();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
   }
@@ -787,6 +858,29 @@ export function init(){
       document.getElementById('tblSky').innerHTML = sr;
     } else secSky.hidden = true;
 
+    // ── bảng đèn: độ rọi từng phòng rồi danh sách đèn ──
+    const secLights = document.getElementById('secLights');
+    const lamps = lightsOf(V).filter(l=>!l.errors.length);
+    if(secLights) secLights.hidden = !lamps.length;
+    if(secLights && lamps.length){
+      const watt = lamps.reduce((s,l)=>s+l.spec.watt,0);
+      let xr='<tr><th>Phòng</th><th class="n">Đèn</th><th class="n">W</th><th class="n">Độ rọi chung</th></tr>';
+      for(const r of lightingOf(V).filter(r=>r.count||r.target!=null)){
+        const lux = r.target==null ? '<span style="color:#888">—</span>'
+          : `<b style="color:${r.ok?'#0a6b3d':'#c0392b'}">${Math.round(r.lux)}</b> / ${r.target} lx`;
+        xr+=`<tr><td>${r.name}</td><td class="n">${r.count}</td><td class="n">${r.watt}</td><td class="n">${lux}</td></tr>`;
+      }
+      const roof = lamps.filter(l=>!l.room);
+      if(roof.length) xr+=`<tr><td>MÁI</td><td class="n">${roof.length}</td><td class="n">${roof.reduce((s,l)=>s+l.spec.watt,0)}</td><td class="n"><span style="color:#888">—</span></td></tr>`;
+      xr+=`<tr class="tot"><td>Toàn nhà</td><td class="n">${lamps.length}</td><td class="n">${watt}</td><td>—</td></tr>`;
+      document.getElementById('tblLux').innerHTML = xr;
+      let lr='<tr><th>Mã</th><th>Loại</th><th class="n">W</th><th>Vị trí</th></tr>';
+      for(const l of lamps)
+        lr+=`<tr><td style="color:#9a6b00;font-weight:700">${l.id}</td><td>${l.spec.name}${l.spec.ip?` IP${l.spec.ip}`:''}</td>`
+          + `<td class="n">${l.spec.watt}</td><td>${l.desc||''}</td></tr>`;
+      document.getElementById('tblLights').innerHTML = lr;
+    }
+
     document.getElementById('vTitle').textContent = V.label;
     document.getElementById('vMeta').textContent  = V.note;
     document.getElementById('vChanges').innerHTML = V.changes.map(c=>`<li>${c}</li>`).join('');
@@ -811,6 +905,7 @@ export function init(){
   <tr><td><b>W#</b></td><td>Cửa sổ — chi tiết ở <b>Bảng cửa sổ</b></td></tr>
   <tr><td style="color:#2f7897"><b>SK#</b></td><td>Lấy sáng mái — chi tiết ở <b>Bảng lấy sáng mái</b></td></tr>
   <tr><td><b>L# / R#</b></td><td>Mã phòng lô chính / lô phụ — <b>Bảng thống kê phòng</b></td></tr>
+  <tr><td style="color:#9a6b00"><b>Đ#</b></td><td>Đèn — chi tiết ở <b>Bảng đèn</b></td></tr>
 
   <tr><td colspan="2" style="background:#f6f4ee;font-weight:700">Hệ kích thước</td></tr>
   <tr><td>Mặc định</td><td><b>Tim tường</b> — nhãn phòng và đường kích thước đều tính tới tim tường, cộng dồn ra đúng 30.0 m</td></tr>
@@ -828,6 +923,12 @@ export function init(){
   <tr><td style="color:#2f7897">Nét đứt xanh + gạch chéo</td><td>Lấy sáng trên mái (nằm phía trên đầu)</td></tr>
   <tr><td style="color:#6f6a5e">Viền chấm xám</td><td>Mái hiên, trần ban công — bản mái đổ ra ngoài tường (nằm phía trên đầu)</td></tr>
   <tr><td>Ô be kẻ vạch</td><td>Bậc tam cấp phía sân — mỗi vạch là mép một bậc</td></tr>
+  <tr><td style="color:#9a6b00">Vòng tròn gạch chéo</td><td>Đèn trần ốp nổi — cỡ vòng là cỡ thân đèn</td></tr>
+  <tr><td style="color:#9a6b00">Vòng tròn chấm giữa</td><td>Đèn thả</td></tr>
+  <tr><td style="color:#9a6b00">Nửa vòng tròn áp tường</td><td>Đèn tường — bụng quay về phía rọi</td></tr>
+  <tr><td style="color:#9a6b00">Ô chữ nhật mảnh áp tường, mã BCT#</td><td>Bảng công tắc — bấm hạt ở mục <b>Bảng công tắc</b>; ô tô vàng khi có cụm đang bật</td></tr>
+  <tr><td style="color:#9a6b00">Quầng vàng + nét đứt vàng</td><td>Đèn đang bật, nét đứt nối về các bảng công tắc điều khiển nó</td></tr>
+  <tr><td style="color:#9a6b00">Nền vàng đậm</td><td>Đèn chống nước (ngoài trời IP65, WC IP44); nền vàng nhạt là đèn trong nhà</td></tr>
   <tr><td>Nét đứt xám trên tường rào</td><td>Cổng — có nhãn kèm bề rộng</td></tr>
   <tr><td>Nét gạch–chấm</td><td>Ranh lô chính / lô phụ ở phần sân</td></tr>
   <tr><td style="color:#8a1c1c">Nét đỏ mảnh + gạch chéo đầu</td><td>Đường kích thước, đơn vị mét</td></tr>
@@ -862,6 +963,9 @@ export function init(){
   <tr><td>Thanh đen–trắng 0–5</td><td>Thang tỉ lệ, mỗi ô 1 mét</td></tr>
   <tr><td>Khung dưới bản vẽ</td><td>Khung tên: tên bản, tỉ lệ, diện tích</td></tr>`;
 
+
+  /* Bảng công tắc bấm được (components/switchBoard.js) — bật / tắt cụm đèn chỉ vẽ lại bản vẽ, không đụng số liệu. */
+  const board = mountSwitchBoard('switchBoard', { onChange: () => buildPlan() });
 
   /* ═══════════ CHỌN PHIÊN BẢN ═══════════ */
   const sel = document.getElementById('ver');
@@ -899,6 +1003,7 @@ export function init(){
     V = applyConfig(BASE, CFG);
     ROOMS=V.rooms; WALLS=V.walls; DOORS=V.doors; WINDOWS=V.windows;
     SKYLIGHTS=V.skylights; FURN=V.furn; GATES=V.gates; STRIPS=V.strips; DIMS=V.dims;
+    board.setPlan(V);
     buildPlan(); buildTables();
     if(refit){ mode='fit'; fit(); }
   }

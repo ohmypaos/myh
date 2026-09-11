@@ -9,11 +9,11 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { COLORS, GLASS_KINDS, ROOF_KINDS } from '../components/palette.js';
+import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palette.js';
 import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -85,6 +85,7 @@ const CHECKS = [
   'Bồn nước trên mái: đủ khối thân, chân, bản đế và hai thanh kiềng; chân đứng đúng mặt mái, kiềng bắc ngang trục đỡ đúng đường tim đáy trụ (không thì bồn treo lơ lửng); bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
   'Màu và nhóm ẩn mái: mọi loại khối massing.js sinh ra đều có màu khai trong components/palette.js (thiếu thì âm thầm tô màu tường), và mọi khối đứng từ cốt mặt mái trở lên đều nằm trong nhóm bị nút "Ẩn mái" giấu',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
+  'Đèn: mỗi đèn khai có đúng khối ở đúng tâm; đèn trần áp đúng mặt dưới vật che ngay trên, đáy cách sàn ít nhất 2 m, đèn thả đáy chao đúng cốt; đèn tường lưng áp mặt tường và sau lưng là tường thật; bảng công tắc đúng một khối, lưng áp tường thật',
 ];
 
 function check(plan){
@@ -1193,6 +1194,65 @@ function check(plan){
      thêm khối mới trên mái là lộ ngay. */
   const onRoof = [...m.boxes, ...m.prisms, ...m.glass].find(b => b.y0 > walkTop - EPS && !ROOF_KINDS.has(b.kind));
   if (onRoof) e.push(`khối '${onRoof.kind}' đứng ở cốt ${n(onRoof.y0)}, trên mặt mái ${n(walkTop)}, mà "Ẩn mái" không giấu`);
+
+  /* 25 — đèn. Vị trí khai lấy từ lightsOf(), chỗ gắn soi trên khối đã dựng — không tính lại cách massing.js tìm chỗ:
+     a) mỗi đèn đúng số khối (đèn thả hai: chao và dây), tâm đúng chỗ khai;
+     b) đèn trần, đèn thả: đỉnh khối cao nhất **áp đúng mặt dưới vật ngay trên nó**, tra trên mọi khối không phải đèn,
+        đồ đạc hay cánh cửa — hở là đèn lơ lửng, cắm vào thì phép 10 bắt. Đáy đèn cách sàn ít nhất 2 m; đèn thả đáy
+        chao đúng cốt khai;
+     c) đèn tường: lưng áp đúng mặt tường khai, và ngay sau lưng — chín điểm trên mặt lưng — là khối tường thật (tường
+        nhà, rào, vách tum). Khai đèn lên trên đỉnh rào thấp hay trong lỗ cửa là lưng đèn không có gì. */
+  const lampBoxes = m.boxes.filter(b => LAMP_KINDS.has(b.kind));
+  const nonLamp = [...m.boxes, ...m.prisms].filter(b => !LAMP_KINDS.has(b.kind) && !['furniture', 'doorLeaf', 'gateDoor'].includes(b.kind));
+  const wallish = [...m.boxes, ...m.prisms].filter(b => /Wall$/.test(b.kind));
+  /* Vật áp tường (đèn tường, bảng công tắc): lưng đúng mặt tường khai, và chín điểm ngay sau lưng đều nằm trong khối tường. */
+  const wallBacked = (it, body, what) => {
+    const back = it.ax === 'h' ? (it.dir > 0 ? body.z : body.z + body.d) : (it.dir > 0 ? body.x : body.x + body.w);
+    if (Math.abs(back - it.face) > EPS) { e.push(`${what} ${it.id} không áp mặt tường ${n(it.face)}`); return; }
+    let miss = null;
+    for (const fu of [0.1, 0.5, 0.9]) for (const fy of [0.1, 0.5, 0.9]) {
+      const uu = it.a + (it.b - it.a) * fu, yy = body.y0 + (body.y1 - body.y0) * fy, nn = back - it.dir * 0.01;
+      const [px, pz] = it.ax === 'h' ? [uu, nn] : [nn, uu];
+      const held = wallish.some(w => {
+        if (px < w.x - EPS || px > w.x + w.w + EPS || pz < w.z - EPS || pz > w.z + w.d + EPS) return false;
+        const [lo, hi] = spanAt(w, w.axis === 'x' ? px : pz);
+        return yy >= lo - EPS && yy <= hi + EPS;
+      });
+      if (!held && !miss) miss = [px, pz, yy];
+    }
+    if (miss) e.push(`${what} ${it.id} lơ lửng — sau lưng ở x ${n(miss[0])}, z ${n(miss[1])}, cốt ${n(miss[2])} không có tường`);
+  };
+  const lampList = lightsOf(plan);
+  for (const l of lampList) {
+    if (l.errors.length) continue;                               // validate() đã báo
+    const mine = lampBoxes.filter(b => b.id === l.id), want = l.mount === 'pendant' ? 2 : 1;
+    if (mine.length !== want) { e.push(`đèn ${l.id} có ${mine.length} khối, cần ${want}`); continue; }
+    const body = mine.reduce((p, q) => (q.w * q.d > p.w * p.d ? q : p));
+    if (Math.abs(body.x + body.w / 2 - l.x) > EPS || Math.abs(body.z + body.d / 2 - l.y) > EPS)
+      e.push(`đèn ${l.id} dựng lệch chỗ khai (${n(l.x)}, ${n(l.y)})`);
+    if (l.mount === 'wall') { wallBacked(l, body, 'đèn tường'); continue; }
+    const top = mine.reduce((p, q) => (q.y1 > p.y1 ? q : p));
+    const corners = [[top.x, top.z], [top.x + top.w, top.z], [top.x, top.z + top.d], [top.x + top.w, top.z + top.d]];
+    const above = nonLamp
+      .filter(s => overlap(s.x, s.x + s.w, top.x, top.x + top.w) > EPS && overlap(s.z, s.z + s.d, top.z, top.z + top.d) > EPS)
+      .map(s => Math.min(...corners.map(([px, pz]) => spanAt(s, s.axis === 'x' ? px : pz)[0])))
+      .filter(y => y > top.y1 - 1e-3);
+    if (!above.length) e.push(`đèn ${l.id} không có gì bên trên để gắn`);
+    else if (Math.min(...above) - top.y1 > 1e-3) e.push(`đèn ${l.id} hở ${n(Math.min(...above) - top.y1)} m dưới vật che bên trên`);
+    if (body.y0 - l.base < 2 - EPS) e.push(`đèn ${l.id} đáy cách sàn ${n(body.y0 - l.base)} m, dưới 2 m — đụng đầu`);
+    if (l.mount === 'pendant' && Math.abs(body.y0 - l.base - l.spec.drop) > EPS)
+      e.push(`đèn thả ${l.id} đáy chao cách sàn ${n(body.y0 - l.base)} m, khai ${l.spec.drop}`);
+  }
+  const strayLamp = lampBoxes.find(b => !lampList.some(l => l.id === b.id && !l.errors.length));
+  if (strayLamp) e.push(`khối đèn ${strayLamp.id} không thuộc đèn khai nào`);
+  const plateBoxes = m.boxes.filter(b => b.kind === 'switchPlate' || b.kind === 'roofSwitch');
+  const plateList = switchesOf(plan).plates.filter(p => !p.errors.length);
+  for (const p of plateList) {
+    const mine = plateBoxes.filter(b => b.id === p.id);
+    if (mine.length !== 1) { e.push(`bảng công tắc ${p.id} có ${mine.length} khối, cần 1`); continue; }
+    wallBacked(p, mine[0], 'bảng công tắc');
+  }
+  if (plateBoxes.length !== plateList.length) e.push(`dựng ${plateBoxes.length} bảng công tắc, khai ${plateList.length}`);
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

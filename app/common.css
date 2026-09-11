@@ -43,3 +43,13 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:#444;margi
 .note{font-size:12.5px;color:#7a2b12;background:#fdf3ec;border-left:3px solid #c8734a;
   padding:9px 11px;border-radius:2px;margin-top:12px}
 code{background:#eeece6;padding:1px 4px;border-radius:2px;font-size:12px}
+
+/* Bảng công tắc (components/switchBoard.js) — dùng chung trang 2D và 3D */
+.swboard .swall{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:4px 0 6px;font-size:12px;color:#6a6a6a}
+.swboard .swplate{border:1px solid #e3dfd3;border-radius:4px;padding:5px 7px;margin:5px 0;background:#fbfaf6}
+.swboard .swname{font-size:11.5px;color:#6f6a5e;margin-bottom:4px}
+.swboard .swgangs{display:flex;flex-wrap:wrap;gap:4px}
+.swboard button{font:inherit;font-size:11.5px;line-height:1.15;padding:5px 8px;cursor:pointer;
+  border:1px solid #b9b4a8;border-radius:3px;background:#f6f4ee;color:#333}
+.swboard button:hover{background:#fff;border-color:#8d8778}
+.swboard button.on{background:#ffe08a;border-color:#c79a1e;color:#3a2a00;font-weight:600}

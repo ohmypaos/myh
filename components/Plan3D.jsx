@@ -79,6 +79,15 @@ export default function Plan3D() {
           </section>
 
           <section>
+            <h2>Bảng công tắc</h2>
+            <div id="switchBoard3" />
+            <p className="doc" style={{ marginTop: 8 }}>
+              Bật thì thân đèn sáng lên, tắt thì xám. Mô hình không dựng nguồn sáng thật — ánh đèn không rọi lên
+              tường, độ sáng xem ở bảng độ rọi trong đặc tả. <b>⇄</b> là công tắc hai chiều.
+            </p>
+          </section>
+
+          <section>
             <h2>Mặt trời</h2>
 
             <label className="sl" htmlFor="day">

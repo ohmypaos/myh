@@ -13,10 +13,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { COLORS, GLASS_KINDS, ROOF_KINDS } from './palette.js';
+import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from './palette.js';
 import { LOT, heightsOf } from '../lib/lot.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
+import { mountSwitchBoard } from './switchBoard.js';
 import { PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { roofCovering } from '../lib/envelope.js';
@@ -87,8 +88,11 @@ export function init(){
   const solidMats = {};
   for (const [kind, color] of Object.entries(COLORS)) {
     if (kind === 'glass') continue;
-    solidMats[kind] = new THREE.MeshLambertMaterial({ color });
+    /* Thân đèn không nhận sáng — sáng đều một màu cả trong bóng râm, đọc ra ngay là bóng đèn (palette.js LAMP_KINDS). */
+    solidMats[kind] = LAMP_KINDS.has(kind) ? new THREE.MeshBasicMaterial({ color }) : new THREE.MeshLambertMaterial({ color });
   }
+  /* Đèn đang tắt: thân đèn nhận sáng như vật thường, xám nhạt. Đang bật thì dùng vật liệu không nhận sáng ở trên. */
+  const lampOff = new THREE.MeshLambertMaterial({ color: 0xd4d1c6 });
   const glassMat = new THREE.MeshLambertMaterial({
     color: COLORS.glass, transparent: true, opacity: 0.34, depthWrite: false });
 
@@ -191,8 +195,11 @@ export function init(){
     solids = walkSolids(massing);
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
-    for (const b of massing.boxes)
-      group.add(b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind));
+    for (const b of massing.boxes) {
+      const mesh = b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind);
+      if (LAMP_KINDS.has(b.kind)) { mesh.castShadow = false; mesh.userData.id = b.id; }
+      group.add(mesh);
+    }
     for (const p of massing.prisms) {
       /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
       const sash = GLASS_KINDS.has(p.kind);
@@ -209,6 +216,7 @@ export function init(){
     scene.add(group);
     applyRoofHidden();
     applyFurnitureHidden();
+    applyLamps();
   }
 
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
@@ -223,6 +231,14 @@ export function init(){
      đọc lối đi khi xem không gian trống. */
   function applyFurnitureHidden(){
     group.children.forEach(m => { if (m.userData.kind === 'furniture') m.visible = !furnitureHidden; });
+  }
+
+  /* Bật / tắt theo bảng công tắc: chỉ đổi vật liệu thân đèn, không dựng lại khối. */
+  function applyLamps(){
+    group?.children.forEach(m => {
+      if (LAMP_KINDS.has(m.userData.kind))
+        m.material = board.isLampOn(m.userData.id) ? solidMats[m.userData.kind] : lampOff;
+    });
   }
 
   const setHtml = (id, html) => {
@@ -449,6 +465,7 @@ export function init(){
     CFG.heights = saved?.heights || {};
     if (saved && saved.planId === plan.id) CFG.lines = saved.lines || CFG.lines;
 
+    board.setPlan(plan);
     rebuild();
     buildHeightSliders();
     updateAzimuth();
@@ -563,6 +580,9 @@ export function init(){
     },
   });
 
+  /* Bảng công tắc — cùng thành phần với trang 2D (components/switchBoard.js). */
+  const board = mountSwitchBoard('switchBoard3', { onChange: () => applyLamps() });
+
   on('vRoof', 'click', e => {
     roofHidden = !roofHidden;
     e.target.classList.toggle('on', roofHidden);
@@ -626,6 +646,7 @@ export function init(){
     UNIT_BOX.dispose();
     Object.values(solidMats).forEach(m => m.dispose());
     glassMat.dispose();
+    lampOff.dispose();
     renderer.dispose();
     host.replaceChildren();
   };

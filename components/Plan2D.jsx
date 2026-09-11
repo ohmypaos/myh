@@ -90,6 +90,22 @@ export default function Plan2D() {
             <h2>Bảng cửa sổ</h2>
             <table id="tblWins" />
           </section>
+          <section id="secLights">
+            <h2>Bảng đèn</h2>
+            <p className="vmeta">
+              Độ rọi chung tính theo phương pháp quang thông, chỉ đèn trần — số để so ngưỡng, sai chừng ±20%.
+            </p>
+            <table id="tblLux" />
+            <table id="tblLights" />
+          </section>
+          <section id="secSwitch">
+            <h2>Bảng công tắc</h2>
+            <p className="vmeta">
+              Bấm từng hạt để bật / tắt cụm đèn: đèn sáng có quầng vàng, nét đứt nối về các bảng điều khiển nó.
+              <b> ⇄</b> là công tắc hai chiều — cùng một hạt nằm ở hai bảng.
+            </p>
+            <div id="switchBoard" />
+          </section>
           <section id="secSky">
             <h2>Bảng lấy sáng mái</h2>
             <table id="tblSky" />

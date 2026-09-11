@@ -2,7 +2,7 @@
 
 Cập nhật 11/9/2026.
 
-**Hiện không còn việc nào đang mở** — 42/42 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Hiện không còn việc nào đang mở** — 43/43 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -57,6 +57,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A23 | Giàn phơi tam giác ngược ở dải hở sân phơi, dọc tường bao sau | ✅ xong | |
 | A24 | Rào mặt tiền kín 2.10, rào sau kín 1.80, bỏ lan can — lấy riêng tư | ✅ xong | |
 | A25 | Vá ba chỗ hở của bộ kiểm (tum ôm lỗ thang, phép 16, màu + ẩn mái); rà lại toàn mô hình | ✅ xong | |
+| A26 | Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông; 25 cụm đèn, 14 bảng công tắc bấm được trên 2D / 3D; phép kiểm 17 (2D) và 25 (3D) | ✅ xong | Ổ cắm, mạch điện chưa vẽ |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -819,6 +820,51 @@ Rà toàn bộ mô hình 3D một lượt (11/9/2026) rồi vá ba chỗ đã bi
 > cao nhất 6.84 (mái tum), thấp nhất −0.12 (ống xả). Và bằng mắt: bốn phía, từ trên xuống, ẩn mái, ẩn đồ,
 > soi gần cầu thang, tum, mái bếp, rào trước/sau.
 
+### ✅ A26 · Hệ đèn
+
+Chủ nhà yêu cầu (11/9/2026) bố trí hệ đèn cho cả nhà. Lý do từng chỗ đặt: `3d.md` mục 3e.
+
+- [x] `LIGHT` (8 loại đèn mua sẵn: cỡ, công suất, quang thông, IP) và `LIGHTING` (hệ số sử dụng theo chỉ số phòng,
+      hệ số suy giảm) trong `lib/lot.js`
+- [x] Khai trong `current.js`: `lights` 26 đèn trần / đèn thả, `wallLights` 14 đèn tường, `lux` ngưỡng 8 phòng —
+      40 bộ, 627 W. Mọi phòng khai ngưỡng đều đạt (phòng khách 169 / 150 lx, bếp 174 / 150, master 118 / 100…)
+- [x] `lightsOf()`, `lightingOf()` trong `lib/envelope.js`; `validate()` thêm **phép kiểm 17**: mã, loại, đèn trần có vật
+      che để gắn và không treo trên lỗ thang, đèn tường trên tường thật và không đè lỗ cửa, phòng nào cũng có đèn,
+      độ rọi đạt ngưỡng
+- [x] `lib/massing.js` dựng thân đèn, cao độ đèn trần tra trên khối đã dựng; `check-3d` thêm **phép kiểm 25**: đèn
+      trần áp đúng mặt dưới vật che, đáy cách sàn ≥ 2 m, đèn thả đủ dây, lưng đèn tường áp tường thật
+- [x] Neo vào lưới (`lib/grid.js`): đèn trần theo gốc phòng chứa nó như nội thất, đèn tường theo bức tường của nó.
+      Thử kéo `y = 25` sang 24.6 và `x = 7.9` sang 7.6: đèn chậu rửa, đèn sân phơi, đèn WC khách đi theo, không
+      lỗi đèn nào
+- [x] Bản vẽ 2D: ký hiệu đèn trần / đèn thả / đèn tường, bảng đèn và bảng độ rọi ở cột phải, chú giải; 3D: thân
+      đèn vật liệu không nhận sáng, "Ẩn mái" giấu đèn trần và đèn trên tum; `specMarkdown()` in bảng đèn và bảng độ rọi
+- [x] Phá thử phép 17: bỏ đèn WC chung, bỏ hai đèn phòng khách (84 lx), đèn trên lỗ thang, đèn giữa sân trống, đèn
+      tường đè W3, đèn tường không có tường, trùng mã, đèn trần khai nhầm danh sách — cả tám đều báo. Phá thử phép 25:
+      đèn tường trên rào thấp (lơ lửng), đèn gương chồm quá đỉnh vách nhựa, đèn thả hạ chao cao hơn chỗ treo — cả ba
+      đều báo
+
+> **Vấp: đèn chiếu nghỉ bị đội lên mái.** Đ8 khai trên trục `x = 0` — cũng là trục vách tây tum — nên lần đầu
+> `lightsOf()` nhận là đèn trên tường tum, lấy sàn là mặt mái, đèn lên cốt 7.44. Phép 3 và 25 bắt được. Sửa: tường
+> nhà trước, tường tum chỉ nhận khi trục đó không có tường nhà. Sửa xong phép 25 lộ tiếp: thân đèn chồm qua cốt 3.75 —
+> ở miệng lỗ thang, phần trên cốt đó là **mép bản mái**, không phải tường. Hạ đèn 1.65 → 1.50 m trên chiếu nghỉ.
+
+**Làm tiếp — bảng công tắc** (chủ nhà yêu cầu cùng ngày):
+
+- [x] `lightGroups` 25 cụm đèn, `switches` 14 bảng công tắc trong `current.js`; `SWITCH` trong `lib/lot.js`. Bảng cạnh
+      cửa phía then cửa, tâm cao 1.25 m; đầu giường hai phòng ngủ 0.75 m. Hai chiều: cầu thang, hành lang, đèn trần và
+      đầu giường hai phòng ngủ, sân chính, hành lang ngoài
+- [x] `switchesOf()` trong `lib/envelope.js`; phần gắn tường tách thành `wallMount()` dùng chung với đèn tường.
+      `validate()` phép 17 soi thêm: đèn nào cũng thuộc đúng một cụm, cụm nào cũng có hạt, bảng trên tường thật, không
+      đè lỗ cửa, không quá 4 hạt. `check-3d` phép 25 soi thêm lưng bảng áp tường thật
+- [x] `components/switchBoard.js` — bảng bấm dùng chung hai trang: bấm từng hạt bật / tắt cụm, "Bật hết / Tắt hết";
+      cụm hai chiều hiện ở cả hai bảng, cùng trạng thái. 2D: đèn bật có quầng vàng, nét đứt nối về các bảng điều khiển
+      nó. 3D: thân đèn bật thì sáng, tắt thì xám. Neo lưới như đèn tường; đặc tả in bảng cụm và bảng công tắc
+- [x] Phá thử phép 17: đèn không thuộc cụm, đèn hai cụm, cụm không hạt, bảng 5 hạt, hạt trỏ cụm không có, bảng đè
+      cửa D9, bảng không có tường, cụm trỏ đèn không có — cả tám đều báo. Phép 25: đẩy bảng trong tum lên quá đỉnh
+      vách → báo lơ lửng
+
+**Chưa làm:** ổ cắm, mạch và tủ điện chưa vẽ; 3D không dựng nguồn sáng thật — `3d.md` mục 3e giải thích vì sao.
+
 ## B · Mô hình 3D
 
 ### ✅ B1 · Bỏ dropdown nơi xây
@@ -1153,9 +1199,9 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **24** (B5 thêm
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **25** (B5 thêm
 10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18 và 19,
-A5 thêm 20, A21 thêm 21, A22 thêm 22, A23 thêm 23, A25 thêm 24); cả 12 phương án qua sạch. Tám phép đầu:
+A5 thêm 20, A21 thêm 21, A22 thêm 22, A23 thêm 23, A25 thêm 24, A26 thêm 25); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

@@ -47,8 +47,18 @@ export const COLORS = {
   step:        0xe2dccd,
   furniture:   0xc4ab86,     // nội thất — gỗ nhạt, tách khỏi tường và sàn
   doorLeaf:    0x8d6e4f,     // cánh cửa đi — gỗ sẫm
+  lamp:        0xfff1cc,     // đèn tường trong nhà và ngoài sân — vàng nhạt, dựng không đổ bóng sáng tối
+  ceilingLamp: 0xfff1cc,     // đèn trần, đèn thả
+  roofLamp:    0xfff1cc,     // đèn trên tường tum
+  switchPlate: 0xf7f6f0,     // mặt bảng công tắc — nhựa trắng
+  roofSwitch:  0xf7f6f0,     // bảng công tắc trên tường tum
   glass:       0xa9cfe0,
 };
+
+/* Loại khối **đèn**: dựng bằng vật liệu không nhận sáng (luôn sáng đều một màu) cho đọc ra ngay là bóng đèn, kể cả
+   trong bóng râm. Chỉ là thân đèn — mô hình không phát sáng thật (không dựng nguồn sáng điểm): không có bóng đổ
+   thì ánh đèn xuyên tường sang phòng bên, ảnh đêm sẽ nói sai. */
+export const LAMP_KINDS = new Set(['lamp', 'ceilingLamp', 'roofLamp']);
 
 /* Loại khối **kính**: dựng bằng vật liệu trong suốt, cố ý không có trong COLORS. */
 export const GLASS_KINDS = new Set(['glass', 'sash', 'louver', 'tumGlass']);
@@ -59,7 +69,7 @@ export const GLASS_KINDS = new Set(['glass', 'sash', 'louver', 'tumGlass']);
    mái trở lên mà không nằm trong danh sách này là lọt lưới. */
 export const ROOF_KINDS = new Set([
   'roof', 'alleyRoof', 'overhang', 'roofInsulation', 'metalRoof', 'gateRoofTile', 'gateBeam', 'gutter', 'beam', 'purlin',
-  'ceiling', 'dropCeiling',
+  'ceiling', 'dropCeiling', 'ceilingLamp', 'roofLamp', 'roofSwitch',
   'tumWall', 'tumRoof', 'tumGlass', 'tumDoor', 'tumCurb', 'louver', 'tumFascia', 'tumCanopy',
   'roofRailing', 'tank', 'tankStand', 'tankCradle',
 ]);

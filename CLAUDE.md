@@ -17,9 +17,9 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `MIN_CLEAR` |
-| `lib/plan.js` | Diện tích thông thủy và **16 phép kiểm** `validate()` |
-| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ, cầu thang lên mái, tum, lan can mái — suy từ cửa, tường và số khai, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `LIGHT` (loại đèn), `LIGHTING` (hệ số tính độ rọi), `SWITCH` (bảng công tắc), `MIN_CLEAR` |
+| `lib/plan.js` | Diện tích thông thủy và **17 phép kiểm** `validate()` |
+| `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ, cầu thang lên mái, tum, lan can mái, đèn và độ rọi — suy từ cửa, tường và số khai, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
 | `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D: `boxes` hộp thẳng trục và `prisms` lăng trụ mặt nghiêng (mái tôn dốc, đầu hồi). Hình học thuần, không dính three.js |
 | `lib/walk.js` | Đi bộ trong 3D: người cao 1.70 m đứng trên mặt nào, vướng khối nào — hình học thuần, `check-3d` dùng chung |
@@ -55,13 +55,13 @@ trong cùng bản vẽ. Không sửa, trừ khi đó là **lỗi của chính b�
 
 **1. Sửa `lib/versions/current.js`.**
 File là một snapshot đầy đủ (rooms, walls, doors, windows, skylights, gates, strips, furn,
-roofs, stairs, tum, roofRailings, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
+roofs, stairs, tum, roofRailings, lights, wallLights, lux, lightGroups, switches, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
 mới — đó là phần hiện trên cột phải của bản vẽ.
 
 **2. Chạy bộ kiểm tra — phải sạch trước khi đi tiếp.**
-`validate()` trong `lib/plan.js` có 16 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
+`validate()` trong `lib/plan.js` có 17 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
 trên tường, phòng kín có cửa, nội thất không chồng nhau và không nằm trong vùng quét cánh
-cửa, bậc nằm gọn trong sân, cầu thang khớp lỗ thang…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
+cửa, bậc nằm gọn trong sân, cầu thang khớp lỗ thang, phòng nào cũng có đèn và đạt độ rọi…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
 Các bản trong kho đối chiếu còn lỗi là bình thường — chúng là bước trung gian.
 
 **3. Sinh lại đặc tả — không bao giờ gõ tay.**
@@ -105,6 +105,15 @@ riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và
 mái, mỗi cửa trên một cạnh), **lan can mép mái** ở `roofRailings` (tuyến). Tường khai `'low'` là bức lửng cao
 `STAIR.parapet`. Hình học suy ở `lib/envelope.js`; bản hiện hành không còn giếng trời, cửa trời hay ô thoáng nào trên
 mái — `skylights` rỗng, chỉ có lỗ thang. `3d.md` mục 3d.
+
+**Đèn** (chốt 11/9/2026): đèn trần, đèn thả khai ở `lights` (tâm đèn), đèn tường ở `wallLights` (tường, vị trí dọc
+tường, hướng quay, cao tính từ sàn phía đèn quay vào — tường tum thì từ mặt mái); loại đèn ở `LIGHT`. Cao độ đèn trần
+**không khai**: áp mặt dưới vật che thấp nhất ngay trên, tra trên khối đã dựng. Ngưỡng độ rọi chung từng phòng khai ở
+`lux`, tính theo phương pháp quang thông (`LIGHTING`) — số để so ngưỡng, không phải số đo. Nhà chính không trần giả
+nên đèn **ốp nổi**, và vị trí đèn trần phải chốt trước khi đổ bản mái (ống luồn dây đặt sẵn trong bản). 3D chỉ dựng
+thân đèn, không dựng nguồn sáng. **Công tắc:** đèn chia cụm ở `lightGroups` (đèn nào cũng thuộc đúng một cụm), bảng
+công tắc ở `switches` gắn như đèn tường, mỗi hạt một cụm — cụm có hạt ở hai bảng là hai chiều. Bảng bấm bật / tắt cụm
+trên cả hai trang ở `components/switchBoard.js`, trạng thái không phải số liệu. `3d.md` mục 3e.
 Lý do của từng lựa chọn nằm ở `3d.md` — đọc trước khi sửa.
 
 ## Hướng
