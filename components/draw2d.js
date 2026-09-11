@@ -10,7 +10,7 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -182,6 +182,15 @@ export function init(){
       const tx=el('text',{x:M(t.x1)-10,y:M(t.y1)-10,font_size:15,text_anchor:'end',fill:'#6f6a5e',
         font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gSky);
       tx.textContent='TUM XÂY (trên mái)';
+    }
+    /* Bồn nước trên mái — nét chấm như mọi thứ nằm trên đầu, kèm mã và dung tích. */
+    for(const t of tanksOf(V)){
+      if(t.errors.length) continue;
+      el('rect',{x:M(t.x),y:M(t.y),width:M(t.w),height:M(t.h),rx:M(Math.min(t.w,t.h)/2),
+        fill:'none',stroke:'#7d8582',stroke_width:2,stroke_dasharray:'2 4'},gSky);
+      const tt=el('text',{x:M(t.x+t.w/2),y:M(t.y+t.h/2)+5,font_size:13,text_anchor:'middle',fill:'#7d8582',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gSky);
+      tt.textContent=`${t.id} ${t.volume}L`;
     }
     for(const r of roofRailingsOf(V)){
       if(r.error) continue;

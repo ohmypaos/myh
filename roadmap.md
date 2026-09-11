@@ -49,6 +49,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
 | A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ✅ xong | |
+| A22 | Bồn nước 1000 L trên mái, góc cuối nhà trên ban công sau | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -656,6 +657,36 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
 > thang đứng yên còn tum nở ra — trong tum thừa một dải bản mái 0.45 m, và **không phép kiểm nào báo**.
 > `tumOf()` chỉ đòi tum **trùm kín** lỗ thang và đòi riêng vách đông áp sát đầu vế 2; ba cạnh kia không
 > đòi ôm sát lỗ. Neo đúng thì không xảy ra, nhưng chỗ hở của bộ kiểm vẫn còn đó.
+
+### ✅ A22 · Bồn nước trên mái
+
+Chủ nhà muốn (11/9/2026) thấy bồn nước trong 3D cho trực quan, đặt ở **góc cuối nhà trên ban công sau**.
+Số liệu và lý do: `3d.md` mục 3d.
+
+- [x] `TANK` trong `lib/lot.js` — bồn inox 1000 L **nằm ngang** Ø 0.96 × 1.59 trên giá thép cao 0.60. Nằm
+      ngang chứ không đứng: thấp hơn nên đỡ chắn tầm và đỡ hứng gió, lại là kiểu quen trên mái nhà ống
+- [x] Vị trí khai ở `tanks` của mặt bằng, hình học suy ở `tanksOf()` (`lib/envelope.js`); `roofSlabs()` tách
+      riêng để lan can mái và bồn cùng hỏi một câu "chỗ này có bản mái thật không"
+- [x] Thân **dọc trục y áp sát tường trái**, không phải nằm ngang qua ban công: trần ban công **gác hai tường
+      bên** nên nó nhịp 5 m theo `x` — đặt dọc sát một gối thì cả tấn nước nằm trong 1.2 m quanh gối thay vì
+      ra giữa nhịp
+- [x] **Bản đế 300 × 300 dưới mỗi chân.** Lộ ra khi tính: chân 50 × 50 đỡ 1/4 bồn đầy ép xuống ~1000 kPa,
+      quá sức nén XPS 300 kPa của lớp chống nóng vừa chốt lát rời — tấm lát lún, XPS bẹp
+- [x] Dựng 3D thành **hình trụ**: `massing.js` khai hộp bao kèm `shape:'cyl'`, `scene3d.js` dựng trụ; 2D vẽ nét
+      chấm bo tròn kèm mã và dung tích; `specMarkdown()` in bảng; `validate()` soi khai sai
+- [x] Neo vào lưới ngay (`lib/grid.js`) — không lặp lại lỗi A21: kéo `y` 28 thì bồn đi theo tường ban công
+- [x] `check-3d` thêm **phép kiểm 22**. Bản đế soi theo **áp lực thật** (dung tích × g / 4 / diện tích đế so với
+      `ROOF_INSULATION.xpsStrength`), không so với chính `TANK.pad` — so với chính nó thì thu nhỏ hằng số là
+      phép kiểm thu nhỏ theo, không bao giờ báo
+- [x] Phá thử: thu bản đế còn 60 mm → báo `681 kPa, quá sức XPS 300 kPa`; bỏ hai chân → báo thiếu khối giá và
+      thiếu chân chạm đáy thân; tụt thân bồn 10 cm → phép 10 báo chân đâm vào thân. Soi hình trụ bằng cách tạm
+      thêm hai bồn giữa mái, một trục `x` một trục `y` — dựng đúng cả hai hướng
+- [x] `npm run check` sạch, `npm run spec`, `warn` + `3d.md` mục 3d + `floor-plan.md`
+
+> **`axis` là tên đã có nghĩa.** Bản đầu đặt trục hình trụ vào trường `axis` của khối. `check-3d` coi khối nào
+> có `axis` là **lăng trụ mặt nghiêng** và đi đọc `yb`/`yt` — không có, nên nó gãy giữa chừng thay vì báo lỗi.
+> Chỉ lộ khi phá thử làm thân bồn chồng vào chân (lúc sạch thì không có cặp nào chồng để phải tính độ đâm sâu).
+> Đổi thành `along`.
 
 ## B · Mô hình 3D
 

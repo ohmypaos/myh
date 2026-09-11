@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 18:32:26 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 18:47:29 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -199,6 +199,14 @@ Lan can thép sơn, trụ bắt nở vào đỉnh tường, cao 1.10 m từ mặ
 | dọc | 5.00 | 10.73 | 19.13 | 8.40 |
 | dọc | 5.00 | 23.87 | 30.00 | 6.13 |
 
+### Bồn nước trên mái
+
+Bồn inox 1000 L nằm ngang, giá thép sơn, chân có bản đế dàn tải. Thân Ø 0.96 × 1.59 m trên giá cao 0.60 m; bốn chân thép 50 × 50 mm, mỗi chân một **bản đế 300 × 300 mm** dàn tải xuống lớp chống nóng — chân trần đặt thẳng lên tấm lát thì ép quá sức XPS.
+
+| Mã | Dung tích | Trục nằm | Hình chiếu x₁ · y₁ · x₂ · y₂ | Chân giá cốt | Đỉnh bồn cốt |
+|---|---:|---|---|---:|---:|
+| BN1 | 1000 L | dọc | 0.25 · 28.20 · 1.21 · 29.79 | 4.09 | 5.65 |
+
 ### Tường xây lên hết chiều cao nhà
 
 Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dưới đây khai riêng dù chỉ áp vào sân.
@@ -297,6 +305,8 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **WC chung không còn ô thoáng.** Quạt hút âm trần nối ống PVC lên mái, đầu ống có chụp chắn mưa và đi xuyên lớp chống thấm có cổ ống — sau này đi tiếp lên theo hộp kỹ thuật tầng 2. Chọn quạt có van một chiều để gió mái không thổi ngược mùi vào.
 
+**Bồn nước 1000 L trên trần ban công — nói với kỹ sư kết cấu.** Bồn đầy nước nặng cỡ 1 tấn, đứng trên bản trần ban công sau (nhịp 5 m gác hai tường bên `x = 0` và `x = 5`), không phải trên mái nhà chính có dầm cột. Đã đặt dọc áp sát tường trái để tải nằm sát gối, nhưng **bản trần ban công vẫn phải được tính với tải này** — cả khi sau 5 năm xây tầng 2 và bồn chuyển chỗ. Bốn chân giá phải có bản đế 300 × 300: chân trần 50 × 50 ép xuống cỡ 1000 kPa, quá sức nén XPS 300 kPa, tấm lát sẽ lún và XPS bị bẹp. Đường cấp lên bồn và ống xuống đi trong hộp kỹ thuật, chỗ xuyên lớp chống thấm phải có cổ ống — giống ống quạt hút WC chung. Bồn phơi nắng cả ngày thì nước nóng về chiều: muốn nước mát thì bọc cách nhiệt hoặc che, nhưng che thì lại thêm khối trên mái.
+
 **Mái hiên cửa chính thành một phần sân thượng.** Bản công xôn 1.2 m không cột nay có người đi lại và lan can bắt ở mép ngoài — kỹ sư kết cấu phải tính lại tải và neo trụ lan can; lan can mép công xôn chịu lực đẩy ngang lớn nhất.
 
 **Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
@@ -384,6 +394,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
 - **Sân giếng sát tường bếp** — dành một khoảng 1.5 m ngay ngoài D10, hai vòi âm tường giãn nhau trên tường nhà chính; mái sân phơi giữ nguyên. Một máy giặt/sấy 0.60 × 0.60 m ở góc giữa tường bếp và tường nhà chính, kê trên bệ sân 0.68 × 0.68 m cao 0.15 m để nước rửa sân không ảnh hưởng máy; bỏ máy rửa bát
 - **Lớp chống nóng mái kiểu mái ngược, lát rời** — chống thấm + tấm XPS 50 mm + vải địa kỹ thuật + **tấm bê tông đúc sẵn 400 × 400 × 40 đặt rời** (chủ nhà chốt: không cán vữa, không dán keo), phủ mọi sàn mái bê tông (nhà chính, WC khách), trần ban công sau và mái hiên cửa chính, tới mặt ngoài tường; chừa giếng trời. Mặt mái 4.00 → 4.09. Lát rời để **dỡ được khi xây tầng 2**: nhấc tấm, cuộn vải địa, gỡ XPS — tái dùng gần hết, và không phải đục vữa ngay trên lớp chống thấm, thứ đắt và khó vá nhất. Cái giá: mặt lát đi theo dốc mái chứ không phẳng tuyệt đối, khe tấm hở. Chọn thay gạch lỗ chống nóng (trữ nhiệt rồi nhả vào buổi tối, ngay trên phòng ngủ) và thay mái tôn trên sàn mái (phải khoét theo giếng trời; lợp sát trần thì khe gió không lùa được)
+- **Bồn nước inox 1000 L** nằm ngang trên giá thép, **góc cuối nhà trên trần ban công sau** — thân dọc trục y áp sát tường trái: trần ban công gác hai tường bên nên nó nhịp 5 m theo x, đặt dọc sát một gối thì cả tấn nước nằm trong 1.2 m quanh gối thay vì ra giữa nhịp. Bốn chân có **bản đế 300 × 300** dàn tải — chân trần đặt thẳng lên tấm lát ép cỡ 1000 kPa, quá sức XPS 300 kPa
 - **Cầu thang chữ U lên mái** thay phòng thờ (chuẩn bị tầng 2 sau khoảng 5 năm): hai vế rộng 0.95 m, 22 nấc cao ≈ 0.170, mặt bậc 0.26, chiếu nghỉ sát tường trái; chân thang ở đầu bắc hành lang. Bỏ vách phòng khách – phòng thờ, thay bằng **bức lửng 1 m** kèm **lan can song thoáng** (không tấm đặc cho khỏi bí) — phòng khách nhận sáng và gió từ tum. Phòng khách 5 × 5 → 5 × 4.85
 - **Tum tường gạch** (không vách tôn / nhựa), mái tôn, trên buồng thang; mặt dưới mái tum 2.70 m trên mặt mái, ô thoáng 0.30 m sát mái gắn **4 lá kính xếp nghiêng chéo xuống** — gió qua, mưa hắt và lá cây không vào, ô polycarbonate đậy trọn lỗ thang, tum **gọn, tường áp sát đầu thang, một cửa** ngay đầu vế 2 — lên hết thang là ra thẳng mái; cánh mở ra phía mái, **then chốt mặt trong** — không ai từ mái vào nhà tự do — ngưỡng có **gờ chắn nước** cao 0.10 m làm nấc cuối của thang; **mái tum đua ngắn 0.18 m bọc diềm gập** ba phía (phía ranh lô trái không đua) cho gọn, **ô văng 0.6 m** che trên cửa; dỡ khi xây tầng 2
 - **Lan can thép 1.1 m** quanh mép mái nhà chính, **bao luôn mái hiên cửa chính** — mái thành sân thượng: phơi đồ, bồn nước, bảo trì lớp chống nóng. Khai tuyến liền cả bốn cạnh; đoạn chừa ở vách tum và ở chỗ đầu hồi bếp nhô trên mặt mái (tuyến x = 5) nay **suy từ hình học** thay cho hai số chép tay — đầu hồi chỉ thật sự chắn từ y 19.20 đến 23.80, lan can dài thêm 0.40 m mỗi đầu

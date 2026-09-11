@@ -9,10 +9,10 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, ROOF_RAILING, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -80,6 +80,7 @@ const CHECKS = [
   'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
   'Xà gồ mái nhẹ: mỗi thanh đúng vị trí suy ra, mặt trên chạm tấm tôn, hai đầu tựa tường hoặc dầm, nhịp và bước không vượt giới hạn thiết kế',
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
+  'Bồn nước trên mái: đủ khối thân, chân và bản đế; chân đứng đúng mặt mái, đỉnh chân đỡ thân; bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
 
@@ -1060,6 +1061,37 @@ function check(plan){
     else if (Math.min(...mine.map(s0)) > a + RAILING.post || Math.max(...mine.map(s1)) < b - RAILING.post)
       e.push(`đoạn lan can mái trục ${ax} ${pos} (${n(a)}–${n(b)}) chỉ có thanh trong khoảng `
              + `${n(Math.min(...mine.map(s0)))}–${n(Math.max(...mine.map(s1)))}`);
+  }
+
+  /* 22 — bồn nước trên mái, lấy từ khối đã dựng. Bốn bản đế nằm trên mặt mái, bốn chân nối bản đế lên đáy
+     thân, thân đúng đường kính và gọn trong hình chiếu khai. Bản đế soi theo **áp lực thật**, không so với
+     chính TANK.pad: bồn đầy nước chia đều bốn chân, ép xuống lớp chống nóng không được quá sức nén của XPS
+     (ROOF_INSULATION.xpsStrength) — thu nhỏ bản đế trong lot.js là lộ ngay. Chồng khối thì phép 10 bắt riêng. */
+  for (const t of tanksOf(plan)) {
+    if (t.errors.length) { e.push(...t.errors); continue; }
+    const mine = m.boxes.filter(b => b.id === t.id && (b.kind === 'tank' || b.kind === 'tankStand'));
+    const body = mine.filter(b => b.kind === 'tank'), stand = mine.filter(b => b.kind === 'tankStand');
+    if (body.length !== 1) { e.push(`bồn nước ${t.id} dựng ${body.length} thân, cần 1`); continue; }
+    if (stand.length !== 8) e.push(`bồn nước ${t.id} dựng ${stand.length} khối giá, cần 8 (4 bản đế + 4 chân)`);
+    const [bd] = body;
+    if (bd.x < t.x - EPS || bd.z < t.y - EPS || bd.x + bd.w > t.x + t.w + EPS || bd.z + bd.d > t.y + t.h + EPS)
+      e.push(`thân bồn ${t.id} lọt ra ngoài hình chiếu khai`);
+    if (Math.abs(bd.y1 - bd.y0 - TANK.dia) > EPS) e.push(`thân bồn ${t.id} cao ${n(bd.y1 - bd.y0)}, cần đúng đường kính ${n(TANK.dia)}`);
+    const pads = stand.filter(b => Math.abs(b.y0 - t.base) < EPS);
+    if (pads.length !== 4) e.push(`bồn nước ${t.id} có ${pads.length} khối chân đứng trên mặt mái ${n(t.base)}, cần 4 bản đế`);
+    else if (plan.roofInsulation) {
+      /* kPa: nước 1 L = 1 kg, g ≈ 9.81; mỗi bản đế đỡ 1/4 bồn đầy. */
+      const each = Math.min(...pads.map(b => b.w * b.d));
+      const kPa = t.volume * 9.81 / 1000 / 4 / each;
+      if (kPa > ROOF_INSULATION.xpsStrength - EPS)
+        e.push(`bản đế bồn ${t.id} rộng ${n(each, 3)} m² ép ${Math.round(kPa)} kPa xuống lớp chống nóng, quá sức XPS ${ROOF_INSULATION.xpsStrength} kPa`);
+    }
+    const legs = stand.filter(b => Math.abs(b.y1 - bd.y0) < EPS);
+    if (legs.length !== 4) e.push(`bồn nước ${t.id} có ${legs.length} chân chạm đáy thân, cần 4`);
+    else if (legs.some(q => !pads.some(p => Math.abs(p.y1 - q.y0) < EPS
+                                            && q.x >= p.x - EPS && q.x + q.w <= p.x + p.w + EPS
+                                            && q.z >= p.z - EPS && q.z + q.d <= p.z + p.d + EPS)))
+      e.push(`có chân bồn ${t.id} không đứng trọn trên bản đế nào`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

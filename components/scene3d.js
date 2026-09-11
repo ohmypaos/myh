@@ -37,6 +37,8 @@ const COLORS = {
   tumFascia:   0x6a716e,     // diềm gập bọc mép mái tum — sẫm để viền mái đọc thành một nét gọn
   tumCanopy:   0x6a716e,     // ô văng trên cửa tum, cùng màu diềm
   roofRailing: 0x4f4c46,     // lan can thép mép mái
+  tank:        0xc6cacb,     // bồn inox — xám sáng ánh kim, tách khỏi tôn xám lạnh
+  tankStand:   0x6a716e,     // giá thép và bản đế dưới bồn
   fenceWall:   0xd9d3c4,
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,
@@ -177,6 +179,21 @@ export function init(){
     return m;
   }
 
+  /* Hình trụ nằm ngang — thân bồn nước. massing.js chỉ có hộp thẳng trục, nên nó khai hộp **bao ngoài**
+     kèm `shape:'cyl'` và trục nằm; ở đây mới dựng đúng mặt cong. Hộp bao vẫn là thứ va chạm và các phép
+     kiểm dùng — thiên về an toàn. */
+  function cylinder(b, material, kind){
+    const g = new THREE.CylinderGeometry(0.5, 0.5, 1, 24);
+    g.rotateZ(Math.PI / 2);                                    // trục mặc định đứng → nằm theo x
+    if (b.along === 'z') g.rotateY(Math.PI / 2);
+    const m = new THREE.Mesh(g, material);
+    m.scale.set(b.w, b.y1 - b.y0, b.d);        // hộp bao chính là bao của hình trụ, co giãn thẳng vào là khớp
+    m.position.set(b.x + b.w / 2, (b.y0 + b.y1) / 2, b.z + b.d / 2);
+    m.castShadow = m.receiveShadow = true;
+    if (kind) m.userData.kind = kind;
+    return m;
+  }
+
   /* Lăng trụ mặt nghiêng — mái tôn dốc và đầu hồi tam giác của bếp (lib/massing.js). Hộp co
      giãn không dựng được vì bốn góc khác cao độ. Dựng không chỉ mục (36 đỉnh) để mỗi mặt
      phẳng lì: dùng chung đỉnh thì pháp tuyến bị trung bình hoá, mái dốc trông như bị bẻ. */
@@ -212,7 +229,7 @@ export function init(){
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes)
-      group.add(box(b, materialOf(b), b.kind));
+      group.add(b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind));
     for (const p of massing.prisms) {
       /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
       const sash = p.kind === 'sash' || p.kind === 'louver';
@@ -236,7 +253,7 @@ export function init(){
      còn lại thì nhìn xuống thấy cầu thang. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang' || k === 'roofInsulation'
                    || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling'
-                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing';
+                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing' || k === 'tank' || k === 'tankStand';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }
