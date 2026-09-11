@@ -49,7 +49,7 @@ export function init(){
     <rect width="26" height="26" fill="#f8f5ec"/>
     <path d="M0 26L26 0" stroke="#e2d9c2" stroke-width="1.2"/></pattern>`;
 
-  const FILL = {yard:'url(#pYard)', wet:'url(#pWet)', circ:'url(#pCirc)', room:'#ffffff'};
+  const FILL = {yard:'url(#pYard)', wet:'url(#pWet)', circ:'url(#pCirc)', storage:'#fbf8f0', room:'#ffffff'};
   const DC = '#8a1c1c';
 
 
@@ -65,11 +65,11 @@ export function init(){
   }
 
   function drawWalls(){
-    for(const [ax,pos,a,b,t] of WALLS){
+    for(const [ax,pos,a,b,t,material] of WALLS){
       const o = M(t)/2;
       const r = ax==='h' ? {x:M(a)-o, y:M(pos)-o, width:M(b-a)+2*o, height:M(t)}
                          : {x:M(pos)-o, y:M(a)-o, width:M(t), height:M(b-a)+2*o};
-      el('rect',{...r, fill:'#141414'},gWall);
+      el('rect',{...r, fill:material==='plastic'?'#778083':'#141414'},gWall);
     }
     // khoét lỗ cửa, cửa sổ, cổng
     const hole = (ax,pos,a,b,t=0.24)=>{
@@ -560,7 +560,7 @@ export function init(){
   }
 
   /* ═══════════ BẢNG BÊN PHẢI ═══════════ */
-  const TYPE={room:'Phòng', wet:'Vệ sinh', circ:'Lưu thông', yard:'Sân'};
+  const TYPE={room:'Phòng', wet:'Vệ sinh', circ:'Lưu thông', storage:'Tủ âm', yard:'Sân'};
 
   function buildTables(){
     let rows='<tr><th>#</th><th>Phòng</th><th class="n">Tim tường<br>R × S (m)</th>'

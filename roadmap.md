@@ -34,7 +34,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A5 | Chống nóng mái — chốt **lát lớp chống nóng** | ✅ xong | |
 | A6 | Bếp — chốt **lợp tôn hai mái + trần tôn**, không đổ mái bê tông | ✅ xong | |
 | A7 | Mái sân phơi — chốt **tôn dốc một mái**, chừa dải hở thẳng hàng ban công | ✅ xong | |
-| A8 | WC khách 2 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
+| A8 | WC khách 1.6 × 2 m, tường trong 100, W4 thành ô thoáng — **đã vào `current.js`** | ✅ xong | |
 | A9 | Bậc tam cấp, mái hiên cửa chính, sàn bếp và WC khách hạ còn +0.15 — **đã vào `current.js`** | ✅ xong | |
 | A10 | Đổ trần ban công sau, tường trái ban công lên mái — thay lam D12, **đã vào `current.js`** | ✅ xong | |
 | A4 | Đưa mái bàn trà, mái tôn bếp, mái sân phơi vào `lib/versions/current.js` | ✅ xong | |
@@ -43,6 +43,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A13 | WC khách: trần giả 2.70 m, ô thoáng W4 nâng lên 2.00–2.40 | ✅ xong | |
 | A14 | Cột và dầm đỡ mái nhẹ — 5 cột thép hộp trên tường rào phải, nhịp ≤ 3.5 m, dầm biên suy ra | ✅ xong | |
 | A15 | Bỏ bàn ăn trong bếp — ăn trên chiếu trải sàn | ✅ xong | |
+| A16 | WC chung 1.6 × 2.0 m cửa cánh mở vào, gioăng kín mùi; kho cũ thành phòng thay đồ/kho Master 2.4 × 2.0 m | ✅ xong | Hai tủ cao 2.0 m chữ L; vách nhựa kín trần, cửa cánh 0.80 m mở về Master; bỏ tủ âm PN1 |
+| A17 | Vách ngăn nội bộ phòng thờ, phòng ngủ, hành lang và WC chung là vách nhựa tới trần | ✅ xong | Không chịu lực; tường bao và vách tiếp xúc sân/mưa vẫn xây |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -207,13 +209,13 @@ lại cùng lúc và giữ tôn.
 - [x] Chủ nhà chốt vùng phủ, dạng mái, vật liệu
 - [x] Vào `current.js` — A4, mã `RF3`
 
-### ✅ A8 · WC khách 2 × 2 m, ô thoáng W4
+### ✅ A8 · WC khách, ô thoáng W4
 
 Thay đổi thuần mặt bằng, không cần loại khối mới, nên **sửa thẳng vào `current.js`** chứ không
 chờ A4.
 
-- [x] WC khách 1.6 × 2.0 → **2.0 × 2.0 m** tim tường, nới sang trái: `x` 7.5–9.5. Dải hở sân
-      phơi (A7) còn 2.5 × 2.0 m
+- [x] WC khách chốt **1.6 × 2.0 m** tim tường, áp tường phải và sau: `x` 7.9–9.5. Dải hở sân
+      phơi (A7) thành 2.9 × 2.0 m
 - [x] Hai tường trong (bắc, tây) 220 → **100 mm** vì phòng nhỏ; hai tường ranh lô giữ 220
 - [x] Trần giữ 3.30 m — đã tính hạ xuống 2.60 rồi bỏ (A13 sau đó làm trần giả 2.70)
 - [x] W4 rộng 0.8 m, bệ 0.90 → **ô thoáng 0.6 × 0.4 m, bệ 1.90 → mép trên 2.30**, kính mờ lật, kèm

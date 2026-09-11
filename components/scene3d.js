@@ -26,6 +26,7 @@ import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayL
 /* Bảng màu giấy can, cùng tông với bản vẽ 2D. Khoá phải trùng `kind` mà massing.js sinh ra. */
 const COLORS = {
   houseWall:   0xefece4,
+  partitionWall:0xb8c3c5,   // vách nhựa ngăn phòng, không phải tường xây
   fenceWall:   0xd9d3c4,
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,

@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 11:52:06 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 12:49:46 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -15,10 +15,10 @@ Ban công sau 2.0 m, bếp chữ L. Bếp lợp tôn hai mái (thay bản bê t�
 |---|---:|---:|
 | Lô đất 9.5 × 30 | 285.00 m² | — |
 | **Khối nhà chính** | **80.00 m²** | 72.87 m² |
-| **Toàn bộ phần kín** | **108.50 m²** | 98.90 m² |
+| **Toàn bộ phần kín** | **107.70 m²** | 98.16 m² |
 | Hành lang ngoài (có mái, hở) | 7.00 m² | — |
-| Sân trống | 169.50 m² | — |
-| Tường chiếm chỗ | 9.60 m² | — |
+| Sân trống | 170.30 m² | — |
+| Tường chiếm chỗ | 9.54 m² | — |
 
 Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
@@ -30,8 +30,8 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | L2 | PHÒNG KHÁCH | 0.0 | 12.0 | 5.0 | 17.0 | 5.0 × 5.0 | 25.00 | 4.78 × 4.84 | 23.14 | Phòng |
 | L3 | PHÒNG THỜ | 0.0 | 17.0 | 4.0 | 19.0 | 4.0 × 2.0 | 8.00 | 3.84 × 1.90 | 7.30 | Phòng |
 | L4 | PHÒNG NGỦ 1 | 0.0 | 19.0 | 4.0 | 22.0 | 4.0 × 3.0 | 12.00 | 3.84 × 2.90 | 11.14 | Phòng |
-| L5 | KHO | 0.0 | 22.0 | 1.8 | 24.0 | 1.8 × 2.0 | 3.60 | 1.64 × 1.90 | 3.12 | Lưu thông |
-| L6 | WC CHUNG | 1.8 | 22.0 | 4.0 | 24.0 | 2.2 × 2.0 | 4.40 | 2.10 × 1.90 | 3.99 | Vệ sinh |
+| L5 | THAY ĐỒ / KHO MASTER | 0.0 | 22.0 | 2.4 | 24.0 | 2.4 × 2.0 | 4.80 | 2.24 × 1.90 | 4.26 | Tủ âm |
+| L6 | WC CHUNG | 2.4 | 22.0 | 4.0 | 24.0 | 1.6 × 2.0 | 3.20 | 1.50 × 1.90 | 2.85 | Vệ sinh |
 | L7 | PHÒNG NGỦ MASTER | 0.0 | 24.0 | 5.0 | 28.0 | 5.0 × 4.0 | 20.00 | 4.78 × 3.84 | 18.36 | Phòng |
 | L8 | BAN CÔNG SAU | 0.0 | 28.0 | 5.0 | 30.0 | 5.0 × 2.0 | 10.00 | 4.78 × 1.78 | 8.51 | Sân |
 | L9 | HÀNH LANG | 4.0 | 17.0 | 5.0 | 24.0 | 1.0 × 7.0 | 7.00 | 0.84 × 6.95 | 5.84 | Lưu thông |
@@ -39,7 +39,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | R2 | BẾP + NHÀ ĂN | 5.0 | 18.0 | 8.5 | 25.0 | 3.5 × 7.0 | 24.50 | 3.34 × 6.78 | 22.65 | Phòng |
 | R3 | HÀNH LANG NGOÀI | 8.5 | 18.0 | 9.5 | 25.0 | 1.0 × 7.0 | 7.00 | 0.84 × 7.00 | 5.88 | Lưu thông |
 | R4 | SÂN PHƠI / GIẶT | 5.0 | 25.0 | 9.5 | 30.0 | 4.5 × 5.0 | 22.50 | 4.28 × 4.78 | 20.46 | Sân |
-| R5 | WC KHÁCH | 7.5 | 28.0 | 9.5 | 30.0 | 2.0 × 2.0 | 4.00 | 1.84 × 1.84 | 3.39 | Vệ sinh |
+| R5 | WC KHÁCH | 7.9 | 28.0 | 9.5 | 30.0 | 1.6 × 2.0 | 3.20 | 1.44 × 1.84 | 2.65 | Vệ sinh |
 
 **Kiểm tra:** cột trái 150.00 + cột phải 135.00 = **285.00 m²** (WC khách nằm trong sân phơi, không cộng riêng)
 **Chuỗi dọc lô chính:** 12.0 + 5.0 + 2.0 + 3.0 + 2.0 + 4.0 + 2.0 = **30.0**
@@ -53,14 +53,14 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | D3 | ngang | 17.0 | 4.00 | 5.00 | 1.00 | Mở thông | — | Phòng khách ↔ Hành lang — thông suốt, KHÔNG có cánh cửa |
 | D4 | dọc | 4.0 | 17.15 | 17.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ Phòng thờ — sát mép bắc |
 | D5 | dọc | 4.0 | 19.15 | 19.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ Phòng ngủ 1 — sát mép bắc |
-| D6 | dọc | 4.0 | 22.15 | 22.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ WC chung — sát mép bắc |
-| D7 | ngang | 24.0 | 0.45 | 1.35 | 0.90 | Lùa 1 cánh | — | Master ↔ Kho — lùa 1 cánh |
+| D6 | dọc | 4.0 | 22.15 | 22.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ WC chung — cửa cánh 0.80 m mở vào WC, gioăng kín mùi; vùng quét chừa trống |
 | D8 | ngang | 24.0 | 4.00 | 4.90 | 0.90 | Mở quay | bản lề đầu lớn, mở + | Hành lang ↔ Master — mở vào phòng |
 | D9 | ngang | 18.0 | 6.60 | 7.60 | 1.00 | Mở quay | bản lề đầu lớn, mở + | Sân chính ↔ Bếp |
 | D10 | ngang | 25.0 | 7.40 | 8.20 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Bếp ↔ Sân phơi — mở vào bếp |
 | D11 | ngang | 28.0 | 8.40 | 9.20 | 0.80 | Mở quay | bản lề đầu nhỏ, mở + | Sân phơi ↔ WC khách — trên trục hành lang ngoài; sàn WC cao hơn sân 0.15 nên chỉ bước qua ngưỡng, không có bậc |
 | D12 | ngang | 28.0 | 0.90 | 4.10 | 3.20 | Lùa 2 cánh | — | Master ↔ Ban công sau — kính lùa 3.2 m, nguồn sáng duy nhất của master |
 | D13 | dọc | 5.0 | 28.60 | 29.40 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Ban công sau ↔ Sân phơi — mở vào ban công, chừa phía sân phơi cho bậc; bản lề phía tường bao sau |
+| D14 | ngang | 24.0 | 1.50 | 2.30 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Master ↔ phòng thay đồ/kho — cửa cánh 0.80 m mở vào kho; bản lề đầu phải, chỉ cách vách WC 0.10 m; vách ngăn kín tới trần |
 
 ## 4. Bảng cửa sổ
 
@@ -69,7 +69,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | W1 | dọc | 5.0 | 12.60 | 14.40 | 1.80 | Phòng khách ← Sân chính |
 | W2 | ngang | 18.0 | 5.30 | 6.30 | 1.00 | Bếp ← Sân chính |
 | W3 | dọc | 8.5 | 19.20 | 21.20 | 2.00 | Bếp ← Hành lang ngoài |
-| W4 | dọc | 7.5 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 2.00, kèm quạt hút |
+| W4 | dọc | 7.9 | 28.70 | 29.30 | 0.60 | WC khách ← Sân phơi — ô thoáng kính mờ lật, bệ 2.00, kèm quạt hút |
 
 ## 5. Lấy sáng trên mái
 
@@ -123,8 +123,8 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | Mái | Mép | Từ | Đến | Dài | Miệng máng | Đặt |
 |---|---|---:|---:|---:|---:|---|
 | RF1 | y = 12.00 | 5.11 | 9.45 | 4.34 | 2.90 | dưới mép mái |
-| RF3 | y = 27.95 | 7.45 | 9.47 | 2.02 | 3.21 | trong mép, sát chân tường cao hơn mái |
-| RF3 | y = 28.00 | 5.11 | 7.45 | 2.34 | 3.20 | dưới mép mái |
+| RF3 | y = 27.95 | 7.85 | 9.47 | 1.62 | 3.21 | trong mép, sát chân tường cao hơn mái |
+| RF3 | y = 28.00 | 5.11 | 7.85 | 2.74 | 3.20 | dưới mép mái |
 
 **Ống xả đứng** — mỗi dải máng một ống 90 mm ở đầu sát tường bao, chạy thẳng xuống, cắm dưới cốt sân vào ống ngầm — không đổ ra sân.
 
@@ -151,7 +151,7 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF1 | y = 18.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
 | RF1 | x = 9.50 | 12.00 | 18.00 | 6.00 | 2.90 → 3.50 | nghiêng theo mái |
 | RF3 | y = 25.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
-| RF3 | y = 28.00 | 5.11 | 7.45 | 2.34 | 3.21 → 3.21 |  |
+| RF3 | y = 28.00 | 5.11 | 7.85 | 2.74 | 3.21 → 3.21 |  |
 | RF3 | x = 9.50 | 25.00 | 27.95 | 2.95 | 3.50 → 3.21 | nghiêng theo mái |
 | RF4 | x = 9.50 | 18.00 | 21.50 | 3.50 | 3.50 → 3.85 | nghiêng theo mái |
 | RF4 | x = 9.50 | 21.50 | 25.00 | 3.50 | 3.85 → 3.50 | nghiêng theo mái |
@@ -206,12 +206,12 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | ngang | 22.0 | 0.0 | 4.0 | 100 |
 | ngang | 24.0 | 0.0 | 5.0 | 100 |
 | dọc | 4.0 | 17.0 | 24.0 | 100 |
-| dọc | 1.8 | 22.0 | 24.0 | 100 |
+| dọc | 2.4 | 22.0 | 24.0 | 100 |
 | ngang | 18.0 | 5.0 | 8.5 | 220 |
 | ngang | 25.0 | 5.0 | 8.5 | 220 |
 | dọc | 8.5 | 18.0 | 25.0 | 100 |
-| ngang | 28.0 | 7.5 | 9.5 | 100 |
-| dọc | 7.5 | 28.0 | 30.0 | 100 |
+| ngang | 28.0 | 7.9 | 9.5 | 100 |
+| dọc | 7.9 | 28.0 | 30.0 | 100 |
 
 ## 8. Nội thất
 
@@ -224,14 +224,14 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | altar | 0.15 | 17.15 | 0.60 | 1.70 |
 | bedw | 0.25 | 19.90 | 2.00 | 1.60 |
 | cab | 3.30 | 20.30 | 0.60 | 1.50 |
-| cab | 0.15 | 22.15 | 1.50 | 0.50 |
-| lav | 1.95 | 22.20 | 0.45 | 0.80 |
-| wc | 1.95 | 23.10 | 0.42 | 0.68 |
-| shower | 3.00 | 22.95 | 0.90 | 0.90 |
+| cab | 0.10 | 22.10 | 0.60 | 1.75 |
+| cab | 0.70 | 22.10 | 1.60 | 0.60 |
+| lav | 2.50 | 22.15 | 0.45 | 0.55 |
+| wc | 2.50 | 23.05 | 0.42 | 0.68 |
+| shower | 3.05 | 23.05 | 0.80 | 0.80 |
 | bedw | 0.25 | 25.20 | 2.10 | 1.85 |
 | cab | 0.30 | 24.60 | 0.45 | 0.45 |
 | cab | 0.30 | 27.20 | 0.45 | 0.45 |
-| cab | 1.80 | 24.15 | 1.80 | 0.55 |
 | desk | 4.25 | 25.49 | 0.60 | 1.20 |
 | desk | 4.25 | 26.69 | 0.60 | 1.20 |
 | chair | 3.55 | 25.85 | 0.48 | 0.48 |
@@ -296,7 +296,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | mái tôn liền dải sân chính, hành lang, sân phơi | 108.5 |
+| current ← | mái tôn liền dải sân chính, hành lang, sân phơi | 107.7 |
 
 ### Thay đổi ở Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
@@ -305,7 +305,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - Bếp thêm **nhánh kệ vuông góc** dài 2.4 m dọc tường tây → bếp chữ L
 - **Bếp nấu tách sang nhánh dọc**, chậu rửa giữ ở nhánh ngang — hết nấu và rửa chen nhau
 - Chậu rửa vẫn quay ra sân phơi, bếp nấu quay vào trong
-- WC khách 1.6 → **2.0 × 2.0 m**, hai tường trong xuống 100 mm
+- WC khách chốt **1.6 × 2.0 m**, áp tường sau; hai tường trong xuống 100 mm
+- **WC chung thu còn 1.6 × 2.0 m**, cửa cánh mở vào trong có gioăng kín mùi; bỏ tủ âm PN1, dải kho cũ thành **phòng thay đồ/kho Master 2.4 × 2.0 m** với hai tủ cao 2.0 m chữ L; vách nhựa kín tới trần, cửa cánh 0.80 m mở về Master
+- **Toàn bộ vách ngăn nội bộ** phòng thờ, phòng ngủ, hành lang và WC chung đổi thành **vách nhựa cao đến trần**, không chịu lực; tường bao và tường tiếp xúc sân/mưa vẫn xây
 - W4 thu thành **ô thoáng 0.6 × 0.4 m**, bệ 2.00 — không nhìn ra được
 - **Trần WC khách hạ còn 2.70 m** (trần giả dưới bản mái; trước cao 3.60 vì sàn hạ mà mái giữ cốt) — ô thoáng W4 nâng lên theo, bệ 1.90 → 2.00, mép trên 2.40
 - D13 đổi chiều **mở vào ban công** — cánh không quét lên bậc phía sân phơi
