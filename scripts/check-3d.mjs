@@ -556,14 +556,19 @@ function check(plan){
     const at = `nội thất ${kind} @${x},${y}`;
     const parts = furnBoxes.filter(b => b.item === i);
     if (!parts.length) { e.push(`${at} không có khối nào`); continue; }
-    if (parts.some(b => b.x < x - EPS || b.z < y - EPS || b.x + b.w > x + w + EPS || b.z + b.d > y + h + EPS))
+    const pad = kind === 'washRaised' ? 0.06 : 0;   // bệ sân máy giặt rộng hơn thân máy mỗi phía 6 cm
+    if (parts.some(b => b.x < x - pad - EPS || b.z < y - pad - EPS || b.x + b.w > x + w + pad + EPS || b.z + b.d > y + h + pad + EPS))
       e.push(`${at} có khối thò ra ngoài chữ nhật khai`);
     const bw = Math.max(...parts.map(b => b.x + b.w)) - Math.min(...parts.map(b => b.x));
     const bd = Math.max(...parts.map(b => b.z + b.d)) - Math.min(...parts.map(b => b.z));
     if (bw * bd < 0.8 * w * h) e.push(`${at} chỉ phủ ${n(bw)} × ${n(bd)} trên ${w} × ${h} khai`);
     const f = plan.floorLevels?.[room[0]] ?? (room[6] !== 'yard' && room[0] !== 'R3' || /^BAN CÔNG/.test(room[1]) ? H.floor : 0);
     const low = Math.min(...parts.map(b => b.y0)), high = Math.max(...parts.map(b => b.y1));
-    if (Math.abs(low - f) > EPS) e.push(`${at} chân ở cốt ${n(low)}, sàn ${room[1]} ở ${n(f)}`);
+    const base = kind === 'washRaised' ? m.boxes.filter(b => b.item === i && b.kind === 'ground') : [];
+    if (kind === 'washRaised' && (base.length !== 1 || Math.abs(base[0].y0 - f) > EPS || Math.abs(base[0].y1 - (f + 0.15)) > EPS))
+      e.push(`${at} không có bệ sân nâng đúng 0.15 m`);
+    const expectedLow = kind === 'washRaised' ? f + 0.15 : f;
+    if (kind !== 'tap' && Math.abs(low - expectedLow) > EPS) e.push(`${at} chân ở cốt ${n(low)}, phải ở ${n(expectedLow)}`);
     if (!(high > low) || high > L.ceiling - 0.3) e.push(`${at} cao tới ${n(high)}, sát trần ${n(L.ceiling)}`);
   }
   const stray = furnBoxes.filter(b => !(b.item >= 0 && b.item < (plan.furn || []).length));

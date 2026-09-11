@@ -203,10 +203,23 @@ export function init(){
   function drawFurniture(){
     const fr=(x,y,w,h,o={})=>el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),rx:3,...o},gF);
     for(const [k,x,y,w,h] of FURN){
-      if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='wash'){
-        fr(x,y,w,h, k==='altar'?{fill:'#f0e6d2'}:{});
+      if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='wash'||k==='washRaised'||k==='dishwasher'){
+        if(k==='washRaised')
+          fr(x-.06,y-.06,w+.12,h+.12,{fill:FILL.yard,stroke:'#a6a096'});  // bệ sân nâng 15 cm
+        fr(x,y,w,h, k==='altar'?{fill:'#f0e6d2'}:k==='washRaised'?{fill:'#d8e7eb'}:{});
         if(k==='cab') for(let i=1;i<3;i++)
           el('line',{x1:M(x),y1:M(y+h*i/3),x2:M(x+w),y2:M(y+h*i/3),stroke:'#b9b9b9'},gF);
+        if(k==='wash'||k==='washRaised'||k==='dishwasher')
+          el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.min(w,h)*0.28),fill:'#f7f7f5'},gF);
+      } else if(k==='tap') {
+        const horiz=w>h, cx=M(x+w/2), cy=M(y+h/2);
+        if(horiz){
+          el('line',{x1:M(x),y1:cy,x2:M(x+w),y2:cy,stroke:'#4e7c8d',stroke_width:2},gF);
+          el('line',{x1:M(x+w),y1:cy-M(h*.65),x2:M(x+w),y2:cy+M(h*.65),stroke:'#4e7c8d',stroke_width:2},gF);
+        } else {
+          el('line',{x1:cx,y1:M(y),x2:cx,y2:M(y+h),stroke:'#4e7c8d',stroke_width:2},gF);
+          el('line',{x1:cx-M(w*.65),y1:M(y+h),x2:cx+M(w*.65),y2:M(y+h),stroke:'#4e7c8d',stroke_width:2},gF);
+        }
       } else if(k==='bed'){                        // đầu giường ở cạnh trên
         fr(x,y,w,h);
         el('rect',{x:M(x+.05),y:M(y+.05),width:M(w-.1),height:M(h*0.28),rx:4,fill:'#eceff2'},gF);

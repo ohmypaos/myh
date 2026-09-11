@@ -1,11 +1,11 @@
-# Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
+# Đặc tả mặt bằng — Hiện hành — sân giếng sát bếp, bố trí lại khu giặt
 
-> Sinh tự động từ `lib/versions/current.js` lúc 12:49:46 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 13:21:13 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Ban công sau 2.0 m, bếp chữ L. Bếp lợp tôn hai mái (thay bản bê tông); mái sân chính 4.5 × 6 m, mái hành lang ngoài và mái sân phơi là một dải tôn liền vòng quanh bếp, máng xối ở các mép thấp ngoài cùng.
+Ban công sau 2.0 m, bếp chữ L. Bếp lợp tôn hai mái (thay bản bê tông); mái sân chính 4.5 × 6 m, mái hành lang ngoài và mái sân phơi là một dải tôn liền vòng quanh bếp. Sân giếng sát tường bếp chỉ đặt ba vòi nước; cụm máy lùi về phía sau dưới mái tôn hiện hữu.
 
 ---
 
@@ -238,7 +238,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | chair | 3.55 | 27.05 | 0.48 | 0.48 |
 | kitsink | 5.15 | 24.30 | 2.15 | 0.60 |
 | kithob | 5.15 | 21.90 | 0.60 | 2.40 |
-| wash | 5.20 | 25.20 | 0.65 | 0.65 |
+| tap | 5.11 | 26.15 | 0.18 | 0.10 |
+| tap | 5.11 | 27.25 | 0.18 | 0.10 |
+| washRaised | 5.20 | 25.20 | 0.65 | 0.65 |
 | wc | 8.05 | 29.10 | 0.42 | 0.68 |
 | lav | 9.00 | 28.95 | 0.40 | 0.60 |
 | round | 5.50 | 12.80 | 1.40 | 1.40 |
@@ -253,7 +255,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Phòng khách mất nắng Đông Nam.** Mái sân chính trùm hết dọc tường phòng khách: W1 còn 27% phần trời (mái bàn trà cũ 92%), D2 còn 26% (cũ 54%); nắng trực tiếp lên W1 + D2 ngày đông chí còn 18% so với không mái (cũ 70%). Phòng khách giờ sáng chủ yếu nhờ cửa chính D1.
 
-**Bếp bị mái che ba phía** — mái sân chính phía bắc, mái hành lang phía đông, mái sân phơi phía nam, đều là tôn không cho sáng qua. Mái sân chính rộng ra nên W2 còn 20%, D9 25% phần trời; W3 sáng hơn trước vì mái hành lang nâng cao, D10 37% (mép mái sân phơi nâng lên 3.20). Ngày âm u phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
+**Bếp bị mái che ba phía** — mái sân chính phía bắc, mái hành lang phía đông, mái sân phơi phía nam, đều là tôn không cho sáng qua. Mái sân chính rộng ra nên W2 còn 20%, D9 25% phần trời; W3 sáng hơn trước vì mái hành lang nâng cao, D10 37% (mép mái sân phơi nâng lên 3.20). Khu sân giếng bên dưới mái chỉ đặt vòi nước để lối ra bếp không bị thiết bị chiếm. Ngày âm u phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
 
 **Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
 
@@ -296,9 +298,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | mái tôn liền dải sân chính, hành lang, sân phơi | 107.7 |
+| current ← | sân giếng sát bếp, bố trí lại khu giặt | 107.7 |
 
-### Thay đổi ở Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
+### Thay đổi ở Hiện hành — sân giếng sát bếp, bố trí lại khu giặt
 
 - Ban công sau 1.0 → **2.0 m sâu** (5.0 × 2.0 = 10.00 m²) — nay ngồi được, không chỉ để thoáng
 - Nhà chính 17.0 → **18.0 m**; sân phụ bù lại 13.0 → 12.0 m
@@ -333,3 +335,4 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Xà gồ mái sân chính** — 4 thanh thép hộp 40 × 80, bước 1.20 m, chạy vuông góc dốc mái từ tường phòng khách tới dầm dọc tường rào; tấm tôn không còn vượt nhịp trống 4.5 m
 - **Góc làm việc master** — thay bàn 1.3 × 1.5 m bằng 2 bàn 0.6 × 1.2 m nối nhau dọc tường phải, kèm 2 ghế làm việc riêng
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
+- **Sân giếng sát tường bếp** — dành một khoảng 1.5 m ngay ngoài D10, chỉ đặt ba vòi nước; mái sân phơi giữ nguyên. Máy giặt/sấy là một khối sát mép mái, kê trên bệ sân cao 0.15 m để nước rửa sân không ảnh hưởng máy; máy rửa bát lùi về phía sau (bên trái khi đứng ở sân phơi nhìn vào nhà chính)

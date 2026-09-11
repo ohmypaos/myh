@@ -45,6 +45,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A15 | Bỏ bàn ăn trong bếp — ăn trên chiếu trải sàn | ✅ xong | |
 | A16 | WC chung 1.6 × 2.0 m cửa cánh mở vào, gioăng kín mùi; kho cũ thành phòng thay đồ/kho Master 2.4 × 2.0 m | ✅ xong | Hai tủ cao 2.0 m chữ L; vách nhựa kín trần, cửa cánh 0.80 m mở về Master; bỏ tủ âm PN1 |
 | A17 | Vách ngăn nội bộ phòng thờ, phòng ngủ, hành lang và WC chung là vách nhựa tới trần | ✅ xong | Không chịu lực; tường bao và vách tiếp xúc sân/mưa vẫn xây |
+| A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -498,6 +499,12 @@ sửa dòng bếp. Tên phòng giữ "BẾP + NHÀ ĂN".
 > **`POST.maxSpan` là 4.5 chứ không 3.5.** Nhịp 3.5 m chủ nhà chốt là dọc tường rào; mép trước mái sân chính
 > từ tường phòng khách tới cột góc đã 4.35 m và không đặt cột giữa được (vướng ghế bàn trà, giữa sân). Phép
 > kiểm lấy ngưỡng dầm thép hộp nhẹ vượt được, 4.5 m.
+
+### ✅ A18 · Sân giếng sát tường bếp
+
+- [x] Dành sân giếng `4.5 × 1.5 m` (`y = 25.0–26.5`) ngay ngoài D10; đặt hai vòi âm tường giãn nhau trên cạnh nhà chính.
+- [x] Chỉ giữ một máy giặt/sấy sau bếp, tại góc vuông giữa tường bếp và tường nhà chính, kê trên bệ sân nâng 0.15 m; bỏ máy rửa bát.
+- [x] Giữ nguyên RF3, hệ máng xối và năm cột đỡ hiện hữu; `check-3d` qua đủ phép kết cấu.
 
 ---
 

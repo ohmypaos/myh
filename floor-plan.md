@@ -35,7 +35,7 @@ Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không s�
 | [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 5 lỗi |
 | [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 2 lỗi |
 | [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 2 lỗi |
-| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; WC khách và WC chung đều 1.6 × 2 m; WC chung cửa cánh mở vào có gioăng kín mùi; bỏ tủ PN1, phần kho 2.4 × 2 m thành phòng thay đồ/kho Master với hai tủ cao 2 m chữ L, vách nhựa kín tới trần và cửa cánh 0.8 m; toàn bộ vách ngăn nội bộ là vách nhựa đến trần, tường bao giữ xây; bậc tam cấp, mái hiên cửa chính; bếp lợp tôn, mái tôn liền dải sân chính – hành lang – sân phơi; rào 1.8 m xây 0.8 m + lan can thoáng, cổng 3.6 m; trần WC khách 2.7 m** (v12 + sửa sau) | **107.70** | **sạch 15/15** |
+| **[hiện hành](./spec/current.md)** ← | **Ban công 2 m, bếp chữ L; sân giếng 1.5 m sát bếp với ba vòi nước, cụm máy lùi dưới mái sân phơi giữ nguyên; WC khách và WC chung đều 1.6 × 2 m; WC chung cửa cánh mở vào có gioăng kín mùi; bỏ tủ PN1, phần kho 2.4 × 2 m thành phòng thay đồ/kho Master với hai tủ cao 2 m chữ L, vách nhựa kín tới trần và cửa cánh 0.8 m; toàn bộ vách ngăn nội bộ là vách nhựa đến trần, tường bao giữ xây; bậc tam cấp, mái hiên cửa chính; bếp lợp tôn, mái tôn liền dải sân chính – hành lang – sân phơi; rào 1.8 m xây 0.8 m + lan can thoáng, cổng 3.6 m; trần WC khách 2.7 m** (v12 + sửa sau) | **107.70** | **sạch 15/15** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.
