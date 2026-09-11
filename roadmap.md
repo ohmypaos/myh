@@ -2,7 +2,7 @@
 
 Cập nhật 11/9/2026.
 
-**Hiện không còn việc nào đang mở** — 45/45 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Hiện không còn việc nào đang mở** — 46/46 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -60,6 +60,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A26 | Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông; 25 cụm đèn, 14 bảng công tắc bấm được trên 2D / 3D; phép kiểm 17 (2D) và 25 (3D) | ✅ xong | Ổ cắm, mạch điện chưa vẽ |
 | A27 | Cây xanh sân phụ — hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái; phép kiểm 18 (2D) và 26 (3D) | ✅ xong | |
 | A28 | Hai chậu cây ban công sau, hai cây bóng mát ở góc sân chính phía cổng | ✅ xong | Sân phơi, dây leo lan can chưa làm |
+| A29 | Diềm ốp mép mái hiên cửa chính — điểm nhấn mặt tiền nhìn từ cổng; phép kiểm 27 (3D) | ✅ xong | Lan can ô giữa hoa văn: để sau |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -910,6 +911,26 @@ Chủ nhà yêu cầu (11/9/2026) tiếp A27: ban công cho hai chậu cây, gó
 > phụ, sát trụ cổng phải và vùng quét cánh cổng — cây ở đó chắn đường xe vào. Nếu chủ nhà ý góc kia thì chỉ đổi toạ độ.
 
 **Chưa làm:** cây ở sân phơi, sân chính phía trong; dây leo trên lan can rào.
+
+### ✅ A29 · Diềm ốp mép mái hiên cửa chính
+
+Chủ nhà thấy (12/9/2026) phần lan can trên mái hiên trông đơn điệu từ góc nhìn chính diện ở cổng. Đề xuất ba hướng, chủ
+nhà chọn làm **dải diềm** trước. `3d.md` mục 3c.
+
+- [x] `FASCIA` trong `lib/lot.js` (cao 0.45, dày 0.05, khung thép ốp gỗ nhựa nâu); khai `overhangFascias:[['h',12.0]]`
+- [x] `fasciasOf()` trong `lib/envelope.js`: dải trước suốt mép ngoài, dải đầu từ mặt tường ra mép, bỏ đầu nằm trên ranh lô;
+      đỉnh bằng mặt lát mái. `validate()` phép 14 soi khai sai
+- [x] 3D kind `fascia` (màu, "Ẩn mái" giấu), neo lưới, bản vẽ 2D, chú giải, đặc tả; `check-3d` thêm **phép kiểm 27**
+- [x] `warn`: treo đầu công xôn — phải nhẹ, neo mặt bên bản, rãnh nhỏ giọt mép dưới
+- [x] Phá thử phép 27: bỏ dải đầu phía sân chính, diềm nhô 0.1 trên mặt lát, dải trước hở khỏi bản 4 cm, dựng diềm ở trần
+      ban công không khai — đều báo. Phép 14: khai diềm cho trục không có mái hiên — báo
+
+> **Vấp: mép ngoài nằm trên ranh lô.** Phá thử khai thêm diềm cho trần ban công sau (lẽ ra phải sạch) thì phép 10 báo diềm
+> đè đỉnh hai tường nâng. Trần ban công đua đúng tới ranh `y = 30`: bản đầu chỉ bỏ **đầu bản** nằm trên ranh lô, quên
+> **mép ngoài** — dải trước ốp sang đất bên cạnh. Nay cạnh nào trên ranh lô cũng không ốp; trần ban công chỉ còn dải đầu
+> phía sân phơi. Bản hiện hành không khai diềm ở đó nên lỗi chưa từng lộ ra mô hình.
+
+**Để sau:** chia lan can mái hiên ba ô, ô giữa thẳng trục cổng – cửa chính làm tấm hoa văn.
 
 ## B · Mô hình 3D
 

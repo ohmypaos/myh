@@ -36,6 +36,7 @@ export const COLORS = {
   roof:        0xc9c2b2,
   alleyRoof:   0xbdb6a6,
   overhang:    0xc9c2b2,
+  fascia:      0x7b5b43,     // diềm mép mái hiên — gỗ nhựa nâu óc chó, điểm nhấn mặt tiền trên nền tường trắng
   roofInsulation:0xc39b82,  // gạch lát trên lớp chống nóng mái — tông gạch nhạt, tách khỏi bê tông
   metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
   gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
@@ -74,7 +75,7 @@ export const GLASS_KINDS = new Set(['glass', 'sash', 'louver', 'tumGlass']);
    được xuống trong nhà. Đầu hồi là tường, cố ý giữ lại. check-3d phép 24 soi: khối nào đứng từ cốt mặt
    mái trở lên mà không nằm trong danh sách này là lọt lưới. */
 export const ROOF_KINDS = new Set([
-  'roof', 'alleyRoof', 'overhang', 'roofInsulation', 'metalRoof', 'gateRoofTile', 'gateBeam', 'gutter', 'beam', 'purlin',
+  'roof', 'alleyRoof', 'overhang', 'fascia', 'roofInsulation', 'metalRoof', 'gateRoofTile', 'gateBeam', 'gutter', 'beam', 'purlin',
   'ceiling', 'dropCeiling', 'ceilingLamp', 'roofLamp', 'roofSwitch',
   'tumWall', 'tumRoof', 'tumGlass', 'tumDoor', 'tumCurb', 'louver', 'tumFascia', 'tumCanopy',
   'roofRailing', 'tank', 'tankStand', 'tankCradle',

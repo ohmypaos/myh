@@ -14,7 +14,8 @@ import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITUR
 import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
          stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf,
-         plantersOf, flowerBedsOf, treesOf } from '../lib/envelope.js';
+         plantersOf, flowerBedsOf, treesOf, overhangsOf } from '../lib/envelope.js';
+import { FASCIA } from '../lib/lot.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -88,6 +89,7 @@ const CHECKS = [
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
   'Đèn: mỗi đèn khai có đúng khối ở đúng tâm; đèn trần áp đúng mặt dưới vật che ngay trên, đáy cách sàn ít nhất 2 m, đèn thả đáy chao đúng cốt; đèn tường lưng áp mặt tường và sau lưng là tường thật; bảng công tắc đúng một khối, lưng áp tường thật',
   'Cây xanh: mỗi chậu đúng một thân chậu đứng trên cốt sân, đúng tâm và cao khai, có cây cắm gốc vào miệng chậu; bồn hoa có bó vỉa từ cốt sân lên đúng mép khai, đất thấp hơn mép đúng cấu tạo, mặt bằng bồn kín không hở không chồng, lưng đất áp tường thật, có khóm hoa đứng trên đất; cây bóng mát có ô gốc kín bó vỉa đúng cốt, một thân đúng tâm cắm từ đất lên lọt vào tán, tán đúng tâm và mặt dưới tán không thấp hơn khoảng thông thiết kế',
+  'Diềm mép mái hiên: bản khai diềm có dải áp kín mặt ngoài mép bản suốt bề dài, dải ở mọi đầu bản không nằm trên ranh lô; đỉnh bằng mặt lát mái, cao đúng khai, buông thấp hơn mặt dưới bản; bản không khai thì không có diềm',
 ];
 
 function check(plan){
@@ -1344,6 +1346,60 @@ function check(plan){
     else if (trunks[0].y0 > soilTop + EPS || trunks[0].y1 <= crown.y0 + EPS || trunks[0].y1 >= crown.y1)
       e.push(`thân cây ${t.id} ở cốt ${n(trunks[0].y0)}–${n(trunks[0].y1)} không nối từ đất (${n(soilTop)}) vào trong tán`);
   }
+
+  /* 27 — diềm mép mái hiên, soi trên khối đã dựng. Mốc lấy từ **khối bản mái đổ ra ngoài** đã dựng và số khai (FASCIA,
+     lớp chống nóng khai cho bản ấy), không gọi fasciasOf():
+     a) mặt ngoài mép bản: chọc 9 điểm dọc mép, ngay ngoài mặt bản, ở giữa bề dày bản — điểm nào cũng phải nằm trong một dải
+        diềm (hở là mép bê tông lòi ra, lệch là dải treo lơ lửng cách bản);
+     b) mỗi đầu bản không nằm trên ranh lô cũng thế — chọc giữa đầu bản;
+     c) mọi dải đỉnh bằng mặt lát (hoặc mặt bản nếu bản không có lớp chống nóng), cao đúng FASCIA.height, đáy thấp hơn mặt
+        dưới bản;
+     d) dải diềm không bám bản nào đã khai thì là thừa. */
+  const fasciaBoxes = m.boxes.filter(b => b.kind === 'fascia');
+  const declared = plan.overhangFascias || [];
+  const hitFascia = (px, py, pz) => fasciaBoxes.some(b => px > b.x - EPS && px < b.x + b.w + EPS && pz > b.z - EPS && pz < b.z + b.d + EPS
+                                                          && py > b.y0 - EPS && py < b.y1 + EPS);
+  const used = new Set();
+  for (const o of overhangsOf(plan).filter(o => !o.error)) {
+    const slab = m.boxes.find(b => b.kind === 'overhang'
+      && Math.abs(b.x - o.rect.x) < EPS && Math.abs(b.z - o.rect.y) < EPS && Math.abs(b.w - o.rect.w) < EPS && Math.abs(b.d - o.rect.h) < EPS);
+    if (!slab) continue;                                          // phép 6 lo bản thiếu
+    const want = declared.some(([ax, pos]) => ax === o.ax && Math.abs(pos - o.pos) < EPS);
+    const near = fasciaBoxes.filter(b => b.x < slab.x + slab.w + 0.1 && b.x + b.w > slab.x - 0.1 && b.z < slab.z + slab.d + 0.1 && b.z + b.d > slab.z - 0.1
+                                      && b.y1 > slab.y0 - EPS && b.y0 < slab.y1 + 0.2);
+    near.forEach(b => used.add(b));
+    const name = `mái đổ ra ngoài trục ${o.ax} ${o.pos}`;
+    if (!want) { if (near.length) e.push(`${name} không khai diềm mà dựng ${near.length} dải diềm`); continue; }
+    const insulated = (plan.roofInsulation?.overhangs || []).some(([ax, pos]) => ax === o.ax && Math.abs(pos - o.pos) < EPS);
+    const top = slab.y1 + (insulated ? ROOF_INSULATION.xps + ROOF_INSULATION.paver : 0), py = (slab.y0 + slab.y1) / 2, k = 0.01;
+    /* Mép ngoài: pháp tuyến ra ngoài theo `dir`, dọc trục tường. */
+    const outer = o.dir > 0 ? (o.ax === 'h' ? slab.z + slab.d : slab.x + slab.w) : (o.ax === 'h' ? slab.z : slab.x);
+    const [s0, s1] = o.ax === 'h' ? [slab.x, slab.x + slab.w] : [slab.z, slab.z + slab.d];
+    let miss = null;
+    const [edge, depthEdge] = o.ax === 'h' ? [LOT.w, LOT.d] : [LOT.d, LOT.w];
+    /* Mép ngoài nằm trên ranh lô (trần ban công đua tới y = 30) thì không ốp — chọc ở đó là đòi ốp sang đất bên cạnh. */
+    const frontOnLot = outer <= EPS || outer >= depthEdge - EPS;
+    for (let i = 0; i <= 8 && !miss && !frontOnLot; i++) {
+      const u = s0 + k + (s1 - s0 - 2 * k) * i / 8, nn = outer + o.dir * k;
+      const [px, pz] = o.ax === 'h' ? [u, nn] : [nn, u];
+      if (!hitFascia(px, py, pz)) miss = `mép ngoài ở x ${n(px)}, z ${n(pz)}`;
+    }
+    const [n0, n1] = o.ax === 'h' ? [slab.z, slab.z + slab.d] : [slab.x, slab.x + slab.w];
+    for (const [end, out] of [[s0, -1], [s1, 1]]) {
+      if (out < 0 ? end <= EPS : end >= edge - EPS) continue;     // đầu nằm trên ranh lô — không ốp
+      const u = end + out * k, nn = (n0 + n1) / 2;
+      const [px, pz] = o.ax === 'h' ? [u, nn] : [nn, u];
+      if (!miss && !hitFascia(px, py, pz)) miss = `đầu bản ở x ${n(px)}, z ${n(pz)}`;
+    }
+    if (miss) e.push(`${name} khai diềm mà ${miss} không có dải diềm`);
+    for (const b of near) {
+      if (Math.abs(b.y1 - top) > EPS) e.push(`diềm ${name} đỉnh cốt ${n(b.y1)}, cần bằng mặt lát ${n(top)}`);
+      else if (Math.abs(b.y1 - b.y0 - FASCIA.height) > EPS || b.y0 > slab.y0 - EPS)
+        e.push(`diềm ${name} cao ${n(b.y1 - b.y0)} m từ cốt ${n(b.y0)} — cần ${FASCIA.height} m, buông thấp hơn mặt dưới bản ${n(slab.y0)}`);
+    }
+  }
+  const strayFascia = fasciaBoxes.find(b => !used.has(b));
+  if (strayFascia) e.push(`dải diềm quanh x ${n(strayFascia.x)}, z ${n(strayFascia.z)} không bám bản mái đổ ra ngoài nào`);
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

@@ -17,7 +17,7 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `GARDEN` (chậu cây, bồn hoa), `LIGHT` (loại đèn), `LIGHTING` (hệ số tính độ rọi), `SWITCH` (bảng công tắc), `MIN_CLEAR` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `FASCIA` (diềm ốp mép mái hiên), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `GARDEN` (chậu cây, bồn hoa), `LIGHT` (loại đèn), `LIGHTING` (hệ số tính độ rọi), `SWITCH` (bảng công tắc), `MIN_CLEAR` |
 | `lib/plan.js` | Diện tích thông thủy và **18 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ, cầu thang lên mái, tum, lan can mái, đèn và độ rọi — suy từ cửa, tường và số khai, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
@@ -98,7 +98,7 @@ mặt tường / dầm đỡ. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (hai tường
 bên ban công sau: tường trái đỡ trần ban công, tường phải có cửa D13). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
-riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`) và tường có mái hiên (`overhangs`).
+riêng (`floorLevels`), phòng có trần giả hạ thấp (`dropCeilings`), tường có mái hiên (`overhangs`) và mái hiên có diềm ốp mép (`overhangFascias`).
 
 **Cầu thang lên mái** (chuẩn bị tầng 2 sau khoảng 5 năm, chốt 11/9/2026) khai ở `stairs`: lọt lòng buồng thang
 (cũng là lỗ khoét bản mái), bề rộng vế, mặt bậc, số nấc hai vế — cao bậc suy ra. **Tum** khai ở `tum` (vùng, cửa ra

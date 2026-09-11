@@ -11,7 +11,7 @@ import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from 
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
          stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf,
-         plantersOf, flowerBedsOf, treesOf } from '../lib/envelope.js';
+         plantersOf, flowerBedsOf, treesOf, fasciasOf } from '../lib/envelope.js';
 import { mountSwitchBoard } from './switchBoard.js';
 
 export function init(){
@@ -374,6 +374,12 @@ export function init(){
       const {x,y,w,h} = o.rect;
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'none',
         stroke:'#6f6a5e',stroke_width:2.4,stroke_dasharray:'3 7'},gSky);
+    }
+    /* Diềm mép mái hiên — dải mỏng màu gỗ bọc mép ngoài bản, cũng ở trên đầu nên vẽ nhạt. */
+    for(const f of fasciasOf(V)){
+      if(f.error) continue;
+      for(const p of f.pieces)
+        el('rect',{x:M(p.x),y:M(p.y),width:M(p.w),height:M(p.h),fill:'#7b5b43',fill_opacity:.7,stroke:'none'},gSky);
     }
   }
 
@@ -961,6 +967,7 @@ export function init(){
   <tr><td>Ô trắng viền đen mảnh</td><td>Cửa sổ</td></tr>
   <tr><td style="color:#2f7897">Nét đứt xanh + gạch chéo</td><td>Lấy sáng trên mái (nằm phía trên đầu)</td></tr>
   <tr><td style="color:#6f6a5e">Viền chấm xám</td><td>Mái hiên, trần ban công — bản mái đổ ra ngoài tường (nằm phía trên đầu)</td></tr>
+  <tr><td style="color:#7b5b43">Dải nâu mảnh ngoài viền chấm</td><td>Diềm ốp mép mái hiên — điểm nhấn mặt tiền</td></tr>
   <tr><td>Ô be kẻ vạch</td><td>Bậc tam cấp phía sân — mỗi vạch là mép một bậc</td></tr>
   <tr><td style="color:#9a6b00">Vòng tròn gạch chéo</td><td>Đèn trần ốp nổi — cỡ vòng là cỡ thân đèn</td></tr>
   <tr><td style="color:#9a6b00">Vòng tròn chấm giữa</td><td>Đèn thả</td></tr>

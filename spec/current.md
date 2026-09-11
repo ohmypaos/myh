@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 23:05:16 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 00:10:35 12/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -113,6 +113,8 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 |---|---:|---:|---:|---:|---|
 | ngang | 12.0 | -0.1 | 5.1 | 1.20 | Mái hiên cửa chính — đổ liền bản mái nhà, công xôn không cột, che bậc D1 |
 | ngang | 28.0 | -0.1 | 5.1 | 1.89 | Trần ban công sau — đổ liền bản mái, gác lên tường trái; thay cho lam đứng D12 |
+
+**Diềm mép mái hiên** — khung thép hộp mạ kẽm, ốp tấm gỗ nhựa ngoài trời màu nâu óc chó. Dải cao 0.45 m, dày 0.05 m, áp mặt ngoài bản; đỉnh bằng mặt lát mái, phía dưới buông thấp hơn mặt dưới bản — không nhô trên mặt lát để khỏi chặn nước thoát ra mép. Bọc mép ngoài và hai đầu, trừ cạnh nằm trên ranh lô: trục ngang 12.0 — 2 dải, dài 6.47 m, cốt 3.64 → 4.09 (đầu toạ độ nhỏ nằm trên ranh lô, không ốp).
 
 ### Lớp chống nóng mái
 
@@ -475,7 +477,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Bồn nước 1000 L trên trần ban công — nói với kỹ sư kết cấu.** Bồn đầy nước nặng cỡ 1 tấn, đứng trên bản trần ban công sau (nhịp 5 m gác hai tường bên `x = 0` và `x = 5`), không phải trên mái nhà chính có dầm cột. Đã đặt dọc áp sát tường `x = 5` để tải nằm sát gối, nhưng **bản trần ban công vẫn phải được tính với tải này** — cả khi sau 5 năm xây tầng 2 và bồn chuyển chỗ. Bốn chân giá phải có bản đế 300 × 300: chân trần 50 × 50 ép xuống cỡ 1000 kPa, quá sức nén XPS 300 kPa, tấm lát sẽ lún và XPS bị bẹp. Đường cấp lên bồn và ống xuống đi trong hộp kỹ thuật, chỗ xuyên lớp chống thấm phải có cổ ống — giống ống quạt hút WC chung. Bồn phơi nắng cả ngày thì nước nóng về chiều: muốn nước mát thì bọc cách nhiệt hoặc che, nhưng che thì lại thêm khối trên mái.
 
-**Mái hiên cửa chính thành một phần sân thượng.** Bản công xôn 1.2 m không cột nay có người đi lại và lan can bắt ở mép ngoài — kỹ sư kết cấu phải tính lại tải và neo trụ lan can; lan can mép công xôn chịu lực đẩy ngang lớn nhất.
+**Mái hiên cửa chính thành một phần sân thượng.** Bản công xôn 1.2 m không cột nay có người đi lại và lan can bắt ở mép ngoài — kỹ sư kết cấu phải tính lại tải và neo trụ lan can; lan can mép công xôn chịu lực đẩy ngang lớn nhất. **Diềm ốp mép mái hiên** cũng treo đúng đầu công xôn: giữ nó nhẹ — khung thép hộp mạ kẽm, tấm gỗ nhựa, không ốp đá hay xây gạch; neo khung vào mặt bên bản chứ không khoan xuyên lớp chống thấm trên mặt bản. Mép dưới diềm buông thấp hơn bản 0.11 m nên làm luôn rãnh nhỏ giọt ở mép dưới, không thì nước mưa men theo mặt dưới bản vào trần hiên.
 
 **Rào kín hai cạnh trước / sau — riêng tư đổi lấy chút nắng.** Mặt tiền (`y = 0`) xây kín **2.10 m**, cạnh sau (`y = 30`, tới `x` 7.9) xây kín **1.80 m**, cả hai không lan can. Đo trên chính khối đã dựng (giờ nắng trực tiếp): chỗ giàn phơi cốt 1.80 **không đổi** — 9.5 h hạ chí, 7.0 h thu phân, 5.7 h đông chí, đúng bằng khi còn lan can, vì rào sau vẫn 1.80; giữa cửa D12 của master cốt 1.20 thì **đông chí 4.6 → 3.6 h**, thu phân 3.3 → 2.8 h — phần mất là ánh sáng vốn lọt qua khe lan can, nay bị bịt. Giữa sân phụ 13.1 → 12.4 h hạ chí do rào trước cao 2.10.
 
@@ -512,7 +514,7 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 11. Hai lỗ mở trên cùng tường không chồng nhau
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
-14. Bậc, mái hiên, tường nâng, cốt sàn riêng, lớp chống nóng mái khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
+14. Bậc, mái hiên, diềm mái hiên, tường nâng, cốt sàn riêng, lớp chống nóng mái khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
 15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần; cột đỡ mái nằm trong lô, dưới một mái nhẹ, không đứng giữa nội thất
 16. Cầu thang lên mái: vế và chiếu nghỉ khớp lỗ thang, cao bậc và mặt bậc trong giới hạn, nằm gọn trong phòng, không vướng nội thất hay cánh cửa; có tum trùm kín lỗ thang, cửa tum trên vách; có lan can mép mái đứng trên mái bê tông
 17. Đèn: mã không trùng, đúng loại; đèn trần có trần hay mái bên trên để gắn, không treo trên lỗ thang; đèn tường nằm trên tường có thật, không đè lỗ cửa; phòng nào cũng có đèn; phòng khai ngưỡng độ rọi thì đèn trần đạt ngưỡng; khai công tắc thì đèn nào cũng thuộc đúng một cụm, cụm nào cũng có hạt công tắc, bảng công tắc trên tường thật, không đè lỗ cửa, không quá số hạt
@@ -587,3 +589,4 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 - **Cây xanh sân phụ** (phối cảnh) — **hai chậu cây** Ø0.40 hai bên bậc cửa chính, đặt giữa khe 0.49 m giữa mặt tường và mép bậc, đối xứng qua trục cửa, dưới mái hiên; **bồn hoa xây** dọc tường bao trái sân phụ phía nhà chính, từ sau trụ cổng (`y` 0.25) tới mép mái hiên (`y` 10.69): rộng 0.50 m, mép bó vỉa cao **0.25 m** trên mặt sân, đất thấp hơn mép 0.05, 20 khóm hoa. Sân phụ còn 4.28 m lọt lòng cho lối vào và đỗ xe
 - **Hai chậu cây ban công sau** — Ø0.40 ở hai góc sát rào sau, để trống giữa ban công và trước cửa lùa D12 cho chỗ ngồi; chậu cạnh D13 đứng ngoài vùng quét cánh
 - **Hai cây bóng mát ở góc sân chính phía cổng** — dọc rào phải, tâm gốc `x` 7.85, `y` 1.75 và 5.05; tán Ø3.30 nối liền thành dải bóng 6.6 m, tới đúng ranh lô phải và ranh mặt tiền, không vươn ra ngoài; mặt dưới tán cao 2.50, đỉnh 5.30; ô gốc 1 × 1 m bó vỉa cao 0.15. Bóng tán rơi vào sân chính từ khoảng 8 h tới 13 h mùa hè
+- **Diềm ốp mép mái hiên cửa chính** — điểm nhấn mặt tiền nhìn thẳng từ cổng: dải cao 0.45 m, khung thép hộp ốp gỗ nhựa nâu, bọc mép ngoài bản hiên 5.27 m và đầu phía sân chính; đỉnh bằng mặt lát mái 4.09, buông thấp hơn mặt dưới bản 0.11 m. Mép bản bê tông mỏng thành một đường ngang đậm, cân với mái ngói cổng phía trước; xây tầng 2 thì thành đường chỉ phân tầng
