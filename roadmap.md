@@ -2,7 +2,7 @@
 
 Cập nhật 11/9/2026.
 
-**Hiện không còn việc nào đang mở** — 43/43 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Hiện không còn việc nào đang mở** — 45/45 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -58,6 +58,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A24 | Rào mặt tiền kín 2.10, rào sau kín 1.80, bỏ lan can — lấy riêng tư | ✅ xong | |
 | A25 | Vá ba chỗ hở của bộ kiểm (tum ôm lỗ thang, phép 16, màu + ẩn mái); rà lại toàn mô hình | ✅ xong | |
 | A26 | Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông; 25 cụm đèn, 14 bảng công tắc bấm được trên 2D / 3D; phép kiểm 17 (2D) và 25 (3D) | ✅ xong | Ổ cắm, mạch điện chưa vẽ |
+| A27 | Cây xanh sân phụ — hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái; phép kiểm 18 (2D) và 26 (3D) | ✅ xong | |
+| A28 | Hai chậu cây ban công sau, hai cây bóng mát ở góc sân chính phía cổng | ✅ xong | Sân phơi, dây leo lan can chưa làm |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -864,6 +866,50 @@ Chủ nhà yêu cầu (11/9/2026) bố trí hệ đèn cho cả nhà. Lý do t�
       vách → báo lơ lửng
 
 **Chưa làm:** ổ cắm, mạch và tủ điện chưa vẽ; 3D không dựng nguồn sáng thật — `3d.md` mục 3e giải thích vì sao.
+
+### ✅ A27 · Cây xanh sân phụ
+
+Chủ nhà yêu cầu (11/9/2026) bắt đầu phối cảnh: hai chậu cây hai bên bậc cửa chính, dọc tường bao phía nhà chính một đoạn
+trồng hoa cao hơn mặt sân một chút. Lý do từng số: `3d.md` mục 3f.
+
+- [x] `GARDEN` trong `lib/lot.js` (chậu Ø0.40 cao 0.45, tán 0.44; bồn rộng 0.50, mép 0.25, đất thấp hơn mép 0.05)
+- [x] Khai trong `current.js`: `planters` CC1, CC2 hai bên bậc D1, đối xứng qua trục cửa; `flowerBeds` BH1 áp tường `x = 0`,
+      `y` 0.25–10.69 — từ sau trụ cổng tới mép mái hiên
+- [x] `plantersOf()`, `flowerBedsOf()` trong `lib/envelope.js`; `validate()` thêm **phép kiểm 18**
+- [x] `lib/massing.js` dựng chậu (trụ đứng), bó vỉa, đất, tán cây và khóm hoa (khối bầu — `shape:'ball'` mới trong
+      `scene3d.js`); `check-3d` thêm **phép kiểm 26**, phép 10 miễn cặp cùng là khối cây xanh
+- [x] Neo lưới: chậu vào cạnh gần nhất của sân chứa nó, bồn hoa theo tường và hai đầu theo mốc gần nhất. Kéo `y = 12` sang
+      11.5: chậu và đầu nam bồn đi theo
+- [x] Bản vẽ 2D (ký hiệu, chú giải), `specMarkdown()` in bảng chậu cây và bồn hoa
+- [x] Phá thử phép 18: chậu đè bậc D1, chậu lấn tường, chậu trong WC khách, chậu trong vùng quét cánh cổng, bồn đè trụ
+      cổng, bồn trước cửa D1, bồn không có tường, bồn chồng chậu, bồn trên tường hai phía là sân — đều báo. Phá thử phép
+      26: bỏ khối đất, cây lơ lửng trên miệng chậu, bỏ hai bó vỉa đầu, bồn hở khỏi tường 5 cm — đều báo
+
+> **Vấp ở phá thử phép 26:** bỏ hai bó vỉa đầu mà vẫn sạch. Lưới điểm lấy đều 21 điểm dọc bồn 10.44 m — bước 0.50, bó
+> vỉa đầu chỉ dày 0.10 nên lọt giữa hai điểm. Thêm hai điểm đúng giữa hai bó vỉa đầu. Cùng một cái bẫy với giàn phơi
+> ngày trước: lấy mẫu thưa hơn chi tiết mỏng nhất thì chi tiết ấy biến mất cũng không ai hay.
+
+### ✅ A28 · Chậu cây ban công, cây bóng mát sân chính
+
+Chủ nhà yêu cầu (11/9/2026) tiếp A27: ban công cho hai chậu cây, góc sân chính phía cổng cho hai cây lớn lấy bóng mát.
+`3d.md` mục 3f.
+
+- [x] `current.js`: `planters` thêm CC3, CC4 ở hai góc ban công sát rào sau; `trees` CX1, CX2 dọc rào phải, tâm gốc `x` 7.85,
+      `y` 1.75 và 5.05
+- [x] `GARDEN.tree` trong `lib/lot.js` (thân Ø0.25, tán Ø3.30 dày 2.80, mặt dưới tán 2.50, ô gốc 1 × 1 bó vỉa 0.15);
+      `treesOf()` trong `lib/envelope.js`; `validate()` phép 18 soi thêm ô gốc và **tán không vươn ra ngoài lô**
+- [x] 3D: ô gốc, đất, thân trụ đứng, tán hình bầu; `check-3d` phép 3 cộng đỉnh tán từ số khai, phép 26 soi thêm ô gốc kín,
+      thân nối từ đất vào tán, mặt dưới tán không thấp hơn khoảng thông. Neo lưới, bản vẽ 2D, đặc tả
+- [x] Chiếu bóng tâm tán theo NOAA ghi vào `warn`: bóng vào sân chính **buổi sáng tới đầu giờ chiều**, từ 14 h đổ sang
+      lô bên và ra ngõ
+- [x] Phá thử phép 18: tán vươn sang lô phải, tán vươn ra ngõ, ô gốc lấn tường, ô gốc trong bếp, ô gốc đè cột C1, chậu
+      ban công trong vùng quét D13, hai ô gốc chồng nhau — đều báo. Phá thử phép 26: tán hạ 0.8 m, bỏ thân, thân không
+      tới tán, cây sát mái sân chính (tán đâm mái, phép 10) — đều báo
+
+> **"Góc sân chính phía cổng" có hai góc trước.** Chọn góc phải (góc có hai bức rào), vì góc trái `x = 5` liền với sân
+> phụ, sát trụ cổng phải và vùng quét cánh cổng — cây ở đó chắn đường xe vào. Nếu chủ nhà ý góc kia thì chỉ đổi toạ độ.
+
+**Chưa làm:** cây ở sân phơi, sân chính phía trong; dây leo trên lan can rào.
 
 ## B · Mô hình 3D
 

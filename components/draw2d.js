@@ -10,7 +10,8 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf,
+         plantersOf, flowerBedsOf, treesOf } from '../lib/envelope.js';
 import { mountSwitchBoard } from './switchBoard.js';
 
 export function init(){
@@ -256,6 +257,46 @@ export function init(){
       t.textContent=r.id;
     }
   }
+
+  /* Cây xanh (lib/envelope.js plantersOf, flowerBedsOf). Bồn hoa: bó vỉa màu rào xây, lòng đất nâu nhạt, khóm hoa là
+     vòng xanh chấm hồng. Chậu cây: vòng chậu đất nung, tán xanh trong mờ chồm ra ngoài miệng chậu. */
+  function drawGarden(){
+    const sq = (q,o) => el('rect',{x:M(q.x),y:M(q.y),width:M(q.w),height:M(q.h),...o},gF);
+    for(const b of flowerBedsOf(V)){
+      if(b.errors.length) continue;
+      sq(b.rect,{fill:'#d9d3c4',stroke:'#8d8778',stroke_width:1.2});
+      sq(b.soil,{fill:'#cdbba1',stroke:'none'});
+      for(const c of b.clumps)
+        el('circle',{cx:M(c.x+c.w/2),cy:M(c.y+c.h/2),r:M(c.w/2),fill:'#9cc281',stroke:'#5f8f4a',stroke_width:1},gF);
+      for(const c of b.blooms)
+        el('circle',{cx:M(c.x+c.w/2),cy:M(c.y+c.h/2),r:M(c.w/4),fill:'#d8577e',stroke:'none'},gF);
+      /* Nhãn đặt ngoài bồn phía sân, chạy dọc bồn. */
+      const mid=(b.a+b.b)/2, off=b.face+b.dir*(GARDEN_LABEL+b.rect[b.ax==='h'?'h':'w']);
+      const [tx,ty] = b.ax==='h' ? [mid,off] : [off,mid];
+      const t=el('text',{x:M(tx),y:M(ty),font_size:12,text_anchor:'middle',dominant_baseline:'middle',fill:'#5f8f4a',stroke:'none',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600,
+        transform:b.ax==='v'?`rotate(-90 ${M(tx)} ${M(ty)})`:null},gF);
+      t.textContent=`${b.id} · BỒN HOA`;
+    }
+    for(const p of plantersOf(V)){
+      if(p.errors.length) continue;
+      el('circle',{cx:M(p.x),cy:M(p.y),r:M(p.rect.w/2),fill:'#ecd3c4',stroke:'#a9644a',stroke_width:1.6},gF);
+      el('circle',{cx:M(p.x),cy:M(p.y),r:M(p.crown.w/2),fill:'#5f8f4a',fill_opacity:.35,stroke:'#5f8f4a',stroke_width:1},gF);
+    }
+    /* Cây bóng mát: ô gốc vuông bó vỉa, chấm thân; tán ở trên đầu nên nét đứt, nền xanh rất nhạt — như mái hiên. */
+    for(const t of treesOf(V)){
+      if(t.errors.length) continue;
+      sq(t.pit,{fill:'#d9d3c4',stroke:'#8d8778',stroke_width:1.2});
+      sq(t.soil,{fill:'#cdbba1',stroke:'none'});
+      el('circle',{cx:M(t.x),cy:M(t.y),r:M(t.crown.w/2),fill:'#5f8f4a',fill_opacity:.10,stroke:'#5f8f4a',stroke_width:1.8,
+        stroke_dasharray:'14 8'},gF);
+      el('circle',{cx:M(t.x),cy:M(t.y),r:M(t.trunk.w/2),fill:'#6b5440',stroke:'none'},gF);
+      const tx=el('text',{x:M(t.x),y:M(t.pit.y)-8,font_size:13,text_anchor:'middle',fill:'#5f8f4a',stroke:'none',
+        font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gF);
+      tx.textContent=t.id;
+    }
+  }
+  const GARDEN_LABEL = 0.12;
 
   /* Bảng công tắc (lib/envelope.js switchesOf) — ô chữ nhật mảnh áp mặt tường phía nó quay vào, kèm mã. Cụm đèn nào
      đang bật thì kẻ nét đứt từ mọi bảng có hạt của cụm ấy tới từng đèn trong cụm: bật một cụm là đọc ra ngay nó do
@@ -789,7 +830,7 @@ export function init(){
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
     drawRooms(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
-    drawFurniture(); drawRacks(); drawSwitches(); drawLights();
+    drawFurniture(); drawGarden(); drawRacks(); drawSwitches(); drawLights();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
   }
@@ -957,6 +998,11 @@ export function init(){
   <tr><td>Ô vuông bo có tựa</td><td>Ghế làm việc</td></tr>
   <tr><td>Chữ nhật + 6 ghế</td><td>Bàn ăn</td></tr>
   <tr><td>Vòng tròn + 4 ghế</td><td>Bàn ngoài sân</td></tr>
+
+  <tr><td colspan="2" style="background:#f6f4ee;font-weight:700">Cây xanh</td></tr>
+  <tr><td style="color:#a9644a">Vòng nâu + tán xanh mờ</td><td>Chậu cây — vòng trong là miệng chậu, vòng xanh là tán</td></tr>
+  <tr><td style="color:#5f8f4a">Dải be viền xám, chấm xanh tâm hồng</td><td>Bồn hoa xây áp tường — viền là bó vỉa, mỗi chấm một khóm hoa</td></tr>
+  <tr><td style="color:#5f8f4a">Vòng xanh nét đứt + ô vuông, mã CX#</td><td>Cây bóng mát — vòng nét đứt là tán (trên đầu), ô vuông là ô gốc bó vỉa, chấm nâu là thân</td></tr>
 
   <tr><td colspan="2" style="background:#f6f4ee;font-weight:700">Khác</td></tr>
   <tr><td>Mũi tên "MẶT TIỀN"</td><td>Mặt tiền quay hướng ${compassName(frontAzimuth())} (phương vị ${+frontAzimuth().toFixed(1)}°)</td></tr>

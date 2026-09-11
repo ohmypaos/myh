@@ -17,8 +17,8 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `LIGHT` (loại đèn), `LIGHTING` (hệ số tính độ rọi), `SWITCH` (bảng công tắc), `MIN_CLEAR` |
-| `lib/plan.js` | Diện tích thông thủy và **17 phép kiểm** `validate()` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `ROOF_INSULATION` (cấu tạo lớp chống nóng sàn mái), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `BEAM` (dầm biên mái nhẹ), `PURLIN` (xà gồ mái nhẹ), `STAIR` (cầu thang, bức lửng), `TUM` (tum trên mái), `ROOF_RAILING` (lan can mép mái), `GARDEN` (chậu cây, bồn hoa), `LIGHT` (loại đèn), `LIGHTING` (hệ số tính độ rọi), `SWITCH` (bảng công tắc), `MIN_CLEAR` |
+| `lib/plan.js` | Diện tích thông thủy và **18 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ, cầu thang lên mái, tum, lan can mái, đèn và độ rọi — suy từ cửa, tường và số khai, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
 | `lib/massing.js` | `buildMassing()` — đổi dữ liệu mặt bằng thành khối 3D: `boxes` hộp thẳng trục và `prisms` lăng trụ mặt nghiêng (mái tôn dốc, đầu hồi). Hình học thuần, không dính three.js |
@@ -55,11 +55,11 @@ trong cùng bản vẽ. Không sửa, trừ khi đó là **lỗi của chính b�
 
 **1. Sửa `lib/versions/current.js`.**
 File là một snapshot đầy đủ (rooms, walls, doors, windows, skylights, gates, strips, furn,
-roofs, stairs, tum, roofRailings, lights, wallLights, lux, lightGroups, switches, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
+roofs, stairs, tum, roofRailings, planters, flowerBeds, trees, lights, wallLights, lux, lightGroups, switches, dims, areas, note, changes, warn). Cập nhật luôn `note` và `changes` cho khớp với thiết kế
 mới — đó là phần hiện trên cột phải của bản vẽ.
 
 **2. Chạy bộ kiểm tra — phải sạch trước khi đi tiếp.**
-`validate()` trong `lib/plan.js` có 17 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
+`validate()` trong `lib/plan.js` có 18 phép kiểm (cộng diện tích, chuỗi kích thước, cửa nằm
 trên tường, phòng kín có cửa, nội thất không chồng nhau và không nằm trong vùng quét cánh
 cửa, bậc nằm gọn trong sân, cầu thang khớp lỗ thang, phòng nào cũng có đèn và đạt độ rọi…). Lỗi hiện ngay trên cột phải khi mở bản vẽ. **Không commit bản hiện hành còn lỗi.**
 Các bản trong kho đối chiếu còn lỗi là bình thường — chúng là bước trung gian.
@@ -114,6 +114,11 @@ nên đèn **ốp nổi**, và vị trí đèn trần phải chốt trước khi
 thân đèn, không dựng nguồn sáng. **Công tắc:** đèn chia cụm ở `lightGroups` (đèn nào cũng thuộc đúng một cụm), bảng
 công tắc ở `switches` gắn như đèn tường, mỗi hạt một cụm — cụm có hạt ở hai bảng là hai chiều. Bảng bấm bật / tắt cụm
 trên cả hai trang ở `components/switchBoard.js`, trạng thái không phải số liệu. `3d.md` mục 3e.
+
+**Cây xanh** (phối cảnh, 11/9/2026): chậu cây khai ở `planters` (tâm chậu), bồn hoa xây áp tường ở `flowerBeds` (tuyến
+tường — phía bồn suy từ phía có sân, lưng bồn là mặt tường), cây bóng mát ở `trees` (tâm gốc; tán không được vươn ra ngoài
+lô). Cỡ chậu, bồn, ô gốc, tán ở `GARDEN`; hình học suy ở `lib/envelope.js`. 3D chỉ dựng khối tượng trưng: chậu và thân cây
+trụ đứng, tán cây và khóm hoa hình bầu (`shape:'ball'`). `3d.md` mục 3f.
 Lý do của từng lựa chọn nằm ở `3d.md` — đọc trước khi sửa.
 
 ## Hướng

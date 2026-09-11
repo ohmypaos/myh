@@ -151,13 +151,21 @@ export function init(){
      kiểm dùng — thiên về an toàn. */
   function cylinder(b, material, kind){
     const g = new THREE.CylinderGeometry(0.5, 0.5, 1, 24);
-    g.rotateZ(Math.PI / 2);                                    // trục mặc định đứng → nằm theo x
+    if (b.along !== 'y') g.rotateZ(Math.PI / 2);               // trục mặc định đứng (chậu cây) → nằm theo x
     if (b.along === 'z') g.rotateY(Math.PI / 2);
     const m = new THREE.Mesh(g, material);
     m.scale.set(b.w, b.y1 - b.y0, b.d);        // hộp bao chính là bao của hình trụ, co giãn thẳng vào là khớp
     m.position.set(b.x + b.w / 2, (b.y0 + b.y1) / 2, b.z + b.d / 2);
     m.castShadow = m.receiveShadow = true;
     if (kind) m.userData.kind = kind;
+    return m;
+  }
+
+  /* Khối bầu — tán cây, khóm hoa (`shape:'ball'`): mặt cầu co giãn đúng hộp bao, dùng chung một hình học. */
+  const UNIT_BALL = new THREE.SphereGeometry(0.5, 16, 12);
+  function ball(b, material, kind){
+    const m = box(b, material, kind);
+    m.geometry = UNIT_BALL;
     return m;
   }
 
@@ -188,7 +196,7 @@ export function init(){
   function build(plan){
     if (group) {
       scene.remove(group);
-      group.traverse(o => { if (o.isMesh && o.geometry !== UNIT_BOX) o.geometry.dispose(); });
+      group.traverse(o => { if (o.isMesh && o.geometry !== UNIT_BOX && o.geometry !== UNIT_BALL) o.geometry.dispose(); });
     }
     const massing = buildMassing(plan, { doorsOpen });
     LEVELS = massing.levels;
@@ -196,7 +204,8 @@ export function init(){
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes) {
-      const mesh = b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind);
+      const mesh = b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind)
+                 : b.shape === 'ball' ? ball(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind);
       if (LAMP_KINDS.has(b.kind)) { mesh.castShadow = false; mesh.userData.id = b.id; }
       group.add(mesh);
     }

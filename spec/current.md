@@ -1,11 +1,11 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 21:59:13 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 23:05:16 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu. Cầu thang chữ U lên mái ở chỗ phòng thờ cũ, thông với phòng khách qua bức lửng; tum xây gọn che đầu thang, một cửa ra thẳng mái, lan can thép quanh mép mái kể cả mái hiên trước — chuẩn bị cho tầng 2 sau khoảng 5 năm. Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông.
+Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu. Cầu thang chữ U lên mái ở chỗ phòng thờ cũ, thông với phòng khách qua bức lửng; tum xây gọn che đầu thang, một cửa ra thẳng mái, lan can thép quanh mép mái kể cả mái hiên trước — chuẩn bị cho tầng 2 sau khoảng 5 năm. Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông. Cây xanh: hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái sân phụ, hai chậu cây ở ban công sau, hai cây bóng mát ở góc sân chính phía cổng.
 
 ---
 
@@ -230,6 +230,32 @@ Giàn phơi trụ thép hộp 50 × 50 sơn tĩnh điện, đầu chữ V chìa 
 | Mã | Sân | Trục | Tim tuyến | Từ | Đến | Dài tuyến | Hai thanh ở | Tổng dây phơi |
 |---|---|---|---:|---:|---:|---:|---|---:|
 | GP1 | SÂN PHƠI / GIẶT | ngang | 29.35 | 6.30 | 7.75 | 1.45 m | y 29.10 · 29.60 | 2.90 m |
+
+### Cây xanh
+
+Phối cảnh ngoài sân. Mô hình 3D chỉ dựng khối tượng trưng — chậu trụ tròn, thân trụ, tán cây hình bầu — để cảm tỉ lệ và thấy bóng đổ.
+
+**Cây bóng mát** — cây bóng mát tán gọn (bàng Đài Loan, lộc vừng), ô gốc 1.0 × 1.0 bó vỉa gạch cao 150. Thân Ø 0.25; tán Ø 3.30 dày 2.80 m, mặt dưới tán cao 2.50 m trên mặt sân — đi lại, dắt xe máy dưới tán không vướng cành. Tán không vươn ra ngoài lô. Ô gốc 1.00 × 1.00 m bó vỉa cao 0.15 m.
+
+| Mã | Sân | Tâm gốc x | Tâm gốc y | Tán x₁ · y₁ · x₂ · y₂ | Đỉnh tán cốt | Ghi chú |
+|---|---|---:|---:|---|---:|---|
+| CX1 | SÂN CHÍNH | 7.85 | 1.75 | 6.20 · 0.10 · 9.50 · 3.40 | 5.30 | Góc sân chính phía cổng — sát rào mặt tiền, tán tới đúng ranh lô phải và ranh mặt tiền |
+| CX2 | SÂN CHÍNH | 7.85 | 5.05 | 6.20 · 3.40 · 9.50 · 6.70 | 5.30 | Sân chính dọc rào phải — tán nối liền CX1, dừng trước dải sân trống trước mái sân chính |
+
+**Chậu cây** — chậu gốm / xi măng Ø400 cao 450, cây cảnh dáng đứng. Chậu Ø 0.40 cao 0.45 m; tán Ø 0.44, cao 0.80 m trên miệng chậu.
+
+| Mã | Sân | Tâm x | Tâm y | Đỉnh tán cốt | Ghi chú |
+|---|---|---:|---:|---:|---|
+| CC1 | SÂN PHỤ | 0.355 | 11.59 | 1.25 | Trái bậc cửa chính D1 — giữa mặt tường trái sân phụ và mép bậc, dưới mái hiên |
+| CC2 | SÂN PHỤ | 4.645 | 11.59 | 1.25 | Phải bậc cửa chính D1 — đối xứng CC1 qua trục cửa x = 2.5, dưới mái hiên |
+| CC3 | BAN CÔNG SAU | 0.355 | 29.64 | 1.70 | Ban công sau — góc trái sát rào sau, dưới trần ban công |
+| CC4 | BAN CÔNG SAU | 4.645 | 29.64 | 1.70 | Ban công sau — góc phải sát rào sau, cạnh cửa D13, ngoài vùng quét cánh |
+
+**Bồn hoa xây** — bó vỉa gạch 100 trát vữa cao 250, lưng áp tường có chống thấm, lỗ thoát nước chân bồn. Rộng 0.50 m tính từ mặt tường, mép bó vỉa cao 0.25 m trên mặt sân, mặt đất trồng thấp hơn mép 0.05 m; khóm hoa chia đều dọc bồn, bước chừng 0.50 m.
+
+| Mã | Sân | Áp tường | Từ | Đến | Dài | Chiếm x₁ · y₁ · x₂ · y₂ | Khóm hoa | Ghi chú |
+|---|---|---|---:|---:|---:|---|---:|---|
+| BH1 | SÂN PHỤ | x = 0.00 | 0.25 | 10.69 | 10.44 m | 0.11 · 0.25 · 0.61 · 10.69 | 20 | Dọc tường bao trái sân phụ, từ sau trụ cổng tới mép mái hiên — hứng mưa trọn |
 
 ### Tường xây lên hết chiều cao nhà
 
@@ -459,6 +485,10 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 
 **Đèn — chốt vị trí đèn trần trước khi đổ mái.** Bản mái bê tông đổ thẳng, không trần giả, nên ống luồn dây và hộp đấu đèn phải **đặt sẵn trong bản mái** đúng toạ độ đèn trần trước khi đổ; đổ xong mới dời đèn là phải đục bản hoặc đi ống nổi. Dưới mái tôn thì dây chạy dọc xà gồ, dầm, dời lúc nào cũng được. **Công tắc:** 14 bảng, 25 cụm đèn, mỗi hạt một cụm. Bảng cạnh cửa đặt phía then cửa, tâm cao 1.25 m; hai phòng ngủ có thêm bảng ở đầu giường cao 0.75. **Hai chiều** ở cầu thang (chân thang — trong tum), hành lang (hai đầu), đèn trần và đèn đầu giường hai phòng ngủ (cửa — đầu giường), sân chính (cửa D2 — cửa D9), hành lang ngoài (cửa D9 — cửa D10): mỗi cụm hai chiều cần đi thêm dây giữa hai bảng, báo thợ điện trước khi đổ mái. Đèn ngoài sân bật từ trong nhà: cổng và hiên ở cửa chính, sân phơi và sân giếng ở cửa D10. Công tắc WC khách ở ngoài trời dưới mái sân phơi — dùng mặt có nắp che nước. Đèn cổng, sân giếng nên thêm cảm biến chuyển động. Ánh sáng **3000 K** (vàng ấm) cho phòng ngủ, phòng khách; **4000 K** cho bếp, WC, bàn làm việc. Đèn ngoài trời đều **IP65** — mái sân chính và hành lang ngoài hứng mưa tạt; hai WC dùng đèn chống ẩm. Phòng ngủ 1 không có cửa sổ ra trời nên **ban ngày cũng phải bật đèn**, bếp ngày âm u cũng vậy. **Độ rọi trong đặc tả là số tính** theo phương pháp quang thông, sai chừng ±20%, không phải đo — mua đèn thì so quang thông (lm) ghi trên hộp chứ đừng so công suất (W). Đèn thả trên bàn trà đáy chao cách nền 2.10 m, không đụng đầu nhưng ở ngoài trời, gió lùa là đung đưa: chọn chao nặng hoặc cần treo cứng. Hai đèn trên tường tum dỡ theo tum khi xây tầng 2 — để sẵn dây chờ.
 
+**Cây xanh sân phụ.** Bồn hoa BH1 lấy tường rào trái làm lưng: **chống thấm mặt trong tường** lên cao hơn mặt đất trồng trước khi đổ đất — không thì tường ẩm, rêu, bong sơn; chân bó vỉa chừa **lỗ thoát nước** ra sân, đáy bồn lót sỏi. Bồn cao 0.25, khóm hoa chừng 0.6 m — thấp hơn phần rào xây đặc 0.80, nên **không che được tầm nhìn từ lô bên cạnh** qua lan can; muốn kín thì trồng dây leo bám lan can. Cánh cổng trái mở ra nằm cách mép bồn 9 cm — đừng để cây bò tràn ra mép. Hai chậu CC1, CC2 nằm dưới mái hiên nên **không hứng mưa, phải tưới tay**, và chỉ có nắng sáng xiên (mặt tiền Đông Bắc, hiên đua 1.2 m) — chọn cây chịu bóng bán phần, dáng đứng. Chậu cách mép bậc chỉ 4 cm: mua chậu miệng không quá Ø0.40, tán không chồm lên bậc. Hai chậu ban công CC3, CC4 cũng dưới trần ban công, tưới tay; ban công quay Tây Nam, nắng chiều gắt — chọn cây chịu nắng nóng.
+
+**Hai cây bóng mát CX1, CX2 che nắng buổi sáng, không che nắng chiều.** Chúng đứng ở góc Đông của sân chính. Tính bóng của tâm tán (cao 3.9 m) theo đường đi của nắng: hạ chí bóng rơi vào sân chính từ khoảng 8 h tới 13 h, thu phân 10 h – 14 h, đông chí chỉ quanh trưa; **từ 14 h trở đi bóng đổ sang lô bên phải và ra ngõ**. Nắng chiều Tây Nam của sân chính vốn đã bị khối nhà và mái sân chính chặn phần lớn. Muốn bóng mát buổi chiều thì cây phải đứng phía Tây Nam chỗ cần che — trong lô này là sân phơi, nơi cố ý giữ nắng. Tán Ø3.30 chạm đúng ranh lô phải và ranh mặt tiền: **phải tỉa giữ cỡ** hằng năm, không thì cành vươn sang đất bên cạnh và ra ngõ. Chọn cây tán gọn, rễ ăn sâu, không rễ nổi — bàng Đài Loan, lộc vừng; tránh cây rễ mạnh (đa, si, bàng ta) cách móng rào chỉ 1 m và móng nhà. Mặt dưới tán 2.50 m: dắt xe máy, đi lại dưới tán không vướng, nhưng xe tải cao không vào góc đó được. Lá rụng xuống mái sân chính và máng xối mép trước ở `y` 12 — cách mép tán CX2 5.3 m nên ít, vẫn nên vét máng mùa lá rụng.
+
 **Sơn chống nóng tường trái — không đổi hình khối, đừng quên:** sơn mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo.
 
 **Lớp chống nóng mái — chỗ đáng tiền nhất** (mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái). XPS được che kín thì bền cỡ 30–50 năm; thứ hỏng trước là lớp chống thấm, nên khi thi công: chống thấm nằm **dưới** XPS, không khò bitum nóng hay sơn gốc dầu; lát tấm ngay, không để XPS phơi nắng; mua đúng XPS ô kín, không phải xốp trắng EPS; tạo dốc từ lớp dưới cho nước không đọng dưới tấm; quanh mọi lỗ trên mái xây gờ cao hơn mặt lát. Dột thì nhấc tấm và gỡ XPS là tới được lớp chống thấm — đó chính là cái lợi của lát rời.
@@ -467,7 +497,7 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 
 ## 10. Kết quả bộ kiểm tra
 
-**Sạch — qua toàn bộ 17 phép kiểm.**
+**Sạch — qua toàn bộ 18 phép kiểm.**
 
 1. Cột trái lấp kín phần lô của nó, không hở không chồng
 2. Cột phải lấp kín phần lô còn lại
@@ -486,6 +516,7 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần; cột đỡ mái nằm trong lô, dưới một mái nhẹ, không đứng giữa nội thất
 16. Cầu thang lên mái: vế và chiếu nghỉ khớp lỗ thang, cao bậc và mặt bậc trong giới hạn, nằm gọn trong phòng, không vướng nội thất hay cánh cửa; có tum trùm kín lỗ thang, cửa tum trên vách; có lan can mép mái đứng trên mái bê tông
 17. Đèn: mã không trùng, đúng loại; đèn trần có trần hay mái bên trên để gắn, không treo trên lỗ thang; đèn tường nằm trên tường có thật, không đè lỗ cửa; phòng nào cũng có đèn; phòng khai ngưỡng độ rọi thì đèn trần đạt ngưỡng; khai công tắc thì đèn nào cũng thuộc đúng một cụm, cụm nào cũng có hạt công tắc, bảng công tắc trên tường thật, không đè lỗ cửa, không quá số hạt
+18. Cây xanh: chậu cây, bồn hoa, ô gốc cây bóng mát nằm gọn trong lọt lòng một cái sân, không đè phòng kín; tán cây không vươn ra ngoài lô; bồn hoa áp trọn một bức tường, không chắn cửa hay cổng; không chồng bậc, nội thất, giàn phơi, cột, trụ cổng, không nằm trong vùng quét cánh cửa hay cánh cổng, không chồng nhau
 
 ---
 
@@ -553,3 +584,6 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 - **Bỏ giếng trời hành lang SK1, hai cửa trời SK2, SK3 và ô thoáng WC chung SK4** — xây tầng 2 là phải bịt; mái bê tông không còn lỗ nào ngoài lỗ thang. WC chung dùng quạt hút nối ống lên mái. Phòng ngủ 1 lấy gió, sáng qua **hai ô thoáng nhỏ W5, W6** (0.40 × 0.30 m, bệ 2.40) ra buồng thang, dồn về phía cửa PN1 — **cánh kính mờ lật cố định** ngả vào phòng, người bên thang đứng thấp hơn bệ chỉ nhìn thấy trần. Thay ô kính cố định và ô lật to đã thử, nhìn vào dễ quá
 - **Hệ đèn 40 bộ, khoảng 630 W** — **ốp nổi** vì nhà chính đổ bản bê tông thẳng, không trần giả (trừ WC khách). Phòng khách 4 đèn Ø400 lưới 2 × 2; mỗi phòng ngủ một đèn Ø500 cộng hai đèn tường đọc sách đầu giường, master thêm downlight trên bàn làm việc và ở lối vào; bếp 3 đèn Ø500 dọc phòng cộng đèn rọi mặt bếp và chậu rửa; hành lang 3 downlight; hai WC đèn chống ẩm cộng đèn gương; cầu thang đèn tường ở chiếu nghỉ và trên lanh tô cửa tum, công tắc hai chiều. Ngoài trời đèn IP65: giằng cổng, mái hiên, trần ban công, mái sân chính (kèm **đèn thả trên bàn trà**), hành lang ngoài, mái sân phơi, sân giếng, cạnh cửa tum trên mái. Độ rọi chung tính theo phương pháp quang thông — mọi phòng khai ngưỡng đều đạt
 - **14 bảng công tắc, 25 cụm đèn** — mỗi hạt bật / tắt một cụm, đèn nào cũng thuộc đúng một cụm. Bảng đặt cạnh cửa phía then cửa, tâm cao 1.25 m; hai phòng ngủ thêm bảng đầu giường 0.75 m. Công tắc hai chiều ở cầu thang, hành lang, đèn trần và đầu giường hai phòng ngủ, sân chính, hành lang ngoài. Trên bản vẽ 2D và mô hình 3D bấm được từng hạt để bật / tắt cụm đèn
+- **Cây xanh sân phụ** (phối cảnh) — **hai chậu cây** Ø0.40 hai bên bậc cửa chính, đặt giữa khe 0.49 m giữa mặt tường và mép bậc, đối xứng qua trục cửa, dưới mái hiên; **bồn hoa xây** dọc tường bao trái sân phụ phía nhà chính, từ sau trụ cổng (`y` 0.25) tới mép mái hiên (`y` 10.69): rộng 0.50 m, mép bó vỉa cao **0.25 m** trên mặt sân, đất thấp hơn mép 0.05, 20 khóm hoa. Sân phụ còn 4.28 m lọt lòng cho lối vào và đỗ xe
+- **Hai chậu cây ban công sau** — Ø0.40 ở hai góc sát rào sau, để trống giữa ban công và trước cửa lùa D12 cho chỗ ngồi; chậu cạnh D13 đứng ngoài vùng quét cánh
+- **Hai cây bóng mát ở góc sân chính phía cổng** — dọc rào phải, tâm gốc `x` 7.85, `y` 1.75 và 5.05; tán Ø3.30 nối liền thành dải bóng 6.6 m, tới đúng ranh lô phải và ranh mặt tiền, không vươn ra ngoài; mặt dưới tán cao 2.50, đỉnh 5.30; ô gốc 1 × 1 m bó vỉa cao 0.15. Bóng tán rơi vào sân chính từ khoảng 8 h tới 13 h mùa hè

@@ -10,10 +10,11 @@
  */
 import { PLANS } from '../lib/versions/index.js';
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palette.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
-import { buildMassing, levels } from '../lib/massing.js';
+import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
+import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf,
+         plantersOf, flowerBedsOf, treesOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -86,6 +87,7 @@ const CHECKS = [
   'Màu và nhóm ẩn mái: mọi loại khối massing.js sinh ra đều có màu khai trong components/palette.js (thiếu thì âm thầm tô màu tường), và mọi khối đứng từ cốt mặt mái trở lên đều nằm trong nhóm bị nút "Ẩn mái" giấu',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
   'Đèn: mỗi đèn khai có đúng khối ở đúng tâm; đèn trần áp đúng mặt dưới vật che ngay trên, đáy cách sàn ít nhất 2 m, đèn thả đáy chao đúng cốt; đèn tường lưng áp mặt tường và sau lưng là tường thật; bảng công tắc đúng một khối, lưng áp tường thật',
+  'Cây xanh: mỗi chậu đúng một thân chậu đứng trên cốt sân, đúng tâm và cao khai, có cây cắm gốc vào miệng chậu; bồn hoa có bó vỉa từ cốt sân lên đúng mép khai, đất thấp hơn mép đúng cấu tạo, mặt bằng bồn kín không hở không chồng, lưng đất áp tường thật, có khóm hoa đứng trên đất; cây bóng mát có ô gốc kín bó vỉa đúng cốt, một thân đúng tâm cắm từ đất lên lọt vào tán, tán đúng tâm và mặt dưới tán không thấp hơn khoảng thông thiết kế',
 ];
 
 function check(plan){
@@ -123,7 +125,9 @@ function check(plan){
   const design = Math.max(walkTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet),
                           ...gateRoofsOf(plan).filter(r => !r.error).map(r => r.ridge + r.tile),
                           plan.tum ? walkTop + TUM.clear + ROOF.sheet : 0,
-                          plan.roofRailings?.length ? walkTop + ROOF_RAILING.height : 0);
+                          plan.roofRailings?.length ? walkTop + ROOF_RAILING.height : 0,
+                          /* Cây bóng mát đứng trên sân: cốt sân 0 cộng số khai (GARDEN.tree). */
+                          plan.trees?.length ? GARDEN.tree.clear + GARDEN.tree.crownHeight : 0);
   for (const b of all)
     if (b.y1 > design + EPS)
       e.push(`hộp ${b.kind} cao ${n(b.y1)} > đỉnh thiết kế ${n(design)}`);
@@ -297,6 +301,8 @@ function check(plan){
     for (let j = i + 1; j < solid.length; j++) {
       const a = solid[i], b = solid[j];
       if (movable(a) && movable(b)) continue;
+      /* Gốc cây cắm vào chậu, khóm hoa cắm xuống đất — cây mềm, chồng nhau là chuyện thật (lib/massing.js). */
+      if (GARDEN_KINDS.has(a.kind) && GARDEN_KINDS.has(b.kind)) continue;
       const ov = penetration(a, b);
       const bad = a.axis || b.axis ? ov > 1e-4 : ov > 1e-6;
       if (bad && clashes++ < 3)
@@ -1253,6 +1259,91 @@ function check(plan){
     wallBacked(p, mine[0], 'bảng công tắc');
   }
   if (plateBoxes.length !== plateList.length) e.push(`dựng ${plateBoxes.length} bảng công tắc, khai ${plateList.length}`);
+
+  /* 26 — cây xanh, lấy từ khối đã dựng; cốt sân lấy từ phòng chứa, không từ số envelope.js tính.
+     a) chậu: đúng một thân chậu, đứng trên cốt sân, đúng tâm khai, cao đúng GARDEN.pot.height; có một tán cây mà gốc
+        nằm **trong** thân chậu và ngọn vượt miệng chậu — không thì cây lơ lửng hoặc bị chôn;
+     b) bồn hoa: bó vỉa đứng từ cốt sân lên đúng mép, đất thấp hơn mép đúng `soil`; lưới điểm trên hình chiếu bồn —
+        mỗi điểm nằm trong **đúng một** khối đất hoặc bó vỉa (hở là đất tràn ra sân, chồng là hai khối trùng mặt);
+        ngay sau mặt lưng đất là tường thật — bồn "áp tường" mà sau lưng là khoảng trống thì đất đổ ra ngoài;
+        mọi khóm hoa đứng trên lòng đất. */
+  for (const p of plantersOf(plan)) {
+    if (p.errors.length) continue;                               // validate() đã báo
+    const room = plan.rooms.find(r => r[0] === p.room), base = floorOf(plan, room, H.floor);
+    const mine = m.boxes.filter(b => b.id === p.id);
+    const pots = mine.filter(b => b.kind === 'planter');
+    if (pots.length !== 1) { e.push(`chậu cây ${p.id} dựng ${pots.length} thân chậu, cần 1`); continue; }
+    const pot = pots[0];
+    if (Math.abs(pot.y0 - base) > EPS || Math.abs(pot.y1 - pot.y0 - GARDEN.pot.height) > EPS)
+      e.push(`chậu cây ${p.id} ở cốt ${n(pot.y0)}–${n(pot.y1)}, cần đứng trên sân ${n(base)} và cao ${GARDEN.pot.height}`);
+    if (Math.abs(pot.x + pot.w / 2 - p.x) > EPS || Math.abs(pot.z + pot.d / 2 - p.y) > EPS)
+      e.push(`chậu cây ${p.id} dựng lệch tâm khai (${n(p.x)}, ${n(p.y)})`);
+    const rooted = mine.some(q => q.kind === 'plant'
+      && q.x + q.w / 2 > pot.x && q.x + q.w / 2 < pot.x + pot.w && q.z + q.d / 2 > pot.z && q.z + q.d / 2 < pot.z + pot.d
+      && q.y0 > pot.y0 + EPS && q.y0 < pot.y1 - EPS && q.y1 > pot.y1 + EPS);
+    if (!rooted) e.push(`chậu cây ${p.id} không có cây cắm gốc vào miệng chậu`);
+  }
+  for (const bd of flowerBedsOf(plan)) {
+    if (bd.errors.length) continue;
+    const room = plan.rooms.find(r => r[0] === bd.room), base = floorOf(plan, room, H.floor);
+    const mine = m.boxes.filter(b => b.id === bd.id);
+    const curbs = mine.filter(b => b.kind === 'bedCurb'), soils = mine.filter(b => b.kind === 'soil');
+    const top = base + GARDEN.bed.height, soilTop = top - GARDEN.bed.soil;
+    if (!curbs.length || curbs.some(c => Math.abs(c.y0 - base) > EPS || Math.abs(c.y1 - top) > EPS))
+      e.push(`bó vỉa bồn hoa ${bd.id} không đứng từ sân ${n(base)} lên mép ${n(top)}`);
+    if (soils.length !== 1 || Math.abs(soils[0].y1 - soilTop) > EPS)
+      { e.push(`bồn hoa ${bd.id} dựng ${soils.length} khối đất, cần 1 với mặt đất cốt ${n(soilTop)}`); continue; }
+    const face = bd.pos + bd.dir * wallThickness(plan, bd.ax, bd.pos, bd.a, bd.b) / 2;
+    const at = (u, t) => (bd.ax === 'h' ? [u, face + bd.dir * t] : [face + bd.dir * t, u]);
+    const inBox = (b, px, pz) => px > b.x - EPS && px < b.x + b.w + EPS && pz > b.z - EPS && pz < b.z + b.d + EPS;
+    /* Dọc bồn: hai điểm giữa hai bó vỉa đầu cộng 21 điểm đều — chỉ lấy điểm đều thì bó vỉa đầu mỏng 0.10 lọt giữa hai
+       điểm, bỏ hẳn nó mà vẫn sạch (đã vấp khi phá thử). */
+    const us = [bd.a + GARDEN.bed.curb / 2, bd.b - GARDEN.bed.curb / 2,
+                ...Array.from({ length: 21 }, (_, i) => bd.a + (bd.b - bd.a) * (i + 0.5) / 21)];
+    let bad = null;
+    for (const u of us) for (let j = 0; j < 7 && !bad; j++) {
+      const [px, pz] = at(u, GARDEN.bed.width * (j + 0.5) / 7);
+      const k = [...curbs, ...soils].filter(b => inBox(b, px, pz)).length;
+      if (k !== 1) { bad = `${k ? 'chồng' : 'hở'} ở x ${n(px)}, z ${n(pz)}`; break; }
+    }
+    if (bad) e.push(`mặt bằng bồn hoa ${bd.id} ${bad}`);
+    const back = [0.1, 0.5, 0.9].map(f => at(bd.a + (bd.b - bd.a) * f, -0.01))
+      .find(([px, pz]) => !wallish.some(w => inBox(w, px, pz) && base + GARDEN.bed.height / 2 >= w.y0 - EPS && base + GARDEN.bed.height / 2 <= w.y1 + EPS));
+    if (back) e.push(`bồn hoa ${bd.id} không áp tường — sau lưng ở x ${n(back[0])}, z ${n(back[1])} không có tường`);
+    const clumps = mine.filter(b => b.kind === 'plant');
+    if (!clumps.length) e.push(`bồn hoa ${bd.id} không có khóm hoa nào`);
+    else if (clumps.some(c => !inBox(soils[0], c.x + c.w / 2, c.z + c.d / 2) || c.y0 > soilTop + EPS))
+      e.push(`bồn hoa ${bd.id} có khóm hoa không đứng trên lòng đất`);
+  }
+  /* c) cây bóng mát: ô gốc — lưới 9 × 9 điểm, mỗi điểm đúng một khối đất hoặc bó vỉa (điểm sát mép rơi vào bó vỉa
+        0.10), bó vỉa đúng cốt; một thân đúng tâm, chân không cao hơn mặt đất, ngọn lọt vào trong tán; tán đúng tâm,
+        mặt dưới tán cách sân không dưới GARDEN.tree.clear — tán thấp là người đi dưới vướng cành. */
+  for (const t of treesOf(plan)) {
+    if (t.errors.length) continue;
+    const T = GARDEN.tree, room = plan.rooms.find(r => r[0] === t.room), base = floorOf(plan, room, H.floor);
+    const mine = m.boxes.filter(b => b.id === t.id);
+    const curbs = mine.filter(b => b.kind === 'bedCurb'), soils = mine.filter(b => b.kind === 'soil');
+    const trunks = mine.filter(b => b.kind === 'trunk'), crowns = mine.filter(b => b.kind === 'plant');
+    const soilTop = base + T.pitHeight - T.soil;
+    if (!curbs.length || curbs.some(c => Math.abs(c.y0 - base) > EPS || Math.abs(c.y1 - base - T.pitHeight) > EPS))
+      e.push(`bó vỉa ô gốc cây ${t.id} không đứng từ sân ${n(base)} lên ${n(base + T.pitHeight)}`);
+    if (soils.length !== 1 || Math.abs(soils[0].y1 - soilTop) > EPS)
+      e.push(`ô gốc cây ${t.id} dựng ${soils.length} khối đất, cần 1 với mặt đất cốt ${n(soilTop)}`);
+    let hole = null;
+    for (let i = 0; i < 9 && !hole; i++) for (let j = 0; j < 9; j++) {
+      const px = t.x - T.pit / 2 + T.pit * (i + 0.5) / 9, pz = t.y - T.pit / 2 + T.pit * (j + 0.5) / 9;
+      const k = [...curbs, ...soils].filter(b => px > b.x - EPS && px < b.x + b.w + EPS && pz > b.z - EPS && pz < b.z + b.d + EPS).length;
+      if (k !== 1) { hole = `${k ? 'chồng' : 'hở'} ở x ${n(px)}, z ${n(pz)}`; break; }
+    }
+    if (hole) e.push(`ô gốc cây ${t.id} ${hole}`);
+    const centred = b => Math.abs(b.x + b.w / 2 - t.x) < EPS && Math.abs(b.z + b.d / 2 - t.y) < EPS;
+    if (crowns.length !== 1 || !centred(crowns[0])) { e.push(`cây ${t.id} dựng ${crowns.length} tán, cần 1 đúng tâm gốc`); continue; }
+    const crown = crowns[0];
+    if (crown.y0 - base < T.clear - EPS) e.push(`tán cây ${t.id} cách sân ${n(crown.y0 - base)} m, dưới khoảng thông ${T.clear}`);
+    if (trunks.length !== 1 || !centred(trunks[0])) e.push(`cây ${t.id} dựng ${trunks.length} thân, cần 1 đúng tâm gốc`);
+    else if (trunks[0].y0 > soilTop + EPS || trunks[0].y1 <= crown.y0 + EPS || trunks[0].y1 >= crown.y1)
+      e.push(`thân cây ${t.id} ở cốt ${n(trunks[0].y0)}–${n(trunks[0].y1)} không nối từ đất (${n(soilTop)}) vào trong tán`);
+  }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

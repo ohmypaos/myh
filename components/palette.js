@@ -23,6 +23,12 @@ export const COLORS = {
   rack:        0x6a716e,     // trụ giàn phơi, cùng màu giá bồn
   rackArm:     0x6a716e,     // tay chìa chéo trên đầu trụ giàn phơi
   rackBar:     0xc6cacb,     // thanh phơi inox
+  planter:     0xa9644a,     // chậu cây — nâu đất nung
+  bedCurb:     0xd9d3c4,     // bó vỉa bồn hoa trát vữa, cùng tông rào xây
+  soil:        0x6f5a45,     // đất trồng trong bồn hoa
+  plant:       0x5f8f4a,     // tán cây, khóm hoa
+  bloom:       0xd8577e,     // chùm hoa trên khóm
+  trunk:       0x6b5440,     // thân cây bóng mát
   fenceWall:   0xd9d3c4,
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,
