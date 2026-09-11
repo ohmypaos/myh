@@ -46,6 +46,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A16 | WC chung 1.6 × 2.0 m cửa cánh mở vào, gioăng kín mùi; kho cũ thành phòng thay đồ/kho Master 2.4 × 2.0 m | ✅ xong | Hai tủ cao 2.0 m chữ L; vách nhựa kín trần, cửa cánh 0.80 m mở về Master; bỏ tủ âm PN1 |
 | A17 | Vách ngăn nội bộ phòng thờ, phòng ngủ, hành lang và WC chung là vách nhựa tới trần | ✅ xong | Không chịu lực; tường bao và vách tiếp xúc sân/mưa vẫn xây |
 | A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
+| A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -536,6 +537,22 @@ sửa dòng bếp. Tên phòng giữ "BẾP + NHÀ ĂN".
 - [x] Giữ nguyên RF3, hệ máng xối và năm cột đỡ hiện hữu; `check-3d` qua đủ phép kết cấu.
 
 ---
+
+### ✅ A19 · Gộp mái hành lang ngoài vào mái bếp
+
+Chủ nhà hỏi (11/9/2026) có nên gộp mái bếp với mái che hành lang; bảo thử. Lý do chính: bỏ đường áp mái
+hành lang thấp (3.50–3.85) vào đầu hồi bếp dài 7 m. Cái giá: mưa tạt vào hành lang, cột C4 ~4.7 m. `3d.md`
+mục 3, 3a.
+
+- [x] `RF2` phủ `x` 5–9.5, bỏ `RF4`; trần tôn vẫn chỉ trong bếp (R3 hở)
+- [x] `beamLines()`: hai mái chung đường mép mà **lệch cao độ** thì mỗi mái một dầm, nằm hẳn về phía mái
+      mình — trước đó chỉ giữ dầm của mái đầu tiên, mép mái bếp hẫng 0.95 m (phép 18 báo)
+- [x] C3, C5 lùi 5 cm vào hẳn dưới mái bếp (`y` 18.05, 24.95) để lên tới dầm mái bếp — đứng giữa ranh thì đỉnh
+      cột dừng ở đáy dầm mái thấp, đầu dầm mái bếp không gối vào đâu (phép 18 báo)
+- [x] `roofPanels()` kéo các mảnh đua cùng một mép thẳng hàng — trước gãy bậc 0.11 m ở `x = 8.55`
+- [x] Phần trời lỗ bếp: W2, D9, D10 không đổi, W3 nhích lên (3d.md mục 3)
+- [x] `note`, `changes`, `warn`, `npm run spec`, `npm run check` sạch
+- [x] Chủ nhà chốt, commit
 
 ## B · Mô hình 3D
 

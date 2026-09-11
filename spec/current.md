@@ -1,11 +1,11 @@
-# Đặc tả mặt bằng — Hiện hành — lớp chống nóng mái XPS
+# Đặc tả mặt bằng — Hiện hành — mái bếp trùm hành lang ngoài
 
-> Sinh tự động từ `lib/versions/current.js` lúc 14:43:21 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 15:09:54 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Ban công sau 2.0 m, bếp chữ L. Bếp lợp tôn hai mái (thay bản bê tông); mái sân chính 4.5 × 6 m, mái hành lang ngoài và mái sân phơi là một dải tôn liền vòng quanh bếp. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu.
+Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu.
 
 ---
 
@@ -126,9 +126,8 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | Mã | Tên | Vùng khai | Tấm mái dựng | Dạng | Cao độ mặt dưới | Vật liệu |
 |---|---|---|---|---|---|---|
 | RF1 | MÁI SÂN CHÍNH | 5.0 · 12.0 · 9.5 · 18.0 | 5.11 · 12.00 · 9.61 · 18.00 | dốc một mái theo y (dốc 10%) | 2.90 → 3.50 | tôn cách nhiệt |
-| RF2 | MÁI BẾP | 5.0 · 18.0 · 8.5 · 25.0 | 5.11 · 17.69 · 8.55 · 25.31 | hai mái, nóc theo y ở 21.5 (dốc 30%) | 3.75 → 4.80 | tôn cách nhiệt |
+| RF2 | MÁI BẾP + HÀNH LANG | 5.0 · 18.0 · 9.5 · 25.0 | 5.11 · 17.69 · 9.61 · 25.31 | hai mái, nóc theo y ở 21.5 (dốc 30%) | 3.75 → 4.80 | tôn cách nhiệt |
 | RF3 | MÁI SÂN PHƠI | 5.0 · 25.0 · 9.5 · 28.0 | 5.11 · 25.00 · 9.61 · 28.00 | dốc một mái theo y (dốc 10%) | 3.50 → 3.20 | tôn cách nhiệt |
-| RF4 | MÁI HÀNH LANG | 8.5 · 18.0 · 9.5 · 25.0 | 8.55 · 18.00 · 9.61 · 25.00 | hai mái, nóc theo y ở 21.5 (dốc 10%) | 3.50 → 3.85 | tôn cách nhiệt |
 
 - RF2 có **trần tôn cốt 3.75** — BẾP + NHÀ ĂN không đổ mái bê tông; cách sàn phòng 3.60 m
 
@@ -153,9 +152,9 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 |---|---:|---:|---:|---|---|
 | C1 | 9.50 | 12.00 | 2.80 | RF1 | có |
 | C2 | 9.50 | 15.00 | 3.09 | RF1 | có |
-| C3 | 9.50 | 18.00 | 3.40 | RF1, RF4 | có |
-| C4 | 9.50 | 21.50 | 3.75 | RF4 | có |
-| C5 | 9.50 | 25.00 | 3.40 | RF3, RF4 | có |
+| C3 | 9.50 | 18.05 | 3.65 | RF2 | có |
+| C4 | 9.50 | 21.50 | 4.68 | RF2 | có |
+| C5 | 9.50 | 24.95 | 3.65 | RF2 | có |
 
 **Dầm biên** — thép hộp 50 × 100, suy ra dọc mọi đoạn mép mái nhẹ không tựa lên tường cao tới mái, từ mặt tường tới mặt tường, đi qua đầu cột. Mặt trên chạm mặt dưới mái (dầm dọc chiều dốc nghiêng theo mái); ở mép có máng thì dầm lùi vào sau máng, đoạn chui dưới máng hạ xuống đáy máng.
 
@@ -164,11 +163,13 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF1 | y = 12.00 | 5.11 | 9.47 | 4.36 | 2.91 → 2.91 |  |
 | RF1 | y = 18.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
 | RF1 | x = 9.50 | 12.00 | 18.00 | 6.00 | 2.90 → 3.50 | nghiêng theo mái |
+| RF2 | y = 18.00 | 8.55 | 9.47 | 0.92 | 3.75 → 3.75 |  |
+| RF2 | y = 25.00 | 8.55 | 9.47 | 0.92 | 3.75 → 3.75 |  |
+| RF2 | x = 9.50 | 18.00 | 21.50 | 3.50 | 3.75 → 4.80 | nghiêng theo mái |
+| RF2 | x = 9.50 | 21.50 | 25.00 | 3.50 | 4.80 → 3.75 | nghiêng theo mái |
 | RF3 | y = 25.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
 | RF3 | y = 28.00 | 5.11 | 7.85 | 2.74 | 3.21 → 3.21 |  |
 | RF3 | x = 9.50 | 25.00 | 27.95 | 2.95 | 3.50 → 3.21 | nghiêng theo mái |
-| RF4 | x = 9.50 | 18.00 | 21.50 | 3.50 | 3.50 → 3.85 | nghiêng theo mái |
-| RF4 | x = 9.50 | 21.50 | 25.00 | 3.50 | 3.85 → 3.50 | nghiêng theo mái |
 
 **Xà gồ** — thép hộp 40 × 80, đặt vuông góc chiều dốc, mặt trên chạm mặt dưới tôn. Số hàng suy ra để bước dọc mái không quá 1.20 m; mỗi thanh dừng ở mặt tường hoặc dầm biên, nhịp không quá 4.50 m.
 
@@ -269,7 +270,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 
 **Phòng khách mất nắng Đông Nam.** Mái sân chính trùm hết dọc tường phòng khách: W1 còn 27% phần trời (mái bàn trà cũ 92%), D2 còn 26% (cũ 54%); nắng trực tiếp lên W1 + D2 ngày đông chí còn 18% so với không mái (cũ 70%). Phòng khách giờ sáng chủ yếu nhờ cửa chính D1.
 
-**Bếp bị mái che ba phía** — mái sân chính phía bắc, mái hành lang phía đông, mái sân phơi phía nam, đều là tôn không cho sáng qua. Mái sân chính rộng ra nên W2 còn 20%, D9 25% phần trời; W3 sáng hơn trước vì mái hành lang nâng cao, D10 37% (mép mái sân phơi nâng lên 3.20). Sân giếng bên dưới mái chỉ có hai vòi âm tường và máy giặt dồn vào góc, để lối ra bếp qua D10 không bị thiết bị chiếm. Ngày âm u phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
+**Bếp bị mái che ba phía** — mái sân chính phía bắc, mái bếp kéo sang hành lang phía đông, mái sân phơi phía nam, đều là tôn không cho sáng qua. Mái sân chính rộng ra nên W2 còn 20%, D9 25% phần trời; W3 sáng hơn trước vì mái trên hành lang nâng cao (nay mép 3.75), D10 37% (mép mái sân phơi nâng lên 3.20). Sân giếng bên dưới mái chỉ có hai vòi âm tường và máy giặt dồn vào góc, để lối ra bếp qua D10 không bị thiết bị chiếm. Ngày âm u phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
+
+**Hành lang ngoài hứng mưa tạt nhiều hơn.** Mái bếp kéo sang nên khoảng hở giữa đỉnh rào 1.80 và đáy dầm mép mái rộng 1.85 m ở hai đầu, 2.9 m dưới nóc, quay Đông Nam — mưa gió tạt vào lối đi và tường đông bếp; thấy ướt thì thêm diềm tôn hoặc lam ở đầu hồi phía rào. Cột C4 dưới nóc cao ~4.7 m đứng trên rào chỉ xây đặc 0.80 — kỹ sư kết cấu xem lại tiết diện và liên kết chân cột.
 
 **Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
 
@@ -314,9 +317,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | v9 | Khách 5×5, cửa dồn sát mép | 107.7 |
 | v10 | Nội thất áp tường trái | 107.7 |
 | v11 | Bàn làm việc, kệ bếp áp tường sau | 107.7 |
-| current ← | lớp chống nóng mái XPS | 107.7 |
+| current ← | mái bếp trùm hành lang ngoài | 107.7 |
 
-### Thay đổi ở Hiện hành — lớp chống nóng mái XPS
+### Thay đổi ở Hiện hành — mái bếp trùm hành lang ngoài
 
 - Ban công sau 1.0 → **2.0 m sâu** (5.0 × 2.0 = 10.00 m²) — nay ngồi được, không chỉ để thoáng
 - Nhà chính 17.0 → **18.0 m**; sân phụ bù lại 13.0 → 12.0 m
@@ -335,19 +338,19 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - Sàn WC khách **hạ còn +0.15 so với sân**, cùng cốt với bếp — D11 khỏi dựng bậc
 - **Đổ trần ban công sau**, tường trái ban công xây lên tới mái — thay cho lam đứng D12: ngang lam về sáng và nắng hè, tháng 9 nắng lên kính còn một nửa, D12 hết dính mưa
 - **Mái sân chính** trùm hết bề ngang lô phụ 4.5 m, từ mặt tiền nhà chính (y = 12) tới bếp — tôn cách nhiệt dốc 10% ra phía cổng, mặt dưới 3.50 sát bếp → 2.90. Thay mái bàn trà 3.5 × 3.0 m; đổi lại W1, D2 phòng khách mất gần hết trời và nắng Đông Nam. Mái che xe ở sân phụ bỏ hẳn
-- **Mái hành lang ngoài** từ tấm phẳng 2.80 thành tôn hai mái 3.50 → nóc 3.85, hai đầu nối phẳng vào mái sân chính và mái sân phơi — đi từ sân chính qua hành lang ra sân phơi, WC khách không qua khe hở nào; nước mái hành lang chảy tiếp sang hai mái ấy
-- **Mái bếp đua 0.20 m** ra ngoài tường ở hai mép thấp, không làm máng — nước rơi xuống mái sân chính và mái sân phơi bên dưới
-- **Mái sân phơi** dốc 17% → **10%** (mép thấp 3.00 → 3.20), cùng mặt phẳng với nửa nam mái hành lang — hết gãy khúc ở chỗ nối
+- **Mái bếp trùm luôn hành lang ngoài** — một mái hai dốc 30% trên x 5–9.5, thay tấm phẳng 2.80 rồi mái hành lang riêng 3.50 → 3.85: bỏ đường áp tôn thấp vào đầu hồi bếp dài 7 m, chỗ dễ dột nhất cụm mái. Đi từ sân chính qua hành lang ra sân phơi, WC khách vẫn không qua khe hở nào
+- **Mái bếp đua 0.20 m** ở hai mép thấp suốt bề ngang 4.5 m, không làm máng — nước rơi xuống mái sân chính và mái sân phơi bên dưới
+- **Mái sân phơi** dốc 17% → **10%** (mép thấp 3.00 → 3.20)
 - **Tường rào hạ 2.20 → 1.80 m**, chỉ xây đặc 0.80 m, phía trên là lan can song thoáng — lấy sáng, lấy gió thay cho tường cao kín. Hai tường bên ban công (tường ranh trái, tường có cửa D13 ra sân phơi) vẫn xây tới trần; lan can chỉ ở rào sau ban công và rào quanh các sân
 - **Cổng chính 2.4 → 3.6 m**, tâm vẫn thẳng cửa chính — ô tô vào thoải mái
 - **Máng xối** chỉ còn ở mép trước mái sân chính và mép thấp mái sân phơi (đoạn áp tường WC khách đặt sát chân tường); mỗi máng một **ống xả** áp mặt trong tường bao phải, xuống ống ngầm chứ không đổ ra sân
-- **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m. Tường bắc và nam bếp dừng ở mép mái, tường đông thành đầu hồi
+- **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m, chỉ trong bếp — hành lang ngoài không trần. Tường bắc và nam bếp dừng ở mép mái, tường đông bếp lên tới mặt dưới mái, nằm gọn dưới tôn liền
 - **Mái sân phơi** dốc một mái phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng
 - **Bàn trà ngoài sân dời ra sát W1**, thẳng giữa cửa sổ, vẫn dưới mái sân chính — trước đứng chắn lối vào cửa bếp D9
 - **Sofa phòng khách xếp chữ L** ở góc tây bắc, cạnh dài quay về kệ tivi — thay hai ghế đối diện nhau; lối từ cửa chính sang hành lang chừa trống ~2 m phía đông
 - **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
-- **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18, 21.5, 25), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80
-- **Dầm biên thép hộp 50 × 100** dọc mọi mép mái nhẹ không tựa tường — tuyến tường rào phải (nghiêng theo mái, đi qua đầu cột), mép trước mái sân chính, mép dải hở mái sân phơi, hai chỗ nối mái ở góc bếp; ở mép có máng thì dầm lùi vào sau máng. Cột hạ đỉnh xuống đáy dầm
+- **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18.05, 21.5, 24.95), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái bếp phần trùm hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80. C3, C5 lùi 5 cm vào hẳn dưới mái bếp để lên tới dầm mái bếp; dầm mái sân chính và mái sân phơi dừng ở mặt cột. C4 dưới nóc cao ~4.7 m
+- **Dầm biên thép hộp 50 × 100** dọc mọi mép mái nhẹ không tựa tường — tuyến tường rào phải (nghiêng theo mái, đi qua đầu cột), mép trước mái sân chính, mép dải hở mái sân phơi, hai chỗ mái bếp đua chồng lên mái sân chính và mái sân phơi (mỗi mái một dầm, đứng sát nhau); ở mép có máng thì dầm lùi vào sau máng. Cột hạ đỉnh xuống đáy dầm
 - **Xà gồ mái sân chính** — 4 thanh thép hộp 40 × 80, bước 1.20 m, chạy vuông góc dốc mái từ tường phòng khách tới dầm dọc tường rào; tấm tôn không còn vượt nhịp trống 4.5 m
 - **Góc làm việc master** — thay bàn 1.3 × 1.5 m bằng 2 bàn 0.6 × 1.2 m nối nhau dọc tường phải, kèm 2 ghế làm việc riêng
 - **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
