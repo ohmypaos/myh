@@ -36,6 +36,7 @@ const COLORS = {
   metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
   gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
   downpipe:    0x6a716e,     // ống xả đứng áp tường bao
+  post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
   ceiling:     0xe4e0d4,
   dropCeiling: 0xe9e6dc,     // trần giả thạch cao / nhựa
   step:        0xe2dccd,

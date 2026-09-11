@@ -17,7 +17,7 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `MIN_CLEAR` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `RAILING` (lan can trên tường rào), `FURNITURE` (chiều cao nội thất 3D), `DOOR_LEAF` (cánh cửa 3D), `POST` (cột đỡ mái nhẹ), `MIN_CLEAR` |
 | `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
@@ -90,7 +90,8 @@ một phòng kín thì phòng đó bỏ bản bê tông, thay bằng trần tôn
 tường chỉ đỡ phòng ấy tự bám mặt dưới mái — đầu hồi tam giác ra theo, không khai (phòng hở như hành
 lang ngoài có mái trùm thì không). Hai mái kề nhau hoặc nối phẳng cùng cao độ, hoặc gá thấp hẳn bên
 dưới (mái trên được đua chồng lên, khai `eave`); **máng xối** suy ở mép thấp không nối sang mái khác
-và không đua trên mái thấp hơn, mỗi dải máng một **ống xả** áp tường bao — không khai. `lib/massing.js`
+và không đua trên mái thấp hơn, mỗi dải máng một **ống xả** áp tường bao — không khai. Mép mái không tựa lên tường cao tới mái thì cần
+**cột đỡ**: vị trí khai ở `posts` (quyết định thiết kế), chiều cao suy tới mặt dưới mái hoặc đáy máng. `lib/massing.js`
 suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (hai tường
 bên ban công sau: tường trái đỡ trần ban công, tường phải có cửa D13). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn

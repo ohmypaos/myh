@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 10:24:09 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 11:05:21 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -133,6 +133,16 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF1 | 9.30 | 11.96 | 9.39 | 12.04 | 2.78 | mặt trong tường bao |
 | RF3 | 9.30 | 27.83 | 9.39 | 27.92 | 3.08 | mặt trong tường bao |
 
+**Cột đỡ mái nhẹ** — thép hộp 100 × 100, đứng ở chỗ mép mái không tựa lên tường cao tới mái. Vị trí khai theo tâm cột; chiều cao suy ra: từ cốt sân tới mặt dưới mái ngay trên cột, hoặc đáy máng nếu máng chạy qua đầu cột. Nhịp giữa hai chỗ đỡ dọc một mép mái không quá 4.5 m.
+
+| Mã | x | y | Đỉnh cột | Đỡ mái | Gác máng |
+|---|---:|---:|---:|---|---|
+| C1 | 9.50 | 12.00 | 2.78 | RF1 | có |
+| C2 | 9.50 | 15.00 | 3.19 | RF1 | — |
+| C3 | 9.50 | 18.00 | 3.50 | RF1, RF4 | — |
+| C4 | 9.50 | 21.50 | 3.85 | RF4 | — |
+| C5 | 9.50 | 25.00 | 3.50 | RF3, RF4 | — |
+
 ### Tường xây lên hết chiều cao nhà
 
 Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dưới đây khai riêng dù chỉ áp vào sân.
@@ -243,7 +253,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 12. Nội thất nằm trong phòng và không chồng nhau
 13. Nội thất không nằm trong vùng quét cánh cửa
 14. Bậc, mái hiên, tường nâng, cốt sàn riêng khai đúng chỗ; bậc nằm gọn trong sân, không vướng nội thất hay cánh cửa
-15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần
+15. Mái nhẹ khai đủ và không chồng nhau; mái nào trùm phòng kín thì trùm trọn và có cốt trần; cột đỡ mái nằm trong lô, dưới một mái nhẹ, không đứng giữa nội thất
 
 ---
 
@@ -292,3 +302,4 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Bàn trà ngoài sân dời ra sát W1**, thẳng giữa cửa sổ, vẫn dưới mái sân chính — trước đứng chắn lối vào cửa bếp D9
 - **Sofa phòng khách xếp chữ L** ở góc tây bắc, cạnh dài quay về kệ tivi — thay hai ghế đối diện nhau; lối từ cửa chính sang hành lang chừa trống ~2 m phía đông
 - **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
+- **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18, 21.5, 25), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80

@@ -41,6 +41,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A11 | Mái sân chính 4.5 × 6 m liền dải với mái hành lang và mái sân phơi, máng xối trong 3D | ✅ xong | |
 | A12 | Tường rào 1.80 m, xây đặc 0.80 m + lan can song thoáng; tường D13 lên trần; cổng chính 3.6 m | ✅ xong | |
 | A13 | WC khách: trần giả 2.70 m, ô thoáng W4 nâng lên 2.00–2.40 | ✅ xong | |
+| A14 | Cột đỡ mái nhẹ — 5 cột thép hộp trên tường rào phải, nhịp ≤ 3.5 m | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -444,6 +445,35 @@ WC **3.60 m** chứ không phải 3.30: sàn WC hạ còn +0.15 ở A9 mà bản
 - [x] `check-3d` thêm **phép kiểm 15**: tấm đúng cốt, dưới bản mái, cao hơn đầu mọi cửa trên tường phòng
 - [x] Phá thử: hạ trần giả xuống 2.20 → phép 15 báo đầu W4 cao hơn trần
 
+### ✅ A14 · Cột đỡ mái nhẹ
+
+`3d.md` mục 8 ghi từ lúc dựng mái sân chính: mái phụ lơ lửng, chưa có cột. Dò trên khối đã dựng (11/9/2026):
+mái bếp tựa tường suốt bốn mép; còn **suốt tuyến tường rào phải `x = 9.5`, `y` 12–28** — mép đông của mái
+sân chính, mái hành lang, mái sân phơi — không có gì đỡ, vì rào chỉ xây đặc 0.80 mà mái ở 2.90–3.85. Hai mép
+tự do khác nằm giữa hai tường (mép trước mái sân chính 4.5 m, mép dải hở mái sân phơi 2.5 m), dầm vượt được.
+
+**Chủ nhà chốt:** 5 cột, nhịp ≤ 3.5 m (`y` 12, 15, 18, 21.5, 25 — đầu `y = 28` có tường WC khách), **thép hộp
+100 × 100** đặt trên tim tường rào. Không lấn hành lang ngoài (lọt lòng 0.84 m, ngưỡng 0.80), không vướng bàn
+trà. Phương án 3 cột ở chỗ nối mái bị bỏ: nhịp 6–7 m phải thép I hoặc giàn.
+
+- [x] Vị trí khai ở `posts` trong `current.js`; tiết diện và nhịp tối đa ở `POST` trong `lib/lot.js`
+- [x] Chiều cao **suy ra** (`postsOf()` trong `lib/envelope.js`): tới mặt dưới tấm mái ngay trên cột, hoặc đáy
+      máng — cột góc C1 gác máng mép trước mái sân chính, đỉnh 2.78
+- [x] `lib/massing.js` dựng khối `post`; gỡ chồng như tường nên phần rào xây và lan can nhường chỗ cho cột
+- [x] Neo vào lưới như lỗ mở: cột trên đường lưới bám đường, cột giữa nhịp đi theo đường phía trên nó
+- [x] Vẽ 2D (ô đặc kèm mã), bảng trong đặc tả, màu thép trong 3D
+- [x] `validate()` phép 15 soi thêm: cột trong lô, dưới một mái nhẹ, không trùng mã, không đứng giữa nội thất
+- [x] `check-3d` thêm **phép kiểm 18**: mỗi cột đúng chỗ, chân chạm sân, đỉnh chạm mái / máng; và soi **kết
+      cấu** — dọc mọi mép mái nhẹ, hai chỗ đỡ liền nhau (tường cao tới mái hoặc cột) không xa quá 4.5 m, đầu
+      mép không hẫng quá 0.3 m. Lấy cột từ khối đã dựng, không từ `posts`
+- [x] Phá thử: bỏ C2 → phép 18 báo nhịp 5.9 m; C2 dời ra ngoài mái → `validate()` và phép 18 báo; đỉnh cột thò
+      lên 10 cm → phép 18 và phép 10 báo; đỉnh hụt 10 cm → phép 18 báo cả 5 cột (phép 10 không thấy được hở)
+- [ ] Dầm biên, xà gồ chưa dựng — mái vẫn là tấm liền; cột chỉ để thấy chỗ đứng và soi nhịp
+
+> **`POST.maxSpan` là 4.5 chứ không 3.5.** Nhịp 3.5 m chủ nhà chốt là dọc tường rào; mép trước mái sân chính
+> từ tường phòng khách tới cột góc đã 4.35 m và không đặt cột giữa được (vướng ghế bàn trà, giữa sân). Phép
+> kiểm lấy ngưỡng dầm thép hộp nhẹ vượt được, 4.5 m.
+
 ---
 
 ## B · Mô hình 3D
@@ -778,8 +808,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **17** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **18** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

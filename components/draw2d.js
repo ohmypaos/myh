@@ -9,7 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf, roofPanels, gutters, downpipes } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -152,6 +152,13 @@ export function init(){
     for(const pp of downpipes(V)){
       const {x,y,w,h} = pp.rect;
       el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.max(w,h)/2)+2,fill:'#5d5a52'},gSky);
+    }
+    /* Cột đỡ mái — ô vuông đặc trên tim tường rào, kèm mã. Cột đứng từ sân lên nên vẽ đậm như tường. */
+    for(const c of postsOf(V)){
+      if(c.error) continue;
+      const {x,y,w,h} = c.rect;
+      el('rect',{x:M(x)-2,y:M(y)-2,width:M(w)+4,height:M(h)+4,fill:'#1a1a1a'},gSky);
+      el('text',{x:M(x)-6,y:M(y+h/2)+4,text_anchor:'end',font_size:11,fill:'#1a1a1a'},gSky).textContent=c.id;
     }
     const seen = new Set();
     for(const p of groups.values()){
