@@ -10,7 +10,7 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -82,10 +82,23 @@ export function init(){
     for(const d of DOORS)   hole(d[1],d[2],d[3],d[4]);
     for(const w of WINDOWS) hole(w[1],w[2],w[3],w[4]);
     for(const [ax,pos,a,b] of GATES) hole(ax,pos,a,b);
-    for(const [ax,pos,a,b,nm] of GATES){
+    const gateRoofs = gateRoofsOf(V);
+    for(const [i,[ax,pos,a,b,nm]] of GATES.entries()){
+      const roof = gateRoofs.find(r=>r.gate===i && !r.error);
+      if(roof){
+        const {x,z,w,d} = roof.rect;
+        /* Mái nằm trên đầu nên vẽ mờ, sống mái là nét giữa. Hai ô vuông là hai trụ xây
+           thay phần rào sát mép cổng; khoảng giữa vẫn là bề rộng thông xe đã ghi. */
+        el('rect',{x:M(x),y:M(z),width:M(w),height:M(d),fill:'#b85c47',fill_opacity:.20,
+          stroke:'#9e4f3d',stroke_width:1.8,stroke_dasharray:'10 6'},gHole);
+        if(ax==='h') el('line',{x1:M(x),y1:M(pos),x2:M(x+w),y2:M(pos),stroke:'#9e4f3d',stroke_width:2.2},gHole);
+        else el('line',{x1:M(pos),y1:M(z),x2:M(pos),y2:M(z+d),stroke:'#9e4f3d',stroke_width:2.2},gHole);
+        for(const p of roof.pillars)
+          el('rect',{x:M(p.x),y:M(p.z),width:M(roof.pillar),height:M(roof.pillar),fill:'#d9d3c4',stroke:'#141414',stroke_width:1.5},gHole);
+      }
       el('line',{x1:M(a),y1:M(pos),x2:M(b),y2:M(pos),
         stroke:'#999',stroke_width:2.5,stroke_dasharray:'12 8'},gHole);
-      const t=el('text',{x:M((a+b)/2),y:M(pos)-16,font_size:19,text_anchor:'middle',
+      const t=el('text',{x:M((a+b)/2),y:M(pos)-(roof ? M(roof.run)+16 : 16),font_size:19,text_anchor:'middle',
         fill:'#444',font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gHole);
       t.textContent=nm;
     }

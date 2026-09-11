@@ -13,7 +13,7 @@ import { COLORS, GLASS_KINDS, ROOF_KINDS } from '../components/palette.js';
 import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf } from '../lib/envelope.js';
+         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 
 const EPS = 1e-6;
@@ -105,6 +105,9 @@ function check(plan){
 
   /* 2 — thò ra ngoài lô. */
   for (const b of all) {
+    /* Mái cổng có nửa mái chìa qua ranh y = 0 ra phía đường; đó là chủ ý của cấu tạo,
+       không phải khối nhà lấn lô. Còn mọi khối khác vẫn giữ giới hạn nửa dày tường. */
+    if (b.kind === 'gateRoofTile' || b.kind === 'gatePillar' || b.kind === 'gateCap') continue;
     if (b.x < -out - EPS || b.x + b.w > LOT.w + out + EPS
      || b.z < -out - EPS || b.z + b.d > LOT.d + out + EPS)
       e.push(`hộp ${b.kind} thò ra ngoài lô: x ${n(b.x)}…${n(b.x + b.w)}, z ${n(b.z)}…${n(b.z + b.d)}`);
@@ -117,6 +120,7 @@ function check(plan){
   /* Tum và lan can mái đứng trên mặt mái: cộng từ số khai (TUM, ROOF_RAILING), không từ khối. */
   const walkTop = L.houseTop + (plan.roofInsulation ? insulationT : 0);
   const design = Math.max(walkTop, ...lightRoofs(plan).map(r => r.high + ROOF.sheet),
+                          ...gateRoofsOf(plan).filter(r => !r.error).map(r => r.ridge + r.tile),
                           plan.tum ? walkTop + TUM.clear + ROOF.sheet : 0,
                           plan.roofRailings?.length ? walkTop + ROOF_RAILING.height : 0);
   for (const b of all)

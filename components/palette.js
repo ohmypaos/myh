@@ -34,6 +34,10 @@ export const COLORS = {
   metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
   gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
   downpipe:    0x6a716e,     // ống xả đứng áp tường bao
+  gatePillar:  0xd9d3c4,     // trụ cổng gạch vuông, cùng tông rào xây
+  gateCap:     0xd9d3c4,     // đầu trụ vát khít mặt dưới mái ngói
+  gateBeam:    0xd9d3c4,     // giằng BTCT nối hai trụ ngay dưới sống mái
+  gateRoofTile:0x9e4f3d,     // mái ngói đất nung trên cổng
   post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
   beam:        0x55595a,     // dầm biên thép hộp, cùng màu cột
   purlin:      0x73787a,     // xà gồ dưới tấm tôn, nhỏ hơn dầm biên
@@ -53,7 +57,7 @@ export const GLASS_KINDS = new Set(['glass', 'sash', 'louver', 'tumGlass']);
    được xuống trong nhà. Đầu hồi là tường, cố ý giữ lại. check-3d phép 24 soi: khối nào đứng từ cốt mặt
    mái trở lên mà không nằm trong danh sách này là lọt lưới. */
 export const ROOF_KINDS = new Set([
-  'roof', 'alleyRoof', 'overhang', 'roofInsulation', 'metalRoof', 'gutter', 'beam', 'purlin',
+  'roof', 'alleyRoof', 'overhang', 'roofInsulation', 'metalRoof', 'gateRoofTile', 'gateBeam', 'gutter', 'beam', 'purlin',
   'ceiling', 'dropCeiling',
   'tumWall', 'tumRoof', 'tumGlass', 'tumDoor', 'tumCurb', 'louver', 'tumFascia', 'tumCanopy',
   'roofRailing', 'tank', 'tankStand', 'tankCradle',
