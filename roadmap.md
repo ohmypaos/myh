@@ -39,6 +39,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A10 | Đổ trần ban công sau, tường trái ban công lên mái — thay lam D12, **đã vào `current.js`** | ✅ xong | |
 | A4 | Đưa mái bàn trà, mái tôn bếp, mái sân phơi vào `lib/versions/current.js` | ✅ xong | |
 | A11 | Mái sân chính 4.5 × 6 m liền dải với mái hành lang và mái sân phơi, máng xối trong 3D | ✅ xong | |
+| A12 | Tường rào 1.80 m, xây đặc 0.80 m + lan can song thoáng; tường D13 lên trần; cổng chính 3.6 m | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | 💤 hoãn | |
@@ -391,9 +392,43 @@ liệu, lý do, cái giá: `3d.md` mục 3.
       thấp hơn và đòi mỗi dải máng có ống xả
 - [x] Phá thử: mái bếp đua 1.5 m cắm xuống mái sân chính → phép 12 báo; bỏ ống xả → phép 13 báo
 
-> **Cái giá lớn nhất: phòng khách.** W1 còn 27% phần trời (mái bàn trà 92%), D2 25% (54%); nắng
+> **Cái giá lớn nhất: phòng khách.** W1 còn 27% phần trời (mái bàn trà 92%), D2 26% (54%); nắng
 > trực tiếp lên W1 + D2 ngày đông chí còn 18% so với không mái (mái bàn trà 70%). Ngày 10/9 chính
 > chỗ này là lý do chọn mái sát góc thay mái dọc tường nhà chính.
+
+### ✅ A12 · Tường rào thấp, lan can thoáng
+
+Chủ nhà muốn (11/9/2026) hạ tường rào, kết hợp lan can thoáng để lấy sáng thay cho tường cao kín.
+Đầu tiên nói xây 1 m; hỏi lại chiều cao thường dùng rồi chốt **đỉnh rào 1.80, xây đặc 0.80**. Số nắng:
+`3d.md` mục 2a.
+
+- [x] `HEIGHTS.fenceSolid` (mặc định `null` = xây kín) và `RAILING` trong `lib/lot.js`; bản hiện hành
+      khai `heights:{fence:1.80, fenceSolid:0.80}` — kho đối chiếu giữ rào kín 2.20
+- [x] `lib/massing.js`: tường rào chỉ xây tới `fenceSolid`, lan can dựng từng thanh (trụ, tay vịn, song),
+      chừa trống trên cổng và cửa; `resolveOverlaps()` cắt lan can đâm vào tường nhà và chỗ hai tuyến
+      gặp nhau ở góc
+- [x] Thanh trượt cao độ 3D thêm "phần xây đặc", và nay lấy giá trị đầu từ `heightsOf(plan)` — trước
+      lấy thẳng `HEIGHTS` nên bỏ qua cao độ khai trong mặt bằng
+- [x] `specMarkdown()` ghi cấu tạo tường rào ở mục Tường
+- [x] `check-3d` phép 5 soi cả bề ngang cổng và cửa, không thanh lan can nào chắn lối; thêm **phép kiểm
+      14** (phần xây không vượt cốt xây đặc, lan can nằm gọn và trên tuyến tường có thật)
+- [x] Tính lại nắng lên D12: hè không đổi, tháng 9 6.9 → 8.7, đông 13.1 → 16.2 kWh/ngày
+- [x] Phá thử: dựng lan can suốt qua cổng và cửa → phép 5 báo
+
+**Chủ nhà chỉnh tiếp (11/9/2026):**
+
+- [x] Tường phải ban công (`x = 5`, `y` 28–30, có cửa D13) không làm rào mà xây tới trần — thêm vào
+      `fullHeightWalls`. Nắng đông chí lên D12 vì vậy 17.8 → 16.2, vẫn hơn rào kín cũ (13.1)
+- [x] Cổng chính 2.4 → **3.6 m** (`x` 0.7–4.3), tâm vẫn thẳng cửa chính — ô tô vào thoải mái
+- [x] Rào không được che cổng: mô hình vốn đã chừa trống, phép 5 xác nhận. Chủ nhà thấy lan can chắn
+      cổng đúng lúc đang phá thử phép 5 trên dev server
+
+> **Vấp ở phép 5:** bản đầu chỉ chọc thêm một điểm giữa lối đi, và phá thử thì nó vẫn sạch — điểm
+> rơi đúng khe giữa hai song, ở cao độ trùng mép dưới tay vịn. Đổi sang soi cả bề ngang lối đi.
+
+> **Lộ tầm nhìn.** Rào thoáng từ 0.80 m trở lên nên từ ngõ và nhà bên nhìn thấy sân và ban công. Rào
+> mặt tiền quay ra đường thường còn chịu quy định địa phương về phần xây đặc — nên hỏi trước khi xin
+> phép xây.
 
 ---
 
@@ -686,8 +721,8 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **13** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **14** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường

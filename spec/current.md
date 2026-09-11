@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 09:23:11 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 09:42:41 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -84,7 +84,7 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
 | Trục | Vị trí | Từ | Đến | Rộng | Tên |
 |---|---:|---:|---:|---:|---|
-| ngang | 0.0 | 1.30 | 3.70 | 2.40 | CỔNG CHÍNH 2.4m |
+| ngang | 0.0 | 0.70 | 4.30 | 3.60 | CỔNG CHÍNH 3.6m |
 
 ### Bậc tam cấp
 
@@ -140,6 +140,7 @@ Chiều cao tường mặc định suy từ phòng áp vào; các đoạn dướ
 | Trục | Vị trí | Từ | Đến |
 |---|---:|---:|---:|
 | dọc | 0.0 | 28.0 | 30.0 |
+| dọc | 5.0 | 28.0 | 30.0 |
 
 ### Cốt sàn riêng
 
@@ -149,6 +150,8 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - R5 WC KHÁCH — cao hơn sân **0.15 m**
 
 ## 7. Tường
+
+**Tường rào** (đoạn chỉ áp sân, không phải tường nâng): xây đặc cao **0.80 m** so với sân, phía trên là **lan can song thoáng** tới đỉnh rào **1.80 m** — trụ 80 mm cách nhau ≤ 2.0 m, song 20 mm bước 120 mm; chừa trống trên cổng và cửa.
 
 | Trục | Vị trí | Từ | Đến | Dày (mm) |
 |---|---:|---:|---:|---:|
@@ -212,6 +215,8 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 
 **Bếp bị mái che ba phía** — mái sân chính phía bắc, mái hành lang phía đông, mái sân phơi phía nam, đều là tôn không cho sáng qua. Mái sân chính rộng ra nên W2 còn 20%, D9 25% phần trời; W3 sáng hơn trước vì mái hành lang nâng cao, D10 37% (mép mái sân phơi nâng lên 3.20). Ngày âm u phải bật đèn bếp ban ngày. Đã cân nhắc tấm lấy sáng và không chọn.
 
+**Rào thoáng thì lộ.** Tường rào chỉ xây đặc 0.80 m, phía trên là lan can: từ ngõ và nhà bên nhìn xuyên được vào sân chính, sân phơi và ban công. Muốn kín chỗ nào thì thêm rèm, lam hay cây ở đoạn đó. Ban công cao hơn sân 0.45 nên lan can sau ban công cao 1.35 m tính từ sàn ban công — vẫn trên mức 1.1 m thường đòi cho lan can.
+
 **Hai việc chống nóng không đổi hình khối, đừng quên khi thi công:** sơn chống nóng mặt ngoài tường trái (16 m quay Tây Bắc) ngay lúc xây, khi lô bên cạnh còn trống và dựng được giàn giáo; lát lớp chống nóng trên toàn bộ sàn mái bê tông nhà chính, kể cả phần trần ban công sau. Mái bê tông nhận nhiệt hè gấp ~4 lần bức tường trái nên đó mới là chỗ đáng tiền.
 
 ## 10. Kết quả bộ kiểm tra
@@ -272,6 +277,8 @@ Mặc định phòng kín và ban công ở cốt nền nhà, sân ở cốt sâ
 - **Mái hành lang ngoài** từ tấm phẳng 2.80 thành tôn hai mái 3.50 → nóc 3.85, hai đầu nối phẳng vào mái sân chính và mái sân phơi — đi từ sân chính qua hành lang ra sân phơi, WC khách không qua khe hở nào; nước mái hành lang chảy tiếp sang hai mái ấy
 - **Mái bếp đua 0.20 m** ra ngoài tường ở hai mép thấp, không làm máng — nước rơi xuống mái sân chính và mái sân phơi bên dưới
 - **Mái sân phơi** dốc 17% → **10%** (mép thấp 3.00 → 3.20), cùng mặt phẳng với nửa nam mái hành lang — hết gãy khúc ở chỗ nối
+- **Tường rào hạ 2.20 → 1.80 m**, chỉ xây đặc 0.80 m, phía trên là lan can song thoáng — lấy sáng, lấy gió thay cho tường cao kín. Hai tường bên ban công (tường ranh trái, tường có cửa D13 ra sân phơi) vẫn xây tới trần; lan can chỉ ở rào sau ban công và rào quanh các sân
+- **Cổng chính 2.4 → 3.6 m**, tâm vẫn thẳng cửa chính — ô tô vào thoải mái
 - **Máng xối** chỉ còn ở mép trước mái sân chính và mép thấp mái sân phơi (đoạn áp tường WC khách đặt sát chân tường); mỗi máng một **ống xả** áp mặt trong tường bao phải, xuống ống ngầm chứ không đổ ra sân
 - **Bếp lợp tôn hai mái** thay bản bê tông: nóc chạy ngang ở y = 21.5, dốc 30%, mép mái 3.75 → nóc 4.80 (nhô 0.85 m trên mái nhà); trần tôn cốt 3.75, cách sàn bếp 3.60 m. Tường bắc và nam bếp dừng ở mép mái, tường đông thành đầu hồi
 - **Mái sân phơi** dốc một mái phủ y 25–28, chừa dải hở 2.5 × 2.0 m thẳng hàng ban công để còn chỗ phơi nắng

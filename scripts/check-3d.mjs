@@ -71,6 +71,7 @@ const CHECKS = [
   'Góc tường kín — chỗ hai tường gặp nhau không khuyết ô nửa bề dày',
   'Mái nhẹ kề nhau thì nối liền mạch cùng cao độ hoặc gá thấp hẳn bên dưới, và không hạ xuống dưới đầu lỗ mở nào nó phủ',
   'Mép thấp nào của mái nhẹ không chảy tiếp hay rơi xuống mái khác cũng có máng, mỗi dải máng có ống xả xuống ống ngầm',
+  'Tường rào có lan can: phần xây không vượt cốt xây đặc, lan can nằm gọn giữa cốt xây đặc và đỉnh rào, trên tuyến tường có thật',
 ];
 
 function check(plan){
@@ -132,24 +133,39 @@ function check(plan){
     pz > b.z + EPS && pz < b.z + b.d - EPS &&
     py > b.y0 + EPS && py < b.y1 - EPS;
 
+  /* Cửa và cổng chọc thêm một điểm sát đỉnh lối đi (đầu cửa, nhưng không quá đỉnh rào): lan can trên
+     tường rào thấp phải chừa trống cả chiều cao lối đi, không chỉ phần xây. */
   const base = o => openingFloor(plan, L, o[1], o[2], o[3], o[4]);
+  const upper = head => Math.min(head, L.fenceTop) - 0.05;
   const holes = [
     ...plan.doors.filter(d => d[5] !== 'open')
       .map(d => ({ id: d[0], ax: d[1], pos: d[2], a: d[3], b: d[4],
-                   y: base(d) + 0.05 })),
+                   ys: [base(d) + 0.05, upper(base(d) + ((H.only[d[0]] || {}).door ?? H.door))] })),
     ...plan.windows
       .map(w => ({ id: w[0], ax: w[1], pos: w[2], a: w[3], b: w[4],
-                   y: base(w) + ((H.only[w[0]] || {}).sill ?? H.sill) + 0.05 })),
+                   ys: [base(w) + ((H.only[w[0]] || {}).sill ?? H.sill) + 0.05] })),
     ...plan.gates
-      .map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3], y: 0.05 })),
+      .map(g => ({ id: g[4] || 'cổng', ax: g[0], pos: g[1], a: g[2], b: g[3], ys: [0.05, upper(Infinity)] })),
   ];
+  const blockers = m.boxes.filter(b => /Wall$/.test(b.kind) || b.kind === 'railing');
 
   for (const o of holes) {
     const mid = (o.a + o.b) / 2;
     const px = o.ax === 'h' ? mid : o.pos;
     const pz = o.ax === 'h' ? o.pos : mid;
-    const hit = walls.find(b => inside(b, px, o.y, pz));
-    if (hit) e.push(`${o.id} bị mảnh ${hit.kind} bịt tại cao độ ${n(o.y)}`);
+    for (const y of o.ys) {
+      const hit = blockers.find(b => inside(b, px, y, pz));
+      if (hit) { e.push(`${o.id} bị mảnh ${hit.kind} bịt tại cao độ ${n(y)}`); break; }
+    }
+    /* Lan can là song mảnh: chọc một điểm dễ lọt khe giữa hai song. Nên với cửa và cổng soi cả bề ngang
+       lối đi — không thanh nào được nằm trên đường tim ấy, chồng vào [a, b], trong chiều cao lối đi. */
+    if (o.ys.length < 2) continue;
+    const [y0, y1] = [o.ys[0] - 0.05, o.ys[1] + 0.05];
+    const rail = m.boxes.find(b => b.kind === 'railing' && (o.ax === 'h'
+        ? o.pos >= b.z - EPS && o.pos <= b.z + b.d + EPS && overlap(b.x, b.x + b.w, o.a, o.b) > EPS
+        : o.pos >= b.x - EPS && o.pos <= b.x + b.w + EPS && overlap(b.z, b.z + b.d, o.a, o.b) > EPS)
+      && overlap(b.y0, b.y1, y0, y1) > EPS);
+    if (rail) e.push(`${o.id} bị lan can chắn lối, cao ${n(rail.y0)}–${n(rail.y1)}`);
   }
 
   /* 6 — diện tích mái. Bắt được cả mảnh thiếu lẫn mảnh chồng của phép khoét giếng trời. */
@@ -395,6 +411,24 @@ function check(plan){
     const ok = pipes.some(p => p.y0 < -EPS && r.some(g => Math.abs(p.y1 - g.y0) < 1e-3
       && p.x >= g.x - EPS && p.x + p.w <= g.x + g.w + EPS && p.z >= g.z - EPS && p.z + p.d <= g.z + g.d + EPS));
     if (!ok) e.push(`dải máng mái ${r[0].id} quanh x ${n(r[0].x)}, z ${n(r[0].z)} không có ống xả xuống ống ngầm`);
+  }
+
+  /* 14 — tường rào có lan can. Mặt bằng không khai `fenceSolid` thì không được có lan can nào. Có
+     khai thì: không mảnh tường rào nào cao quá cốt xây đặc; mỗi thanh lan can nằm gọn trong khoảng
+     cốt xây đặc → đỉnh rào và có tâm nằm trên đường tim một bức tường khai trong `walls`. */
+  const railBoxes = m.boxes.filter(b => b.kind === 'railing');
+  if (H.fenceSolid == null) {
+    if (railBoxes.length) e.push(`mặt bằng không khai fenceSolid mà có ${railBoxes.length} thanh lan can`);
+  } else {
+    const tall = m.boxes.find(b => b.kind === 'fenceWall' && b.y1 > H.fenceSolid + EPS);
+    if (tall) e.push(`tường rào quanh x ${n(tall.x)}, z ${n(tall.z)} xây tới ${n(tall.y1)}, quá cốt xây đặc ${n(H.fenceSolid)}`);
+    /* Chạm đường tim chứ không đòi tâm nằm đúng trên tim: ở góc hai tuyến lan can, thanh bị cắt còn
+       mẩu lệch nửa bề dày — vẫn là lan can của bức tường ấy. */
+    const onWall = b => plan.walls.some(([ax, pos, a, c]) => ax === 'h'
+      ? pos >= b.z - EPS && pos <= b.z + b.d + EPS && b.x >= a - 0.2 && b.x + b.w <= c + 0.2
+      : pos >= b.x - EPS && pos <= b.x + b.w + EPS && b.z >= a - 0.2 && b.z + b.d <= c + 0.2);
+    const stray = railBoxes.find(b => b.y0 < H.fenceSolid - EPS || b.y1 > L.fenceTop + EPS || !onWall(b));
+    if (stray) e.push(`thanh lan can lạc chỗ quanh x ${n(stray.x)}, z ${n(stray.z)}, cao ${n(stray.y0)}–${n(stray.y1)}`);
   }
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };

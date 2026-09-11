@@ -17,7 +17,7 @@ npm run dev
 | `lib/versions/current.js` | **Nguồn sự thật của số liệu.** File sống — sửa thẳng vào đây |
 | `lib/versions/v1.js` … `v11.js` | Kho đối chiếu, **đóng băng**. Không sửa, không thêm bản mới |
 | `lib/versions/index.js` | `ARCHIVE`, `CURRENT`, `PLANS`. Thứ tự `PLANS` = thứ tự dropdown |
-| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `MIN_CLEAR` |
+| `lib/lot.js` | Hằng số cấp lô đất: `LOT`, `HEIGHTS` (cao độ), `STEP` (bậc tam cấp), `ROOF` (bề dày tôn lợp, tấm trần, tiết diện máng xối), `RAILING` (lan can trên tường rào), `MIN_CLEAR` |
 | `lib/plan.js` | Diện tích thông thủy và **15 phép kiểm** `validate()` |
 | `lib/envelope.js` | Vỏ nhà: cốt sàn từng phòng, bậc tam cấp, mái hiên, mái nhẹ — suy từ cửa và tường, dùng chung cho 3D, phép kiểm, 2D, đặc tả |
 | `lib/spec.js` | `specMarkdown()` — sinh đặc tả |
@@ -80,7 +80,8 @@ Một thay đổi thiết kế = một commit gồm đủ: `lib/versions/current
 ## Trang 3D
 
 Cao độ nằm ở `HEIGHTS` trong `lib/lot.js` chứ không nhân bản vào từng file mặt bằng; phương
-án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên.
+án nào đổi chiều cao thì khai `heights:{...}` trong chính file đó để đè lên. Bản hiện hành khai
+`fence` 1.80 và `fenceSolid` 0.80: tường rào xây đặc tới 0.80, phía trên lan can thoáng dựng từng thanh.
 
 **Mái phụ lợp tôn** khai ở `roofs` của mặt bằng: vùng phủ theo tim tường, dạng (`flat`, `mono:y`,
 `gable:y`) và cao độ **mặt dưới**; độ dốc suy từ cao độ với nhịp, không khai tay. Mái trùm trọn
@@ -89,8 +90,8 @@ tường chỉ đỡ phòng ấy tự bám mặt dưới mái — đầu hồi t
 lang ngoài có mái trùm thì không). Hai mái kề nhau hoặc nối phẳng cùng cao độ, hoặc gá thấp hẳn bên
 dưới (mái trên được đua chồng lên, khai `eave`); **máng xối** suy ở mép thấp không nối sang mái khác
 và không đua trên mái thấp hơn, mỗi dải máng một **ống xả** áp tường bao — không khai. `lib/massing.js`
-suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (tường
-trái ban công sau, đỡ trần ban công). Cốt sàn từng phòng, bậc tam cấp và mái
+suy chiều cao tường từ phòng áp vào, không khai tay — trừ đoạn khai ở `fullHeightWalls` (hai tường
+bên ban công sau: tường trái đỡ trần ban công, tường phải có cửa D13). Cốt sàn từng phòng, bậc tam cấp và mái
 hiên suy ở `lib/envelope.js` — mặt bằng chỉ khai cửa có bậc kèm phần rộng hơn cửa và mặt bậc (`steps`), phòng có cốt sàn
 riêng (`floorLevels`) và tường có mái hiên (`overhangs`). Lý do của từng lựa chọn nằm ở `3d.md` —
 đọc trước khi sửa.

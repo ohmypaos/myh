@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { LOT, HEIGHTS } from '../lib/lot.js';
+import { LOT, heightsOf } from '../lib/lot.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { PLANS } from '../lib/versions/index.js';
@@ -26,6 +26,7 @@ import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayL
 const COLORS = {
   houseWall:   0xefece4,
   fenceWall:   0xd9d3c4,
+  railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,
   ground:      0xcfccc0,
   roof:        0xc9c2b2,
@@ -422,7 +423,8 @@ export function init(){
     { key:'sill',    name:'Bệ cửa sổ',           min:0.0, max:1.6 },
     { key:'head',    name:'Mép trên cửa sổ',     min:1.4, max:3.2 },
     { key:'slab',    name:'Dày bản mái',         min:0.1, max:0.6 },
-    { key:'fence',   name:'Tường rào',           min:1.2, max:3.0 },
+    { key:'fence',   name:'Tường rào — đỉnh rào', min:1.2, max:3.0 },
+    { key:'fenceSolid', name:'Tường rào — phần xây đặc (trên là lan can)', min:0.3, max:3.0 },
     { key:'alley',   name:'Mái hiên hành lang ngoài', min:2.0, max:4.0 },
   ];
 
@@ -444,7 +446,11 @@ export function init(){
     const host = document.getElementById('heightSliders');
     if (!host) return;
     host.replaceChildren();
-    const eff = { ...HEIGHTS, ...CFG.heights };
+    /* Giá trị đầu của thanh trượt là cao độ mặt bằng thật sự dùng — kể cả số khai trong `heights` của
+       chính mặt bằng (bản hiện hành hạ tường rào) — rồi mới tới phần người xem đã kéo. Phần xây đặc
+       chưa khai thì bằng đỉnh rào: tường kín, không lan can. */
+    const eff = { ...heightsOf(plan), ...CFG.heights };
+    eff.fenceSolid ??= eff.fence;
     /* Mặt bằng nào khai mái nhẹ trùm hành lang ngoài thì cao độ mái ấy nằm trong `roofs`, thanh
        trượt HEIGHTS.alley không chạm tới — giấu đi cho khỏi kéo mà không thấy gì đổi. */
     const r3 = plan.rooms.find(r => r[0] === 'R3');
