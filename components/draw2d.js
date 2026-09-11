@@ -5,7 +5,7 @@ import { LOT } from '../lib/lot.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
-import { MIN_CLEAR } from '../lib/lot.js';
+import { MIN_CLEAR, FURNITURE } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
@@ -204,8 +204,10 @@ export function init(){
     const fr=(x,y,w,h,o={})=>el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),rx:3,...o},gF);
     for(const [k,x,y,w,h] of FURN){
       if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='wash'||k==='washRaised'||k==='dishwasher'){
-        if(k==='washRaised')
-          fr(x-.06,y-.06,w+.12,h+.12,{fill:FILL.yard,stroke:'#a6a096'});  // bệ sân nâng 15 cm
+        if(k==='washRaised'){                      // bệ sân nâng dưới máy
+          const p=FURNITURE.washPlinth.pad;
+          fr(x-p,y-p,w+2*p,h+2*p,{fill:FILL.yard,stroke:'#a6a096'});
+        }
         fr(x,y,w,h, k==='altar'?{fill:'#f0e6d2'}:k==='washRaised'?{fill:'#d8e7eb'}:{});
         if(k==='cab') for(let i=1;i<3;i++)
           el('line',{x1:M(x),y1:M(y+h*i/3),x2:M(x+w),y2:M(y+h*i/3),stroke:'#b9b9b9'},gF);
@@ -214,11 +216,11 @@ export function init(){
       } else if(k==='tap') {
         const horiz=w>h, cx=M(x+w/2), cy=M(y+h/2);
         if(horiz){
-          el('line',{x1:M(x),y1:cy,x2:M(x+w),y2:cy,stroke:'#4e7c8d',stroke_width:2},gF);
-          el('line',{x1:M(x+w),y1:cy-M(h*.65),x2:M(x+w),y2:cy+M(h*.65),stroke:'#4e7c8d',stroke_width:2},gF);
+          el('line',{x1:M(x),y1:cy,x2:M(x+w),y2:cy,stroke:'#5d5a52',stroke_width:2},gF);
+          el('line',{x1:M(x+w),y1:cy-M(h*.65),x2:M(x+w),y2:cy+M(h*.65),stroke:'#5d5a52',stroke_width:2},gF);
         } else {
-          el('line',{x1:cx,y1:M(y),x2:cx,y2:M(y+h),stroke:'#4e7c8d',stroke_width:2},gF);
-          el('line',{x1:cx-M(w*.65),y1:M(y+h),x2:cx+M(w*.65),y2:M(y+h),stroke:'#4e7c8d',stroke_width:2},gF);
+          el('line',{x1:cx,y1:M(y),x2:cx,y2:M(y+h),stroke:'#5d5a52',stroke_width:2},gF);
+          el('line',{x1:cx-M(w*.65),y1:M(y+h),x2:cx+M(w*.65),y2:M(y+h),stroke:'#5d5a52',stroke_width:2},gF);
         }
       } else if(k==='bed'){                        // đầu giường ở cạnh trên
         fr(x,y,w,h);

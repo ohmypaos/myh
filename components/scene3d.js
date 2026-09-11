@@ -191,7 +191,7 @@ export function init(){
     BOUNDS.max.y = LEVELS.top;
     group = new THREE.Group();
     for (const b of massing.boxes)
-      group.add(box(b, solidMats[b.kind] || solidMats.houseWall, b.kind));
+      group.add(box(b, solidMats[b.tone || b.kind] || solidMats.houseWall, b.kind));
     for (const p of massing.prisms) {
       const m = new THREE.Mesh(prismGeometry(p), solidMats[p.kind] || solidMats.houseWall);
       m.castShadow = m.receiveShadow = true;
