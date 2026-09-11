@@ -9,7 +9,7 @@ import { MIN_CLEAR } from '../lib/lot.js';
 import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
-import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf } from '../lib/envelope.js';
+import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf } from '../lib/envelope.js';
 
 export function init(){
   /* Dọn sạch trước khi dựng: trong dev, React StrictMode gọi effect hai lần, nếu không
@@ -152,6 +152,11 @@ export function init(){
     for(const pp of downpipes(V)){
       const {x,y,w,h} = pp.rect;
       el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.max(w,h)/2)+2,fill:'#5d5a52'},gSky);
+    }
+    /* Dầm biên — dải xám mờ dưới mép mái, nằm trên đầu nên không đậm như tường. */
+    for(const b of beamsOf(V)){
+      const {x,y,w,h} = b.rect;
+      el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),fill:'#55595a',fill_opacity:.6},gSky);
     }
     /* Cột đỡ mái — ô vuông đặc trên tim tường rào, kèm mã. Cột đứng từ sân lên nên vẽ đậm như tường. */
     for(const c of postsOf(V)){

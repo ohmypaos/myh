@@ -9,7 +9,7 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
-import { LOT, STEP, ROOF, POST, heightsOf } from '../lib/lot.js';
+import { LOT, STEP, ROOF, POST, BEAM, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness }
   from '../lib/envelope.js';
@@ -77,7 +77,7 @@ const CHECKS = [
   'Trần giả dựng đúng cốt khai, dưới bản mái, và cao hơn đầu mọi cửa, cửa sổ trên tường phòng ấy',
   'Đi bộ: qua được mọi cửa và cổng cả hai chiều, tới nơi đứng đúng cốt sàn phòng bên kia; không đi xuyên được tường nhà',
   'Nội thất: khối của mỗi món nằm gọn trong chỗ khai và phủ gần trọn nó, chân chạm sàn phòng chứa nó, thấp hơn trần. Cánh cửa: cửa quay 1 cánh, cửa 4 cánh 4 cánh, áp mép lỗ, đứng phía mở, cao đúng đầu cửa',
-  'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép',
+  'Cột đỡ mái nhẹ: mỗi cột một khối đúng chỗ khai, chân chạm sân, đỉnh chạm mặt dưới mái hoặc đáy máng; mọi mép mái nhẹ có tường cao tới mái hoặc cột đỡ, không nhịp nào quá POST.maxSpan, không hẫng ở đầu mép; đoạn mép không tựa tường có dầm, dầm chạm mái hoặc máng, hai đầu gối lên tường, cột hay dầm khác',
 ];
 
 function check(plan){
@@ -376,6 +376,9 @@ function check(plan){
      tiếp sang mái khác cùng cao độ, hoặc rơi xuống một mái thấp hơn ngay bên dưới, hoặc có hộp máng
      phủ đường mép với miệng ngang mặt dưới mái. */
   const gutterBoxes = m.boxes.filter(b => b.kind === 'gutter');
+  /* Máng dừng ở mặt dầm biên dọc tường bao (lib/envelope.js): mươi phân tôn đua qua dầm ra trên đỉnh tường bao
+     không có máng. Điểm soi nằm trên dầm, hoặc quá mặt dầm không tới 0.1 m dọc mép, thì cho qua. */
+  const beamsAll = [...m.boxes.filter(b => b.kind === 'beam'), ...m.prisms.filter(p => p.kind === 'beam')];
   const inPlan = (q, x, z) => x > q.x + EPS && x < q.x + q.w - EPS && z > q.z + EPS && z < q.z + q.d - EPS;
   for (const p of panels) {
     if (!p.axis || Math.abs(p.yb[1] - p.yb[0]) < EPS) continue;
@@ -400,7 +403,10 @@ function check(plan){
                    (q.id === p.id || Math.abs(spanAt(q, q.axis === 'x' ? pt[0] : pt[1])[0] - h) < 1e-3))
               || panels.some(q => q.id !== p.id && inPlan(q, ...drop)
                    && spanAt(q, q.axis === 'x' ? drop[0] : drop[1])[1] < h - EPS)
-              || gutterBoxes.some(g => covers(g) && Math.abs(g.y1 - h) < 1e-3);
+              || gutterBoxes.some(g => covers(g) && Math.abs(g.y1 - h) < 1e-3)
+              || beamsAll.some(q => along === 'x'
+                   ? u > q.x - 0.1 && u < q.x + q.w + 0.1 && c > q.z - 0.01 && c < q.z + q.d + 0.01
+                   : u > q.z - 0.1 && u < q.z + q.d + 0.1 && c > q.x - 0.01 && c < q.x + q.w + 0.01);
       if (!ok) {
         e.push(`mép thấp mái ${p.id} ở ${along === 'x' ? 'z' : 'x'} ${n(c)} không có máng xối quanh ${along} ${n(u)}`);
         break;
@@ -622,27 +628,70 @@ function check(plan){
         return [spanAt(p, c0)[0], spanAt(p, c1)[0]];
       }),
       ...gutterBoxes.filter(g => onPlan(g, b)).map(g => g.y0),
+      ...m.boxes.filter(g => g.kind === 'beam' && onPlan(g, b)).map(g => g.y0),
+      ...m.prisms.filter(p => p.kind === 'beam' && onPlan(p, b)).flatMap(p => {
+        const [c0, c1] = p.axis === 'x' ? [Math.max(p.x, b.x), Math.min(p.x + p.w, b.x + b.w)]
+                                        : [Math.max(p.z, b.z), Math.min(p.z + p.d, b.z + b.d)];
+        return [spanAt(p, c0)[0], spanAt(p, c1)[0]];
+      }),
     ];
     if (!caps.length) e.push(`cột ${id} không có mái nào bên trên`);
     else if (Math.abs(Math.min(...caps) - b.y1) > 1e-3)
       e.push(`cột ${id} đỉnh ở ${n(b.y1)}, vật bên trên (mặt dưới mái / đáy máng) ở ${n(Math.min(...caps))}`);
   }
   const holders = [...m.boxes.filter(b => /Wall$/.test(b.kind) || b.kind === 'post'), ...m.prisms.filter(p => /Wall$/.test(p.kind))];
+
+  /* c) Dầm: mặt trên chạm vật ngay trên (mặt dưới tấm mái hoặc đáy máng — soi hơi lùi vào trong đoạn, đúng
+        ranh thì chạm cả máng bên cạnh), hai đầu gối lên tường, cột hay đoạn dầm khác trong vòng 6 cm. */
+  const beamParts = [...m.boxes.filter(b => b.kind === 'beam'), ...m.prisms.filter(p => p.kind === 'beam')];
+  const alongXOf = q => q.axis ? q.axis === 'x' : q.w >= q.d;
+  for (const bm of beamParts) {
+    const alongX = alongXOf(bm);
+    const [u0, u1] = alongX ? [bm.x, bm.x + bm.w] : [bm.z, bm.z + bm.d];
+    const cn = alongX ? bm.z + bm.d / 2 : bm.x + bm.w / 2;
+    const pt = u => (alongX ? [u, cn] : [cn, u]);
+    const span = u => (bm.axis ? spanAt(bm, u) : [bm.y0, bm.y1]);
+    for (const u of [u0 + Math.min(0.01, (u1 - u0) / 3), u1 - Math.min(0.01, (u1 - u0) / 3)]) {
+      const [px, pz] = pt(u);
+      const inP = q => px >= q.x - EPS && px <= q.x + q.w + EPS && pz >= q.z - EPS && pz <= q.z + q.d + EPS;
+      const above = [...panels.filter(inP).map(p => spanAt(p, p.axis === 'x' ? px : pz)[0]),
+                     ...gutterBoxes.filter(inP).map(g => g.y0)];
+      const top = span(u)[1];
+      if (!above.length || Math.abs(Math.min(...above) - top) > 0.01) {
+        e.push(`dầm ${bm.id} quanh x ${n(px)}, z ${n(pz)}: mặt trên ${n(top)}, vật bên trên ở ${above.length ? n(Math.min(...above)) : 'không có'}`);
+        break;
+      }
+    }
+    for (const u of [u0, u1]) {
+      const [px, pz] = pt(u), bot = span(u)[0];
+      const rests = [...holders, ...beamParts.filter(q => q !== bm)].some(s =>
+        px >= s.x - 0.06 && px <= s.x + s.w + 0.06 && pz >= s.z - 0.06 && pz <= s.z + s.d + 0.06
+        && (s.axis ? spanAt(s, Math.min(s.axis === 'x' ? s.x + s.w : s.z + s.d, Math.max(s.axis === 'x' ? s.x : s.z, s.axis === 'x' ? px : pz)))[1] : s.y1) >= bot - 0.01);
+      if (!rests) e.push(`đầu dầm ${bm.id} ở x ${n(px)}, z ${n(pz)} không gối lên tường, cột hay dầm nào`);
+    }
+  }
   for (const R of lightRoofs(plan)) {
     const edges = [['h', R.y0, R.x0, R.x1], ['h', R.y1, R.x0, R.x1], ['v', R.x0, R.y0, R.y1], ['v', R.x1, R.y0, R.y1]];
     for (const [ax, pos, a, b] of edges) {
-      const steps = Math.max(1, Math.round((b - a) / 0.05)), held = [];
+      const steps = Math.max(1, Math.round((b - a) / 0.05)), held = [], bare = [];
       for (let i = 0; i <= steps; i++) {
         const u = a + (b - a) * i / steps;
         const [px, pz] = ax === 'h' ? [u, pos] : [pos, u];
         const under = R.axis === 'x' ? R.under(px) : R.axis === 'y' ? R.under(pz) : R.under(0);
         /* Tường phải lên tới mặt dưới mái (chừa 6 cm: tường dừng ở chỗ thấp nhất trong bề dày của nó). Cột thì
-           chừa 0.2 m: cột góc gác máng, đỉnh ở đáy máng chứ không ở mặt dưới mái. */
-        const ok = holders.some(s => px >= s.x - EPS && px <= s.x + s.w + EPS && pz >= s.z - EPS && pz <= s.z + s.d + EPS
-          && (s.axis ? spanAt(s, s.axis === 'x' ? px : pz)[1] : s.y1) >= under - (s.kind === 'post' ? 0.2 : 0.06));
-        if (ok) held.push(u);
+           đứng dưới đáy dầm, mà dầm chui dưới máng thì còn thấp hơn — chừa đủ bề cao dầm cộng máng. */
+        const on = s => px >= s.x - EPS && px <= s.x + s.w + EPS && pz >= s.z - EPS && pz <= s.z + s.d + EPS;
+        const topAt = s => (s.axis ? spanAt(s, s.axis === 'x' ? px : pz)[1] : s.y1);
+        const byWall = holders.some(s => s.kind !== 'post' && on(s) && topAt(s) >= under - 0.06);
+        const byPost = holders.some(s => s.kind === 'post' && on(s) && topAt(s) >= under - (BEAM.depth + ROOF.gutterDepth + 0.03));
+        if (byWall || byPost) held.push(u);
+        /* Không tựa tường thì phải có dầm dọc mép: trong 15 cm bề ngang (dầm lùi sau máng), 6 cm dọc trục. */
+        const nearBeam = q => { const [ex, ez] = alongXOf(q) ? [0.06, 0.15] : [0.15, 0.06];
+          return px >= q.x - ex && px <= q.x + q.w + ex && pz >= q.z - ez && pz <= q.z + q.d + ez; };
+        if (!byWall && !beamParts.some(nearBeam)) bare.push(u);
       }
       const where = `mép ${ax === 'h' ? 'y' : 'x'} = ${pos} mái ${R.id}`;
+      if (bare.length) e.push(`${where}: đoạn không tựa tường mà không có dầm, quanh ${n(bare[0])}–${n(bare[bare.length - 1])}`);
       if (!held.length) { e.push(`${where} không có tường hay cột nào đỡ`); continue; }
       const hang = Math.max(held[0] - a, b - held[held.length - 1]);
       if (hang > 0.3) e.push(`${where} hẫng ${n(hang)} m ở đầu mép`);

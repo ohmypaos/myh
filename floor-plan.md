@@ -127,7 +127,7 @@ Kiểm tra chiều ngang: 3.5 (bếp) + 1.0 (hành lang ngoài) = **4.5** ✔
 | Phòng | Kích thước | Ghi chú |
 |---|---|---|
 | Phòng khách | 5.0 × 6.0 = 30.0 m² | Rộng rãi, tỉ lệ tốt |
-| Bếp + nhà ăn | 3.5 × 7.0 = 24.5 m² | Đủ bàn ăn 6 ghế + bếp chữ L |
+| Bếp + nhà ăn | 3.5 × 7.0 = 24.5 m² | Bếp chữ L; ăn trên chiếu trải sàn, không kê bàn ăn |
 | Phòng ngủ 1 | 4.1 × 3.5 = 14.35 m² | Đạt chuẩn |
 | WC khách | 2.5 × 2.0 = 5.0 m² | Đủ |
 | Hành lang ngoài | 1.0 × 7.0 | Hẹp nhưng đúng chức năng lối phụ |

@@ -41,7 +41,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A11 | Mái sân chính 4.5 × 6 m liền dải với mái hành lang và mái sân phơi, máng xối trong 3D | ✅ xong | |
 | A12 | Tường rào 1.80 m, xây đặc 0.80 m + lan can song thoáng; tường D13 lên trần; cổng chính 3.6 m | ✅ xong | |
 | A13 | WC khách: trần giả 2.70 m, ô thoáng W4 nâng lên 2.00–2.40 | ✅ xong | |
-| A14 | Cột đỡ mái nhẹ — 5 cột thép hộp trên tường rào phải, nhịp ≤ 3.5 m | ✅ xong | |
+| A14 | Cột và dầm đỡ mái nhẹ — 5 cột thép hộp trên tường rào phải, nhịp ≤ 3.5 m, dầm biên suy ra | ✅ xong | |
+| A15 | Bỏ bàn ăn trong bếp — ăn trên chiếu trải sàn | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -457,8 +458,8 @@ tự do khác nằm giữa hai tường (mép trước mái sân chính 4.5 m, m
 trà. Phương án 3 cột ở chỗ nối mái bị bỏ: nhịp 6–7 m phải thép I hoặc giàn.
 
 - [x] Vị trí khai ở `posts` trong `current.js`; tiết diện và nhịp tối đa ở `POST` trong `lib/lot.js`
-- [x] Chiều cao **suy ra** (`postsOf()` trong `lib/envelope.js`): tới mặt dưới tấm mái ngay trên cột, hoặc đáy
-      máng — cột góc C1 gác máng mép trước mái sân chính, đỉnh 2.78
+- [x] Chiều cao **suy ra** (`postsOf()` trong `lib/envelope.js`): ban đầu tới mặt dưới tấm mái hoặc đáy máng;
+      có dầm (dưới đây) thì tới đáy dầm
 - [x] `lib/massing.js` dựng khối `post`; gỡ chồng như tường nên phần rào xây và lan can nhường chỗ cho cột
 - [x] Neo vào lưới như lỗ mở: cột trên đường lưới bám đường, cột giữa nhịp đi theo đường phía trên nó
 - [x] Vẽ 2D (ô đặc kèm mã), bảng trong đặc tả, màu thép trong 3D
@@ -468,7 +469,26 @@ trà. Phương án 3 cột ở chỗ nối mái bị bỏ: nhịp 6–7 m phải
       mép không hẫng quá 0.3 m. Lấy cột từ khối đã dựng, không từ `posts`
 - [x] Phá thử: bỏ C2 → phép 18 báo nhịp 5.9 m; C2 dời ra ngoài mái → `validate()` và phép 18 báo; đỉnh cột thò
       lên 10 cm → phép 18 và phép 10 báo; đỉnh hụt 10 cm → phép 18 báo cả 5 cột (phép 10 không thấy được hở)
-- [ ] Dầm biên, xà gồ chưa dựng — mái vẫn là tấm liền; cột chỉ để thấy chỗ đứng và soi nhịp
+- [x] **Dầm biên** (chủ nhà yêu cầu 11/9/2026 "cho thực tế") — thép hộp 50 × 100 (`BEAM`), **suy ra** ở
+      `beamsOf()`: dọc mọi đoạn mép mái nhẹ không tựa lên tường cao tới mái, đi qua đầu cột; mặt trên chạm mặt
+      dưới mái (dầm dọc tường rào nghiêng theo mái, cắt ở nóc mái hành lang), cột hạ xuống đáy dầm
+- [x] Mép có máng tự do: dầm lùi vào sau máng. Máng dừng ở mặt dầm dọc tường bao và ở mặt cột góc — `gutters()`
+      cắt đầu máng; `beamLines()` tách riêng để gutters() dùng mà không vòng lặp
+- [x] Dựng 3D (lăng trụ khi nghiêng, "Ẩn mái" giấu cùng), vẽ 2D, bảng trong đặc tả
+- [x] Phép 18 thêm: đoạn mép không tựa tường phải có dầm; dầm chạm mái hoặc máng; hai đầu dầm gối lên tường,
+      cột hay dầm khác. Phép 13 cho qua mươi phân tôn đua qua dầm ra trên đỉnh tường bao (không có máng)
+- [x] Phá thử dầm: bỏ hết dầm ngang → phép 18 báo đủ 5 đoạn mép không có dầm; hạ mặt trên dầm 5 cm → phép 18
+      báo dầm không chạm mái; bỏ cắt máng ở mặt cột → phép 18 báo đầu dầm không gối lên cột góc
+- [ ] Xà gồ chưa dựng — tấm tôn vẫn vượt liền từ tường sang dầm
+
+> **Vấp ở dầm:** bản đầu cho dầm dọc tường rào nội suy thẳng hai đầu nên nằm phẳng 3.50 dưới nóc 3.85 của mái
+> hành lang — cột giữa ra 3.40 thay vì 3.745. Rồi máng chạy xuyên qua tuyến dầm ở góc WC khách làm dầm gãy bậc,
+> rồi máng chồm 2.5 cm lên đầu cột góc làm cột hạ dưới đáy dầm. Phép 18 bắt cả hai lỗi sau (đầu dầm không gối).
+
+### ✅ A15 · Bỏ bàn ăn trong bếp
+
+Chủ nhà (11/9/2026): nhà thường ăn trên chiếu trải sàn, không dùng bàn. Bỏ `dine` khỏi `furn`, `floor-plan.md`
+sửa dòng bếp. Tên phòng giữ "BẾP + NHÀ ĂN".
 
 > **`POST.maxSpan` là 4.5 chứ không 3.5.** Nhịp 3.5 m chủ nhà chốt là dọc tường rào; mép trước mái sân chính
 > từ tường phòng khách tới cột góc đã 4.35 m và không đặt cột giữa được (vướng ghế bàn trà, giữa sân). Phép

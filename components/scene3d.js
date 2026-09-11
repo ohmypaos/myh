@@ -37,6 +37,7 @@ const COLORS = {
   gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
   downpipe:    0x6a716e,     // ống xả đứng áp tường bao
   post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
+  beam:        0x55595a,     // dầm biên thép hộp, cùng màu cột
   ceiling:     0xe4e0d4,
   dropCeiling: 0xe9e6dc,     // trần giả thạch cao / nhựa
   step:        0xe2dccd,
@@ -207,7 +208,7 @@ export function init(){
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
      được vào trong bếp. Đầu hồi là tường, giữ nguyên. */
   const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang'
-                   || k === 'metalRoof' || k === 'gutter' || k === 'ceiling' || k === 'dropCeiling';
+                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'ceiling' || k === 'dropCeiling';
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }

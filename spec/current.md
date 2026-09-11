@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — mái tôn liền dải sân chính, hành lang, sân phơi
 
-> Sinh tự động từ `lib/versions/current.js` lúc 11:05:21 11/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 11:32:25 11/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -122,8 +122,8 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 
 | Mái | Mép | Từ | Đến | Dài | Miệng máng | Đặt |
 |---|---|---:|---:|---:|---:|---|
-| RF1 | y = 12.00 | 5.11 | 9.61 | 4.50 | 2.90 | dưới mép mái |
-| RF3 | y = 27.95 | 7.45 | 9.61 | 2.16 | 3.21 | trong mép, sát chân tường cao hơn mái |
+| RF1 | y = 12.00 | 5.11 | 9.45 | 4.34 | 2.90 | dưới mép mái |
+| RF3 | y = 27.95 | 7.45 | 9.47 | 2.02 | 3.21 | trong mép, sát chân tường cao hơn mái |
 | RF3 | y = 28.00 | 5.11 | 7.45 | 2.34 | 3.20 | dưới mép mái |
 
 **Ống xả đứng** — mỗi dải máng một ống 90 mm ở đầu sát tường bao, chạy thẳng xuống, cắm dưới cốt sân vào ống ngầm — không đổ ra sân.
@@ -133,15 +133,28 @@ Mái phụ lợp tôn, không phải bản bê tông liền mái nhà. Vùng ph�
 | RF1 | 9.30 | 11.96 | 9.39 | 12.04 | 2.78 | mặt trong tường bao |
 | RF3 | 9.30 | 27.83 | 9.39 | 27.92 | 3.08 | mặt trong tường bao |
 
-**Cột đỡ mái nhẹ** — thép hộp 100 × 100, đứng ở chỗ mép mái không tựa lên tường cao tới mái. Vị trí khai theo tâm cột; chiều cao suy ra: từ cốt sân tới mặt dưới mái ngay trên cột, hoặc đáy máng nếu máng chạy qua đầu cột. Nhịp giữa hai chỗ đỡ dọc một mép mái không quá 4.5 m.
+**Cột đỡ mái nhẹ** — thép hộp 100 × 100, đứng ở chỗ mép mái không tựa lên tường cao tới mái. Vị trí khai theo tâm cột; chiều cao suy ra: từ cốt sân tới đáy dầm biên trên đầu cột. Nhịp giữa hai chỗ đỡ dọc một mép mái không quá 4.5 m.
 
-| Mã | x | y | Đỉnh cột | Đỡ mái | Gác máng |
+| Mã | x | y | Đỉnh cột | Đỡ mái | Dưới dầm |
 |---|---:|---:|---:|---|---|
-| C1 | 9.50 | 12.00 | 2.78 | RF1 | có |
-| C2 | 9.50 | 15.00 | 3.19 | RF1 | — |
-| C3 | 9.50 | 18.00 | 3.50 | RF1, RF4 | — |
-| C4 | 9.50 | 21.50 | 3.85 | RF4 | — |
-| C5 | 9.50 | 25.00 | 3.50 | RF3, RF4 | — |
+| C1 | 9.50 | 12.00 | 2.80 | RF1 | có |
+| C2 | 9.50 | 15.00 | 3.09 | RF1 | có |
+| C3 | 9.50 | 18.00 | 3.40 | RF1, RF4 | có |
+| C4 | 9.50 | 21.50 | 3.75 | RF4 | có |
+| C5 | 9.50 | 25.00 | 3.40 | RF3, RF4 | có |
+
+**Dầm biên** — thép hộp 50 × 100, suy ra dọc mọi đoạn mép mái nhẹ không tựa lên tường cao tới mái, từ mặt tường tới mặt tường, đi qua đầu cột. Mặt trên chạm mặt dưới mái (dầm dọc chiều dốc nghiêng theo mái); ở mép có máng thì dầm lùi vào sau máng, đoạn chui dưới máng hạ xuống đáy máng.
+
+| Mái | Tuyến | Từ | Đến | Dài | Mặt trên | Ghi chú |
+|---|---|---:|---:|---:|---|---|
+| RF1 | y = 12.00 | 5.11 | 9.47 | 4.36 | 2.91 → 2.91 |  |
+| RF1 | y = 18.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
+| RF1 | x = 9.50 | 12.00 | 18.00 | 6.00 | 2.90 → 3.50 | nghiêng theo mái |
+| RF3 | y = 25.00 | 8.55 | 9.47 | 0.92 | 3.50 → 3.50 |  |
+| RF3 | y = 28.00 | 5.11 | 7.45 | 2.34 | 3.21 → 3.21 |  |
+| RF3 | x = 9.50 | 25.00 | 27.95 | 2.95 | 3.50 → 3.21 | nghiêng theo mái |
+| RF4 | x = 9.50 | 18.00 | 21.50 | 3.50 | 3.50 → 3.85 | nghiêng theo mái |
+| RF4 | x = 9.50 | 21.50 | 25.00 | 3.50 | 3.85 → 3.50 | nghiêng theo mái |
 
 ### Tường xây lên hết chiều cao nhà
 
@@ -213,7 +226,6 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | desk | 3.55 | 25.00 | 1.30 | 1.50 |
 | kitsink | 5.15 | 24.30 | 2.15 | 0.60 |
 | kithob | 5.15 | 21.90 | 0.60 | 2.40 |
-| dine | 6.40 | 19.60 | 1.05 | 2.20 |
 | wash | 5.20 | 25.20 | 0.65 | 0.65 |
 | wc | 8.05 | 29.10 | 0.42 | 0.68 |
 | lav | 9.00 | 28.95 | 0.40 | 0.60 |
@@ -303,3 +315,5 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 - **Sofa phòng khách xếp chữ L** ở góc tây bắc, cạnh dài quay về kệ tivi — thay hai ghế đối diện nhau; lối từ cửa chính sang hành lang chừa trống ~2 m phía đông
 - **Kệ tivi dài hết tường** y = 17 (3.9 m lọt lòng), thay kệ 1.8 m
 - **Cột đỡ mái nhẹ** — 5 cột thép hộp 100 × 100 trên tim tường rào phải (y = 12, 15, 18, 21.5, 25), nhịp ≤ 3.5 m: trước đó cả mép đông mái sân chính, mái hành lang, mái sân phơi không có gì đỡ vì rào chỉ xây 0.80
+- **Dầm biên thép hộp 50 × 100** dọc mọi mép mái nhẹ không tựa tường — tuyến tường rào phải (nghiêng theo mái, đi qua đầu cột), mép trước mái sân chính, mép dải hở mái sân phơi, hai chỗ nối mái ở góc bếp; ở mép có máng thì dầm lùi vào sau máng. Cột hạ đỉnh xuống đáy dầm
+- **Bỏ bàn ăn trong bếp** — nhà ăn trên chiếu trải sàn, không dùng bàn; nhánh bếp chữ L có thêm chỗ trống
