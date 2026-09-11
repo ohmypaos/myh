@@ -48,7 +48,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A18 | Sân giếng sát tường bếp; bố trí lại cụm máy | ✅ xong | Ba vòi nước ở sân giếng; mái và cột giữ nguyên |
 | A19 | Gộp mái hành lang ngoài vào mái bếp — một mái hai dốc 30% trên `x` 5–9.5 | ✅ xong | |
 | A20 | Cầu thang chữ U lên mái thay phòng thờ, tum xây, lan can mái; bỏ SK1–SK4 — chuẩn bị tầng 2 | ✅ xong | |
-| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới, tay vịn khe giữa hai vế, XPS lát rời | ⬜ chưa làm | XPS lát rời chờ chủ nhà quyết |
+| A21 | Việc tồn sau A20: neo thang / tum / lan can mái vào lưới ✅, tay vịn khe giữa hai vế, XPS lát rời | 🔵 đang làm | XPS lát rời chờ chủ nhà quyết |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -599,9 +599,37 @@ bức lửng 1 m. Số liệu, lý do, cái giá: `3d.md` mục 3d.
 
 ### ⬜ A21 · Việc tồn sau A20
 
-- [ ] Neo thang, tum, lan can mái vào lưới (E2) — kéo thanh trượt `y` 16.85 thì thang đang đứng yên
+- [x] **Neo thang, tum, lan can mái vào lưới (E2).** Trước đó kéo thanh trượt `y` 16.85 hay `y` 19 thì cả ba
+      đứng yên, tách khỏi phòng
+  - [x] `nearAnchor()` trong `lib/grid.js` — neo vào đường lưới **gần nhất về cả hai phía**, giữ độ lệch có
+        dấu. Cách neo cũ (`anchor`, đường nhỏ hơn) sai cho thứ khai theo **mặt tường**: mép lỗ thang
+        `y` 18.95 là mặt trong vách PN1 ở đường 19.0, neo về đường 18 là dịch vách PN1 thì lỗ thang đứng yên
+  - [x] Thang: ba mép bám mặt đường, mép `x` lớn **giữ bề dài chạy** — nó là đầu vế 2, do `width`, `tread`
+        và số nấc quyết định, không phải một mốc tự do
+  - [x] Tum: ba cạnh bám đường, cạnh `x` lớn giữ bề ngang (áp sát đầu vế 2 nên đi theo thang). Cửa tum neo
+        theo **chính cạnh tum chứa nó**, bề dài cửa giữ nguyên như mọi lỗ mở
+  - [x] Lan can mái: cả ba số bám mặt đường gần nhất; tuyến trước `y` 10.73 neo vào đường 12 mà bản hiên
+        đua ra từ đó
+  - [x] Kiểm: kéo `y` 16.85 → thang, tum, cửa tum, lan can cùng đi; kéo `y` 19 → mép lỗ thang và tum đi,
+        đoạn chừa đầu hồi bếp **không** đi; kéo `y` 18 / 25 → đoạn chừa đi theo mái bếp; kéo `y` 12 → tuyến
+        lan can trước đi theo bản hiên. `check:grid` khứ hồi khớp cả 12 phương án
+- [x] **Đoạn chừa của lan can mái suy ra, không khai.** Chặn của việc trên: tuyến `x = 5` khai tay hai số
+      18.8 / 24.2 chép từ hình học đầu hồi bếp — không đường lưới nào neo được cho đúng (gần nhất là 19 và
+      24, nhưng đầu hồi bám 18 và 25). Nay khai **tuyến liền** bốn cạnh, `roofRailingsOf()` cắt ra chỗ vướng:
+      vách tum, và chỗ mái nhẹ đội đỉnh tường lên trên mặt mái (profile lấy từ `roofCapOnWall`, cùng hàm
+      `massing.js` dùng dựng đầu hồi). Đầu hồi chỉ thật sự chắn `y` 19.20–23.80 nên lan can dài thêm 0.40 m
+      mỗi đầu
+  - [x] `check-3d` phép 21 soi **từng đoạn đã cắt** thay vì cả tuyến khai — so với cả tuyến thì một đầu có
+        thanh là cho qua, nửa kia mất sạch vẫn lọt
+  - [x] Phá thử: bỏ phần cắt → phép 10 báo 37 cặp khối chồng (lan can cắm vào đầu hồi và vách tum); bỏ dựng
+        một đoạn lan can → phép 21 báo đúng đoạn `v 5 (23.8–30)`
 - [ ] Tay vịn dọc khe giữa hai vế thang
 - [ ] Lớp chống nóng XPS kiểu lát rời để tháo khi xây tầng 2 — chờ chủ nhà quyết
+
+> **Lộ ra khi phá thử neo:** neo mép `y` lớn của lỗ thang về đường nhỏ hơn rồi kéo `y` 19 ra 19.4 thì lỗ
+> thang đứng yên còn tum nở ra — trong tum thừa một dải bản mái 0.45 m, và **không phép kiểm nào báo**.
+> `tumOf()` chỉ đòi tum **trùm kín** lỗ thang và đòi riêng vách đông áp sát đầu vế 2; ba cạnh kia không
+> đòi ôm sát lỗ. Neo đúng thì không xảy ra, nhưng chỗ hở của bộ kiểm vẫn còn đó.
 
 ## B · Mô hình 3D
 
