@@ -9,6 +9,7 @@
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
 import { PLANS } from '../lib/versions/index.js';
+import { COLORS, GLASS_KINDS, ROOF_KINDS } from '../components/palette.js';
 import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
@@ -82,6 +83,7 @@ const CHECKS = [
   'Lớp chống nóng mái: chỉ có khi mặt bằng khai; nằm ngay trên mặt bản mái, dày đúng cấu tạo; phủ kín mọi bản mái bê tông và mái đổ ra ngoài được khai, trừ chỗ khối nhô cao hơn mái; không phủ giếng trời, không lát ra chỗ không có bản mái hay đỉnh tường nhà bên dưới',
   'Giàn phơi: đủ hai trụ, bốn tay chìa và hai thanh phơi; trụ đứng trên cốt sân, tay chìa nối đầu trụ lên ngọn, hai thanh chạy suốt tuyến và lệch đều hai bên đúng tầm chìa — mặt cắt đúng hình tam giác ngược',
   'Bồn nước trên mái: đủ khối thân, chân, bản đế và hai thanh kiềng; chân đứng đúng mặt mái, kiềng bắc ngang trục đỡ đúng đường tim đáy trụ (không thì bồn treo lơ lửng); bản đế đủ rộng để áp lực xuống lớp chống nóng không quá sức XPS; thân đúng đường kính và nằm gọn trong hình chiếu khai',
+  'Màu và nhóm ẩn mái: mọi loại khối massing.js sinh ra đều có màu khai trong components/palette.js (thiếu thì âm thầm tô màu tường), và mọi khối đứng từ cốt mặt mái trở lên đều nằm trong nhóm bị nút "Ẩn mái" giấu',
   'Cầu thang lên mái: đủ khối, bậc đều và không cao quá giới hạn, bậc trên cùng lên đúng mặt mái; đi bộ từ chân thang lên mái, ra vào qua từng cửa tum rồi xuống lại không vướng; đủ khoảng đầu trên mọi mặt bậc; hai mép trong giáp khe giữa hai vế có tay vịn chạy hết vế và trụ ở đầu khe; tum trùm kín lỗ thang; lan can mái đứng trên mặt mái',
 ];
 
@@ -556,28 +558,36 @@ function check(plan){
       return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(want, depth) };
     };
     const sides = { [-1]: side(-1), [1]: side(1) };
-    /* Thử **cả bề ngang lỗ**, không chỉ tim lỗ. Cửa thường hẹp hơn tầm vai nên vẫn đúng một lối như cũ;
-       nhưng lỗ rộng thì tim lỗ không nhất thiết là lối đi — D4 là cả cạnh hở của buồng thang, tim lỗ rơi
-       đúng khe giữa hai vế, chỗ có tay vịn, còn người thì đi trên vế. Qua được là đủ, không bắt đi giữa.
-       Báo theo lối giữa cho thông điệp khỏi đổi. */
+    /* Thử **cả bề ngang lỗ**, không chỉ tim lỗ: lỗ rộng thì tim lỗ không nhất thiết là lối đi — D4 là cả
+       cạnh hở của buồng thang, tim lỗ rơi đúng khe giữa hai vế, chỗ có tay vịn, còn người thì đi trên vế.
+
+       Nhưng "có **một** lối nào đó qua được" thì quá lỏng: nửa cửa bị bịt cũng lọt. Luật: qua được nếu
+       **tim lỗ thông** (cửa thường chỉ có một lối, đúng như cũ), **hoặc** có một **dải liền** rộng ít nhất
+       MIN_PASS đi qua được ở chỗ khác (lỗ rộng thì lối lệch tim vẫn là lối thật). Nửa cửa 0.9 m bị bịt cho
+       dải liền chừng 0.2 m — dưới ngưỡng, vẫn báo. Bề ngang lấy theo tim người, đã trừ tầm vai hai bên. */
+    const MIN_PASS = 0.30, STEP_U = 0.05;
     const lo = o.a + WALK.radius, hi = o.b - WALK.radius;
-    const lines = hi <= lo + EPS ? [mid]
-      : [mid, ...Array.from({ length: Math.floor((hi - lo) / 0.1) + 1 }, (_, i) => lo + i * 0.1)];
+    const lines = hi <= lo + EPS ? []
+      : Array.from({ length: Math.floor((hi - lo) / STEP_U) + 1 }, (_, i) => lo + i * STEP_U);
     for (const dir of [-1, 1]) {
       const from = sides[-dir], to = sides[dir];
       if (to.level - from.level > WALK.climb + EPS && !withSteps.has(o.id)) continue;
-      let bad = null;
-      for (const u of lines) {
+      const tryLine = u => {
         const [x0, z0] = at(o, u, from.c), [x1, z1] = at(o, u, to.c);
         const start = { x: x0, z: z0, foot: supportAt(solids, x0, z0, from.level) };
         const r = stepWalk(solids, start, x1 - x0, z1 - z0);
-        const why = r.hit || Math.hypot(r.x - x1, r.z - z1) > 1e-3 ? 'block'
-                  : Math.abs(r.foot - to.level) > EPS ? 'level' : null;
-        if (!why) { bad = null; break; }
-        bad ??= { r, why };
+        return { r, why: r.hit || Math.hypot(r.x - x1, r.z - z1) > 1e-3 ? 'block'
+                      : Math.abs(r.foot - to.level) > EPS ? 'level' : null };
+      };
+      const centre = tryLine(mid);
+      if (!centre.why) continue;
+      let run = 0, best = 0;
+      for (const u of lines) {
+        if (tryLine(u).why) run = 0; else { run += STEP_U; best = Math.max(best, run); }
+        if (best >= MIN_PASS - EPS) break;
       }
-      if (!bad) continue;
-      const { r, why } = bad, arrow = `${o.id} ${dir > 0 ? '→' : '←'}`;
+      if (best >= MIN_PASS - EPS) continue;
+      const { r, why } = centre, arrow = `${o.id} ${dir > 0 ? '→' : '←'}`;
       if (why === 'block')
         e.push(`đi bộ ${arrow} vướng ${r.hit?.kind ?? '?'} ở ${o.ax === 'h' ? 'z' : 'x'} ${n(o.ax === 'h' ? r.z : r.x)} (cửa ở ${o.pos}, mặt tường ±${half})`);
       else
@@ -1160,6 +1170,25 @@ function check(plan){
         e.push(`thanh phơi ${r.id} chỉ chạy ${n(s0)}–${n(s1)}, tuyến ${n(r.a)}–${n(r.b)}`);
     }
   }
+
+  /* 24 — màu và nhóm ẩn mái. Hai chỗ hỏng lặng lẽ mà 23 phép trên không thấy vì chúng chỉ soi hình học:
+     thêm một loại khối mà quên khai màu thì nó rơi về màu tường và trông "gần đúng"; thêm một khối đứng
+     trên mái mà quên cho vào ROOF_KINDS thì bấm "Ẩn mái" xong nó vẫn che mất phần trong nhà. Đọc thẳng
+     components/palette.js — cùng một nguồn scene3d.js dùng, không phải danh sách chép lại. */
+  for (const b of [...m.boxes, ...m.prisms])
+    if (!COLORS[b.kind] && !GLASS_KINDS.has(b.kind)) {
+      e.push(`loại khối '${b.kind}' không có màu khai trong palette.js — 3D sẽ tô nhầm màu tường`);
+      break;
+    }
+  for (const g of m.glass)
+    if (!GLASS_KINDS.has(g.kind) && !COLORS[g.kind]) {
+      e.push(`loại kính '${g.kind}' không có trong palette.js`);
+      break;
+    }
+  /* Đứng **trên mặt mái đi lại được** thì phải bị "Ẩn mái" giấu. Suy từ cao độ chứ không chép danh sách:
+     thêm khối mới trên mái là lộ ngay. */
+  const onRoof = [...m.boxes, ...m.prisms, ...m.glass].find(b => b.y0 > walkTop - EPS && !ROOF_KINDS.has(b.kind));
+  if (onRoof) e.push(`khối '${onRoof.kind}' đứng ở cốt ${n(onRoof.y0)}, trên mặt mái ${n(walkTop)}, mà "Ẩn mái" không giấu`);
 
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }

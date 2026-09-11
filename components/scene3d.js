@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
+import { COLORS, GLASS_KINDS, ROOF_KINDS } from './palette.js';
 import { LOT, heightsOf } from '../lib/lot.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
@@ -22,48 +23,6 @@ import { roofCovering } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
 import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayLabel }
   from '../lib/sun.js';
-
-/* Bảng màu giấy can, cùng tông với bản vẽ 2D. Khoá phải trùng `kind` mà massing.js sinh ra. */
-const COLORS = {
-  houseWall:   0xefece4,
-  partitionWall:0xb8c3c5,   // vách nhựa ngăn phòng, không phải tường xây
-  lowWall:     0xefece4,     // bức lửng giữa phòng khách và buồng thang — trát sơn như tường nhà
-  stair:       0xe2dccd,     // bản thang, chiếu nghỉ
-  stairRail:   0x4f4c46,     // lan can thang, lan can mép lỗ thang
-  tumWall:     0xefece4,     // tường gạch tum trát sơn, cùng màu tường nhà
-  tumRoof:     0xb9bcb8,     // mái tôn tum
-  tumDoor:     0x8d6e4f,     // cánh cửa tum ra mái
-  tumCurb:     0xefece4,     // gờ chắn nước ngưỡng cửa tum
-  tumFascia:   0x6a716e,     // diềm gập bọc mép mái tum — sẫm để viền mái đọc thành một nét gọn
-  tumCanopy:   0x6a716e,     // ô văng trên cửa tum, cùng màu diềm
-  roofRailing: 0x4f4c46,     // lan can thép mép mái
-  tank:        0xc6cacb,     // bồn inox — xám sáng ánh kim, tách khỏi tôn xám lạnh
-  tankStand:   0x6a716e,     // giá thép và bản đế dưới bồn
-  tankCradle:  0x6a716e,     // thanh kiềng ngang đỡ đáy bồn
-  rack:        0x6a716e,     // trụ giàn phơi, cùng màu giá bồn
-  rackArm:     0x6a716e,     // tay chìa chéo trên đầu trụ giàn phơi
-  rackBar:     0xc6cacb,     // thanh phơi inox
-  fenceWall:   0xd9d3c4,
-  railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
-  floor:       0xe8e3d6,
-  ground:      0xcfccc0,
-  roof:        0xc9c2b2,
-  alleyRoof:   0xbdb6a6,
-  overhang:    0xc9c2b2,
-  roofInsulation:0xc39b82,  // gạch lát trên lớp chống nóng mái — tông gạch nhạt, tách khỏi bê tông
-  metalRoof:   0xb9bcb8,     // tôn — xám hơi lạnh, tách khỏi bê tông
-  gutter:      0x7d8582,     // máng xối — tối hơn tôn cho thấy rõ viền mép mái
-  downpipe:    0x6a716e,     // ống xả đứng áp tường bao
-  post:        0x55595a,     // cột thép hộp đỡ mái nhẹ
-  beam:        0x55595a,     // dầm biên thép hộp, cùng màu cột
-  purlin:      0x73787a,     // xà gồ dưới tấm tôn, nhỏ hơn dầm biên
-  ceiling:     0xe4e0d4,
-  dropCeiling: 0xe9e6dc,     // trần giả thạch cao / nhựa
-  step:        0xe2dccd,
-  furniture:   0xc4ab86,     // nội thất — gỗ nhạt, tách khỏi tường và sàn
-  doorLeaf:    0x8d6e4f,     // cánh cửa đi — gỗ sẫm
-  glass:       0xa9cfe0,
-};
 
 const CENTER = new THREE.Vector3(LOT.w / 2, 0, LOT.d / 2);
 
@@ -236,7 +195,7 @@ export function init(){
       group.add(b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind) : box(b, materialOf(b), b.kind));
     for (const p of massing.prisms) {
       /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
-      const sash = p.kind === 'sash' || p.kind === 'louver';
+      const sash = GLASS_KINDS.has(p.kind);
       const m = new THREE.Mesh(prismGeometry(p), sash ? glassMat : solidMats[p.kind] || solidMats.houseWall);
       m.castShadow = !sash; m.receiveShadow = true;
       m.userData.kind = p.kind;
@@ -255,9 +214,7 @@ export function init(){
   /* "Ẩn mái" phải giấu cả mái tôn, máng xối và trần tôn của bếp, không thì bấm xong vẫn không nhìn
      được vào trong bếp. Đầu hồi là tường, giữ nguyên. Tum và lan can mái đứng trên mái nên giấu cùng —
      còn lại thì nhìn xuống thấy cầu thang. */
-  const isRoof = k => k === 'roof' || k === 'alleyRoof' || k === 'overhang' || k === 'roofInsulation'
-                   || k === 'metalRoof' || k === 'gutter' || k === 'beam' || k === 'purlin' || k === 'ceiling' || k === 'dropCeiling'
-                   || k === 'tumWall' || k === 'tumRoof' || k === 'tumGlass' || k === 'tumDoor' || k === 'tumCurb' || k === 'louver' || k === 'tumFascia' || k === 'tumCanopy' || k === 'roofRailing' || k === 'tank' || k === 'tankStand' || k === 'tankCradle';
+  const isRoof = k => ROOF_KINDS.has(k);
   function applyRoofHidden(){
     group.children.forEach(m => { if (isRoof(m.userData.kind)) m.visible = !roofHidden; });
   }

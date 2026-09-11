@@ -2,7 +2,7 @@
 
 Cập nhật 11/9/2026.
 
-**Hiện không còn việc nào đang mở** — 41/41 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Hiện không còn việc nào đang mở** — 42/42 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -56,6 +56,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A22 | Bồn nước 1000 L trên mái, góc phải cuối nhà trên trần ban công sau | ✅ xong | |
 | A23 | Giàn phơi tam giác ngược ở dải hở sân phơi, dọc tường bao sau | ✅ xong | |
 | A24 | Rào mặt tiền kín 2.10, rào sau kín 1.80, bỏ lan can — lấy riêng tư | ✅ xong | |
+| A25 | Vá ba chỗ hở của bộ kiểm (tum ôm lỗ thang, phép 16, màu + ẩn mái); rà lại toàn mô hình | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -788,6 +789,36 @@ xây kín, cao lên, không lan can sắt. Số liệu và cái giá: `3d.md` m�
 > đường tim, nên vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —
 > thanh ấy là của cạnh bên, hợp lệ. Đổi sang so tâm khối, phải lọt hẳn trong lõi bức tường (0.06).
 
+### ✅ A25 · Vá ba chỗ hở của bộ kiểm, rà lại toàn mô hình
+
+Rà toàn bộ mô hình 3D một lượt (11/9/2026) rồi vá ba chỗ đã biết là bộ kiểm không phủ.
+
+- [x] **Tum phải ôm sát lỗ thang, không chỉ trùm kín.** `tumOf()` nay đòi mặt trong mỗi vách cách mép lỗ
+      không quá một bề dày vách. Cho phép hụt chút vì vách tum 100 đứng trên tường bao 220 thì mặt trong lùi
+      0.06; hở hơn thế là thừa một dải bản mái nằm trong tum. Phá thử nới vách nam ra `y` 19.4 → báo
+- [x] **Phép 16 (đi bộ) siết lại.** Trước đó nới thành "có một lối nào đó qua được" — nửa cửa bị bịt cũng
+      lọt. Nay: qua được nếu **tim lỗ thông** (cửa thường chỉ có một lối, đúng như cũ) **hoặc** có một **dải
+      liền ≥ 0.30 m** đi qua được ở chỗ khác (lỗ rộng như D4 thì lối lệch tim vẫn là lối thật). Phá thử bịt
+      nửa cửa D8 → báo
+- [x] **Phép kiểm 24 mới — màu và nhóm ẩn mái.** Tách `components/palette.js` (COLORS, GLASS_KINDS,
+      ROOF_KINDS) ra khỏi `scene3d.js` để phép kiểm đọc **cùng một nguồn** — `check-3d` không nạp được
+      `scene3d.js` (kéo theo three.js), mà đọc bằng biểu thức chính quy thì mong manh. Phép 24 đòi: mọi loại
+      khối có màu khai, và **mọi khối đứng từ cốt mặt mái trở lên** nằm trong nhóm bị "Ẩn mái" giấu — suy từ
+      cao độ chứ không chép danh sách, nên thêm khối mới trên mái là lộ ngay. Phá thử bỏ màu `tankCradle` và
+      bỏ `tank` khỏi ROOF_KINDS → cả hai đều báo
+
+> **Phép 16 siết xong bắt được một lỗi thật ngay.** Giàn phơi đứng cách mép bậc cửa D13 đúng **0.11 m** —
+> bước xuống bậc là đụng trụ, người rộng 0.5 m không lọt. Lúc đặt (A23) tôi chỉ soi giàn **không chồng lên
+> hình chữ nhật bậc**, mà quên chỗ đứng ở chân bậc. Đầu tây giàn lùi từ `x` 5.75 sang **6.30** (chừa 0.66 m),
+> dây phơi 3.90 → **2.90 m**. Muốn dài hơn thì phải quay giàn dọc tường WC khách như bản đầu (3.10 m) —
+> chủ nhà đã chọn dọc tường bao sau nên giữ.
+
+> **Rà lại toàn mô hình, không thấy lỗi nào khác.** Đã soi bằng số: 40 loại khối đều có màu; 13 loại nằm
+> trên mái đều bị "Ẩn mái" giấu; lan can rào chỉ chạy trên phần sân (`x = 0` tới `y` 11.89, `x = 9.5` tới
+> 27.95) và không có thanh nào ở hai cạnh xây kín; không khối nào ra ngoài ranh quá nửa bề dày tường; đỉnh
+> cao nhất 6.84 (mái tum), thấp nhất −0.12 (ống xả). Và bằng mắt: bốn phía, từ trên xuống, ẩn mái, ẩn đồ,
+> soi gần cầu thang, tum, mái bếp, rào trước/sau.
+
 ## B · Mô hình 3D
 
 ### ✅ B1 · Bỏ dropdown nơi xây
@@ -1122,8 +1153,9 @@ Mở một cấu hình lưu cho **mặt bằng khác** thì bỏ phần `lines` 
 khoét mái theo giếng trời — đúng loại việc dễ sai lặng lẽ, vì thiếu một mảnh hay chồng hai
 mảnh thì ảnh vẫn trông bình thường.
 
-`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **20** (B5 thêm
-10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18 và 19, A5 thêm 20); cả 12 phương án qua sạch. Tám phép đầu:
+`scripts/check-3d.mjs`, chạy bằng `npm run check:3d`. Ban đầu tám phép kiểm, nay **24** (B5 thêm
+10 và 11, A9 thêm 9, A4 thêm 12, A11 thêm 13, A12 thêm 14, A13 thêm 15, B2 thêm 16, B3 thêm 17, A14 thêm 18 và 19,
+A5 thêm 20, A21 thêm 21, A22 thêm 22, A23 thêm 23, A25 thêm 24); cả 12 phương án qua sạch. Tám phép đầu:
 
 1. Mọi hộp có bề rộng, bề sâu và chiều cao dương
 2. Không hộp nào thò ra ngoài lô quá nửa bề dày tường
