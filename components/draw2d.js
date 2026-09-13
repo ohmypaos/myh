@@ -57,7 +57,7 @@ export function init(){
 
 
   // các lớp vẽ — tạo lại mỗi lần đổi phiên bản
-  let gRoom,gStep,gWall,gHole,gSky,gF,gLight,gW,gD,gDim,gL,gT,TB;
+  let gRoom,gAxis,gStep,gWall,gHole,gSky,gF,gLight,gW,gD,gDim,gL,gT,TB;
 
   /* ═══════════ CÁC LỚP VẼ ═══════════ */
 
@@ -65,6 +65,25 @@ export function init(){
     for(const [id,name,x,y,w,h,type] of ROOMS)
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),
         fill:FILL[type],stroke:'#d5d1c6',stroke_width:1},gRoom);
+  }
+
+  /* Hệ tọa độ giao tiếp: gốc (0,0) ở góc trên-trái lô, X tăng sang phải và Y tăng xuống dưới.
+     Lưới 1 m đủ để gọi nhanh một vị trí như `x=2, y=23` mà không nhầm chiều. */
+  function drawAxes(){
+    const C='#52707b', faint={stroke:C,stroke_width:1,stroke_opacity:.24,stroke_dasharray:'5 7'};
+    for(let x=0;x<=9;x++) el('line',{x1:M(x),y1:0,x2:M(x),y2:M(30),...faint},gAxis);
+    for(let y=0;y<=30;y++) el('line',{x1:0,y1:M(y),x2:M(9.5),y2:M(y),...faint},gAxis);
+    el('line',{x1:0,y1:-52,x2:M(9.5),y2:-52,stroke:C,stroke_width:2},gAxis);
+    el('path',{d:`M${M(9.5)} -52l-16 -8m16 8l-16 8`,stroke:C,stroke_width:2,fill:'none'},gAxis);
+    el('line',{x1:-52,y1:0,x2:-52,y2:M(30),stroke:C,stroke_width:2},gAxis);
+    el('path',{d:`M-52 ${M(30)}l-8 -16m8 16l8 -16`,stroke:C,stroke_width:2,fill:'none'},gAxis);
+    const label=(x,y,s,o={})=>{const t=el('text',{x,y,fill:C,font_size:o.fs||16,
+      text_anchor:o.anchor||'middle',font_weight:o.weight||600},gAxis); t.textContent=s;};
+    label(M(9.5)/2,-68,'X (m) →',{fs:20});
+    label(-68,M(15),'Y (m) ↓',{fs:20,anchor:'middle'});
+    for(let x=0;x<=9;x++) label(M(x),-18,`x=${x}`,{fs:15});
+    for(let y=0;y<=30;y++) label(-17,M(y)+5,`y=${y}`,{fs:15,anchor:'end'});
+    label(8,24,'(0,0)',{fs:16,anchor:'start'});
   }
 
   function drawWalls(){
@@ -823,7 +842,7 @@ export function init(){
   /* ── dựng toàn bộ bản vẽ cho phiên bản đang chọn ── */
   function buildPlan(){
     [...scene.children].forEach(c => { if(c !== defs) c.remove(); });
-    gRoom = g(); gStep = g(); gWall = g(); gHole = g(); gSky = g();
+    gRoom = g(); gAxis = g({pointer_events:'none'}); gStep = g(); gWall = g(); gHole = g(); gSky = g();
     gF    = g({stroke:'#5c5c5c', stroke_width:1.6, fill:'#fff'});
     gLight = g();
     gW    = g(); gD = g();
@@ -833,7 +852,7 @@ export function init(){
                font_size:17,text_anchor:'middle'});
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
-    drawRooms(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
+    drawRooms(); drawAxes(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
     drawFurniture(); drawGarden(); drawRacks(); drawSwitches(); drawLights();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
@@ -956,6 +975,7 @@ export function init(){
   <tr><td>Mặc định</td><td><b>Tim tường</b> — nhãn phòng và đường kích thước đều tính tới tim tường, cộng dồn ra đúng 30.0 m</td></tr>
   <tr><td>Nút "Nhãn"</td><td>Gạt sang <b>Sử dụng</b> để xem số lọt lòng, đã trừ hết tường. Nhãn khi đó có hậu tố "sd"</td></tr>
   <tr><td>Bảng thống kê</td><td>Luôn có cả hai cột để đối chiếu</td></tr>
+  <tr><td style="color:#52707b">Lưới X / Y xanh xám</td><td>Hệ tọa độ giao tiếp: gốc <b>(0,0)</b> góc trên-trái lô, X tăng sang phải, Y tăng xuống dưới; mỗi ô là 1 m</td></tr>
 
   <tr><td colspan="2" style="background:#f6f4ee;font-weight:700">Nét vẽ</td></tr>
   <tr><td>Nét đen đặc</td><td>Tường xây — bao 220mm, ngăn 100mm</td></tr>

@@ -62,7 +62,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A28 | Hai chậu cây ban công sau, hai cây bóng mát ở góc sân chính phía cổng | ✅ xong | Sân phơi, dây leo lan can chưa làm |
 | A29 | Diềm ốp mép mái hiên cửa chính — điểm nhấn mặt tiền nhìn từ cổng; phép kiểm 27 (3D) | ✅ xong | Lan can ô giữa hoa văn: để sau |
 | A30 | Cập nhật kích thước giường master và phòng ngủ 1 trong mô hình 3D | ✅ xong | |
-| A31 | Đổi chuỗi phòng: khách 5.85 m, PN1 2.5 m, master 3.5 m; WC chung và kho master cùng 1.5 × 2 m | ✅ xong | |
+| A31 | Đổi chuỗi phòng: khách 6.35 m, PN1 2.5 m, master 3.5 m; WC chung và kho master cùng 2 × 1.5 m | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -832,7 +832,7 @@ Chủ nhà yêu cầu (11/9/2026) bố trí hệ đèn cho cả nhà. Lý do t�
 - [x] `LIGHT` (8 loại đèn mua sẵn: cỡ, công suất, quang thông, IP) và `LIGHTING` (hệ số sử dụng theo chỉ số phòng,
       hệ số suy giảm) trong `lib/lot.js`
 - [x] Khai trong `current.js`: `lights` 26 đèn trần / đèn thả, `wallLights` 14 đèn tường, `lux` ngưỡng 8 phòng —
-      40 bộ, 627 W. Mọi phòng khai ngưỡng đều đạt (phòng khách 169 / 150 lx, bếp 174 / 150, master 118 / 100…)
+      40 bộ, 675 W. Mọi phòng khai ngưỡng đều đạt (phòng khách 203 / 150 lx, bếp 174 / 150, master 118 / 100…)
 - [x] `lightsOf()`, `lightingOf()` trong `lib/envelope.js`; `validate()` thêm **phép kiểm 17**: mã, loại, đèn trần có vật
       che để gắn và không treo trên lỗ thang, đèn tường trên tường thật và không đè lỗ cửa, phòng nào cũng có đèn,
       độ rọi đạt ngưỡng
@@ -945,12 +945,13 @@ Chủ nhà chốt (13/9/2026): giường **phòng ngủ 1 1.6 × 1.8 m** và gi�
 
 ### ✅ A31 · Điều chỉnh chuỗi phòng bên trái
 
-Chủ nhà chốt (13/9/2026): master **5.0 × 3.5 m**, phòng ngủ 1 **4.0 × 2.5 m**, WC chung và phòng kho master
-**cùng 1.5 × 2.0 m**. Một mét chiều dài rút từ hai phòng ngủ được chuyển hết cho phòng khách, thành **5.0 × 5.85 m**.
+Chủ nhà chốt (13/9/2026): master **5.0 × 3.5 m**, phòng ngủ 1 **4.0 × 2.5 m**, WC chung và phòng kho master cùng
+**2.0 × 1.5 m** — cạnh 2 m nằm dọc vách PN1. Hai phòng lấp đủ dải rộng 4 m tới hành lang. Tổng 1.5 m chiều dài
+rút từ hai phòng ngủ và độ sâu WC/kho được chuyển hết cho phòng khách, thành **5.0 × 6.35 m**.
 
 - [x] Dời đồng bộ vách ngăn, cửa, ô thoáng, cầu thang, tum, hành lang, nội thất, đèn và công tắc theo các mốc mới;
-      hành lang mở rộng 2.0 m trước WC/kho, giường PN1 sát vách kho và tủ áp vách cầu thang; giữ nguyên ban công sau,
-      sân chính, bếp, mái và phần bao nhà
+      WC/kho cùng sâu 1.5 m, lấp đủ dải tới hành lang, giường PN1 sát vách kho và tủ áp vách cầu thang; giữ nguyên ban
+      công sau, sân chính, bếp, mái và phần bao nhà
 - [x] Sinh lại `spec/current.md`, cập nhật `3d.md` và `floor-plan.md`; `check:grid`, `check:3d` đều sạch
 
 ## B · Mô hình 3D

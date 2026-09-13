@@ -61,7 +61,8 @@ export default function Plan2D() {
           <section>
             <h2>Tuỳ chỉnh kích thước</h2>
             <p className="vmeta">
-              Mỗi thanh là <b>một bức tường</b> — tường chung tính là một, nên kéo nó là thấy
+              Gốc tọa độ <b>(0,0)</b> ở góc trên-trái lô; X tăng sang phải, Y tăng xuống dưới. Mỗi thanh là
+              <b>một bức tường</b> — tường chung tính là một, nên kéo nó là thấy
               ngay cả hai bên đổi cùng lúc. Cửa, giếng trời và nội thất đi theo.
             </p>
             <div id="cfgSliders" />
