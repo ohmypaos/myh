@@ -1,11 +1,11 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 17:07:13 13/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 17:13:43 13/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
 
-Phòng khách 5.0 × 5.85 m; phòng ngủ 1 4.0 × 2.5 m; master 5.0 × 3.5 m. WC chung 1.5 × 2.0 m, phần còn lại là phòng kho master. Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu. Cầu thang chữ U lên mái ở chỗ phòng thờ cũ, thông với phòng khách qua bức lửng; tum xây gọn che đầu thang, một cửa ra thẳng mái, lan can thép quanh mép mái kể cả mái hiên trước — chuẩn bị cho tầng 2 sau khoảng 5 năm. Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông. Cây xanh: hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái sân phụ, hai chậu cây ở ban công sau, hai cây bóng mát ở góc sân chính phía cổng.
+Phòng khách 5.0 × 5.85 m; phòng ngủ 1 4.0 × 2.5 m; master 5.0 × 3.5 m. WC chung và phòng kho master đều 1.5 × 2.0 m; đoạn hành lang trước hai phòng rộng 2.0 m. Ban công sau 2.0 m, bếp chữ L. Bếp và hành lang ngoài chung một mái tôn hai mái dốc 30% (thay bản bê tông); mái sân chính 4.5 × 6 m và mái sân phơi gá thấp dưới hai mép đua của nó. Sân giếng sát tường bếp có hai vòi âm tường và một máy giặt/sấy dồn vào góc giữa tường bếp và tường nhà chính, dưới mái tôn hiện hữu. Cầu thang chữ U lên mái ở chỗ phòng thờ cũ, thông với phòng khách qua bức lửng; tum xây gọn che đầu thang, một cửa ra thẳng mái, lan can thép quanh mép mái kể cả mái hiên trước — chuẩn bị cho tầng 2 sau khoảng 5 năm. Hệ đèn 40 bộ ốp nổi, độ rọi chung từng phòng tính theo quang thông. Cây xanh: hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái sân phụ, hai chậu cây ở ban công sau, hai cây bóng mát ở góc sân chính phía cổng.
 
 ---
 
@@ -14,11 +14,11 @@ Phòng khách 5.0 × 5.85 m; phòng ngủ 1 4.0 × 2.5 m; master 5.0 × 3.5 m. W
 | Mục | Tim tường | Sử dụng |
 |---|---:|---:|
 | Lô đất 9.5 × 30 | 285.00 m² | — |
-| **Khối nhà chính** | **80.00 m²** | 73.00 m² |
-| **Toàn bộ phần kín** | **107.70 m²** | 98.30 m² |
+| **Khối nhà chính** | **80.00 m²** | 72.96 m² |
+| **Toàn bộ phần kín** | **107.70 m²** | 98.26 m² |
 | Hành lang ngoài (có mái, hở) | 7.00 m² | — |
 | Sân trống | 170.30 m² | — |
-| Tường chiếm chỗ | 9.40 m² | — |
+| Tường chiếm chỗ | 9.44 m² | — |
 
 Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 
@@ -30,11 +30,12 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | L2 | PHÒNG KHÁCH | 0.0 | 12.0 | 5.0 | 17.9 | 5.0 × 5.8 | 29.25 | 4.78 × 5.69 | 27.20 | Phòng |
 | L3 | CẦU THANG | 0.0 | 17.9 | 4.0 | 20.0 | 4.0 × 2.1 | 8.60 | 3.89 × 2.05 | 7.97 | Lưu thông |
 | L4 | PHÒNG NGỦ 1 | 0.0 | 20.0 | 4.0 | 22.5 | 4.0 × 2.5 | 10.00 | 3.84 × 2.40 | 9.22 | Phòng |
-| L5 | PHÒNG KHO MASTER | 0.0 | 22.5 | 2.5 | 24.5 | 2.5 × 2.0 | 5.00 | 2.34 × 1.90 | 4.45 | Tủ âm |
-| L6 | WC CHUNG | 2.5 | 22.5 | 4.0 | 24.5 | 1.5 × 2.0 | 3.00 | 1.40 × 1.90 | 2.66 | Vệ sinh |
+| L5 | PHÒNG KHO MASTER | 0.0 | 22.5 | 1.5 | 24.5 | 1.5 × 2.0 | 3.00 | 1.34 × 1.90 | 2.55 | Tủ âm |
+| L6 | WC CHUNG | 1.5 | 22.5 | 3.0 | 24.5 | 1.5 × 2.0 | 3.00 | 1.40 × 1.90 | 2.66 | Vệ sinh |
 | L7 | PHÒNG NGỦ MASTER | 0.0 | 24.5 | 5.0 | 28.0 | 5.0 × 3.5 | 17.50 | 4.78 × 3.34 | 15.97 | Phòng |
 | L8 | BAN CÔNG SAU | 0.0 | 28.0 | 5.0 | 30.0 | 5.0 × 2.0 | 10.00 | 4.78 × 1.78 | 8.51 | Sân |
-| L9 | HÀNH LANG | 4.0 | 17.9 | 5.0 | 24.5 | 1.0 × 6.7 | 6.65 | 0.84 × 6.60 | 5.54 | Lưu thông |
+| L9 | HÀNH LANG | 4.0 | 17.9 | 5.0 | 22.5 | 1.0 × 4.7 | 4.65 | 0.84 × 4.65 | 3.91 | Lưu thông |
+| L10 | HÀNH LANG | 3.0 | 22.5 | 5.0 | 24.5 | 2.0 × 2.0 | 4.00 | 1.84 × 1.90 | 3.50 | Lưu thông |
 | R1 | SÂN CHÍNH | 5.0 | 0.0 | 9.5 | 18.0 | 4.5 × 18.0 | 81.00 | 4.39 × 17.78 | 78.05 | Sân |
 | R2 | BẾP + NHÀ ĂN | 5.0 | 18.0 | 8.5 | 25.0 | 3.5 × 7.0 | 24.50 | 3.34 × 6.78 | 22.65 | Phòng |
 | R3 | HÀNH LANG NGOÀI | 8.5 | 18.0 | 9.5 | 25.0 | 1.0 × 7.0 | 7.00 | 0.84 × 7.00 | 5.88 | Lưu thông |
@@ -53,14 +54,14 @@ Nhà chính chạy từ `y = 12.0` tới `y = 30.0` → **dài 18.0 m**.
 | D3 | ngang | 17.9 | 4.00 | 5.00 | 1.00 | Mở thông | — | Phòng khách ↔ Hành lang — thông suốt, KHÔNG có cánh cửa |
 | D4 | dọc | 4.0 | 17.85 | 20.00 | 2.15 | Mở thông | — | Hành lang ↔ Cầu thang — thông suốt, chân thang ở đầu bắc hành lang |
 | D5 | dọc | 4.0 | 20.15 | 20.95 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ Phòng ngủ 1 — sát mép bắc |
-| D6 | dọc | 4.0 | 22.65 | 23.45 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ WC chung — cửa cánh 0.80 m mở vào WC, gioăng kín mùi; vùng quét chừa trống |
+| D6 | dọc | 3.0 | 22.65 | 23.45 | 0.80 | Mở quay | bản lề đầu nhỏ, mở − | Hành lang ↔ WC chung — cửa cánh 0.80 m mở vào WC, gioăng kín mùi; vùng quét chừa trống |
 | D8 | ngang | 24.5 | 4.00 | 4.90 | 0.90 | Mở quay | bản lề đầu lớn, mở + | Hành lang ↔ Master — mở vào phòng |
 | D9 | ngang | 18.0 | 6.60 | 7.60 | 1.00 | Mở quay | bản lề đầu lớn, mở + | Sân chính ↔ Bếp |
 | D10 | ngang | 25.0 | 7.40 | 8.20 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Bếp ↔ Sân phơi — mở vào bếp |
 | D11 | ngang | 28.0 | 8.40 | 9.20 | 0.80 | Mở quay | bản lề đầu nhỏ, mở + | Sân phơi ↔ WC khách — trên trục hành lang ngoài; sàn WC cao hơn sân 0.15 nên chỉ bước qua ngưỡng, không có bậc |
 | D12 | ngang | 28.0 | 0.90 | 4.10 | 3.20 | Lùa 2 cánh | — | Master ↔ Ban công sau — kính lùa 3.2 m, nguồn sáng duy nhất của master |
 | D13 | dọc | 5.0 | 28.60 | 29.40 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Ban công sau ↔ Sân phơi — mở vào ban công, chừa phía sân phơi cho bậc; bản lề phía tường bao sau |
-| D14 | ngang | 24.5 | 1.50 | 2.30 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Master ↔ phòng kho — cửa cánh 0.80 m mở vào kho; bản lề đầu phải, chỉ cách vách WC 0.10 m; vách ngăn kín tới trần |
+| D14 | ngang | 24.5 | 0.50 | 1.30 | 0.80 | Mở quay | bản lề đầu lớn, mở − | Master ↔ phòng kho — cửa cánh 0.80 m mở vào kho; bản lề đầu phải, vách ngăn kín tới trần |
 
 ## 4. Bảng cửa sổ
 
@@ -118,7 +119,7 @@ Mái hiên, trần ban công — cùng cốt bản mái nhà, bề đua tính t�
 
 ### Lớp chống nóng mái
 
-Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, CẦU THANG, PHÒNG NGỦ 1, PHÒNG KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt lát. Diện tích lát **95.66 m²**, mặt lát cốt **4.09** (bản mái 4.00, chưa tính vữa tạo dốc). Lát **rời**, không cán vữa: xây tầng 2 thì nhấc tấm, cuộn vải địa, gỡ XPS — không phải đục, không phạm vào lớp chống thấm.
+Kiểu **mái ngược**: chống thấm nằm dưới tấm cách nhiệt, được che nắng và đỡ co giãn nhiệt. Phủ mọi sàn mái bê tông (PHÒNG KHÁCH, CẦU THANG, PHÒNG NGỦ 1, PHÒNG KHO MASTER, WC CHUNG, PHÒNG NGỦ MASTER, HÀNH LANG, HÀNH LANG, WC KHÁCH) và mái hiên cửa chính, trần ban công sau, tới mặt ngoài tường; chừa giếng trời — quanh mỗi lỗ xây gờ chắn nước cao hơn mặt lát. Diện tích lát **95.66 m²**, mặt lát cốt **4.09** (bản mái 4.00, chưa tính vữa tạo dốc). Lát **rời**, không cán vữa: xây tầng 2 thì nhấc tấm, cuộn vải địa, gỡ XPS — không phải đục, không phạm vào lớp chống thấm.
 
 | Lớp (dưới lên) | Dày (m) | Ghi chú |
 |---|---:|---|
@@ -301,8 +302,9 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | ngang | 20.0 | 0.0 | 4.0 | 100 |
 | ngang | 22.5 | 0.0 | 4.0 | 100 |
 | ngang | 24.5 | 0.0 | 5.0 | 100 |
-| dọc | 4.0 | 20.0 | 24.5 | 100 |
-| dọc | 2.5 | 22.5 | 24.5 | 100 |
+| dọc | 4.0 | 20.0 | 22.5 | 100 |
+| dọc | 1.5 | 22.5 | 24.5 | 100 |
+| dọc | 3.0 | 22.5 | 24.5 | 100 |
 | ngang | 18.0 | 5.0 | 8.5 | 220 |
 | ngang | 25.0 | 5.0 | 8.5 | 220 |
 | dọc | 8.5 | 18.0 | 25.0 | 100 |
@@ -318,13 +320,13 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | tbl | 1.40 | 14.55 | 1.30 | 0.80 |
 | shrine | 0.11 | 17.30 | 0.70 | 0.50 |
 | tvShelf | 0.81 | 17.30 | 2.85 | 0.50 |
-| bedw | 0.25 | 20.45 | 1.80 | 1.60 |
-| cab | 3.30 | 20.50 | 0.60 | 1.50 |
+| bedw | 0.25 | 20.85 | 1.80 | 1.60 |
+| cab | 3.30 | 20.05 | 0.60 | 1.50 |
 | cab | 0.10 | 22.60 | 0.60 | 1.75 |
-| cab | 0.70 | 22.60 | 1.60 | 0.60 |
-| lav | 2.60 | 22.65 | 0.45 | 0.55 |
-| wc | 2.60 | 23.55 | 0.42 | 0.68 |
-| shower | 3.05 | 23.55 | 0.80 | 0.80 |
+| cab | 0.70 | 22.60 | 0.70 | 0.60 |
+| lav | 1.65 | 22.65 | 0.45 | 0.55 |
+| wc | 2.40 | 22.70 | 0.42 | 0.68 |
+| shower | 1.65 | 23.45 | 0.80 | 0.80 |
 | bedw | 0.25 | 25.20 | 2.00 | 1.80 |
 | cab | 0.30 | 24.60 | 0.45 | 0.45 |
 | cab | 0.30 | 27.20 | 0.45 | 0.45 |
@@ -359,13 +361,13 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | Đ10 | đèn tường ngoài trời IP65 | 10 | 800 | MÁI | tường x = 3.97, y 19.40, quay + | tường, tâm cao 1.90 m trên sàn | 5.89 → 6.09 | Mái — mặt ngoài tum cạnh cửa, rọi sân thượng và lối tới bồn nước |
 | Đ11 | downlight ốp nổi Ø150 | 12 | 1100 | HÀNH LANG | 4.47 · 18.90 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Hành lang — đầu bắc, chân cầu thang |
 | Đ12 | downlight ốp nổi Ø150 | 12 | 1100 | HÀNH LANG | 4.47 · 21.45 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Hành lang — giữa, trước cửa PN1 |
-| Đ13 | downlight ốp nổi Ø150 | 12 | 1100 | HÀNH LANG | 4.47 · 23.80 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Hành lang — đầu nam, trước WC chung và cửa master |
+| Đ13 | downlight ốp nổi Ø150 | 12 | 1100 | HÀNH LANG | 4.00 · 23.80 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Hành lang — đầu nam, trước WC chung và cửa master |
 | Đ14 | ốp trần LED Ø500 | 36 | 3600 | PHÒNG NGỦ 1 | 2.03 · 21.25 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Phòng ngủ 1 — giữa phòng; phòng không cửa sổ ra trời, ban ngày cũng cần |
 | Đ15 | đèn tường hắt | 8 | 600 | PHÒNG NGỦ 1 | tường x = 0.00, y 20.70, quay + | tường, tâm cao 1.10 m trên sàn | 1.49 → 1.61 | Phòng ngủ 1 — đọc sách, bên đầu giường phía cửa sổ ô thoáng |
 | Đ16 | đèn tường hắt | 8 | 600 | PHÒNG NGỦ 1 | tường x = 0.00, y 21.80, quay + | tường, tâm cao 1.10 m trên sàn | 1.49 → 1.61 | Phòng ngủ 1 — đọc sách, bên đầu giường phía trong |
-| Đ17 | ốp trần LED Ø400 | 24 | 2400 | PHÒNG KHO MASTER | 1.55 · 23.80 | trần, cách sàn 3.30 m | 3.70 → 3.75 | Phòng kho — giữa khoảng đứng trước hai tủ |
-| Đ18 | ốp trần chống ẩm Ø250 IP44 | 18 | 1600 | WC CHUNG | 3.20 · 23.50 | trần, cách sàn 3.30 m | 3.67 → 3.75 | WC chung — ốp trần chống ẩm |
-| Đ19 | đèn tường hắt | 8 | 600 | WC CHUNG | tường y = 22.50, x 2.72, quay + | tường, tâm cao 1.85 m trên sàn | 2.24 → 2.36 | WC chung — đèn gương trên lavabo |
+| Đ17 | ốp trần LED Ø400 | 24 | 2400 | PHÒNG KHO MASTER | 0.75 · 23.80 | trần, cách sàn 3.30 m | 3.70 → 3.75 | Phòng kho — giữa khoảng đứng trước hai tủ |
+| Đ18 | ốp trần chống ẩm Ø250 IP44 | 18 | 1600 | WC CHUNG | 2.25 · 23.50 | trần, cách sàn 3.30 m | 3.67 → 3.75 | WC chung — ốp trần chống ẩm |
+| Đ19 | đèn tường hắt | 8 | 600 | WC CHUNG | tường y = 22.50, x 1.88, quay + | tường, tâm cao 1.85 m trên sàn | 2.24 → 2.36 | WC chung — đèn gương trên lavabo |
 | Đ20 | ốp trần LED Ø500 | 36 | 3600 | PHÒNG NGỦ MASTER | 2.50 · 26.00 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Master — lệch về phía chân giường, không chói mắt người nằm |
 | Đ21 | downlight ốp nổi Ø150 | 12 | 1100 | PHÒNG NGỦ MASTER | 1.90 · 24.70 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Master — lối vào từ D8, trước cửa phòng kho D14 |
 | Đ22 | downlight ốp nổi Ø150 | 12 | 1100 | PHÒNG NGỦ MASTER | 4.35 · 26.70 | trần, cách sàn 3.30 m | 3.69 → 3.75 | Master — trên bàn làm việc |
@@ -396,11 +398,12 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | L2 PHÒNG KHÁCH | 4 | 96 | 9600 | 27.20 | 3.30 | 1.02 | 0.51 | **145 lx** | 150 lx ✗ |
 | L3 CẦU THANG | 2 | 16 | 0 | — | — | — | — | — | không tính |
 | L4 PHÒNG NGỦ 1 | 3 | 52 | 3600 | 9.22 | 3.30 | 0.58 | 0.39 | **123 lx** | 100 lx ✓ |
-| L5 PHÒNG KHO MASTER | 1 | 24 | 2400 | 4.45 | 3.30 | 0.41 | 0.33 | **144 lx** | 100 lx ✓ |
+| L5 PHÒNG KHO MASTER | 1 | 24 | 2400 | 2.55 | 3.30 | 0.31 | 0.28 | **214 lx** | 100 lx ✓ |
 | L6 WC CHUNG | 2 | 26 | 1600 | 2.66 | 3.30 | 0.32 | 0.29 | **139 lx** | 100 lx ✓ |
 | L7 PHÒNG NGỦ MASTER | 5 | 76 | 5800 | 15.97 | 3.30 | 0.77 | 0.45 | **131 lx** | 100 lx ✓ |
 | L8 BAN CÔNG SAU | 2 | 24 | 2000 | — | — | — | — | — | không tính |
-| L9 HÀNH LANG | 3 | 36 | 3300 | 5.54 | 3.30 | 0.29 | 0.28 | **133 lx** | 100 lx ✓ |
+| L9 HÀNH LANG | 2 | 24 | 2200 | 3.91 | 3.30 | 0.28 | 0.28 | **126 lx** | 100 lx ✓ |
+| L10 HÀNH LANG | 1 | 12 | 1100 | — | — | — | — | — | không tính |
 | R1 SÂN CHÍNH | 3 | 39 | 3300 | — | — | — | — | — | không tính |
 | R2 BẾP + NHÀ ĂN | 5 | 124 | 10800 | 22.65 | 3.60 | 0.79 | 0.46 | **174 lx** | 150 lx ✓ |
 | R3 HÀNH LANG NGOÀI | 2 | 20 | 0 | — | — | — | — | — | không tính |
@@ -408,7 +411,7 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | R5 WC KHÁCH | 2 | 26 | 1600 | 2.65 | 2.70 | 0.41 | 0.34 | **162 lx** | 100 lx ✓ |
 | MÁI | 1 | 10 | — | — | — | — | — | — | không tính |
 
-**Cụm đèn và công tắc** — 25 cụm, 14 bảng công tắc (mặt công tắc chữ nhật 120 × 75, tối đa 4 hạt). Mỗi hạt bật / tắt đúng một cụm; cụm có hạt ở hai bảng là **công tắc hai chiều** — đi thêm dây giữa hai bảng.
+**Cụm đèn và công tắc** — 25 cụm, 13 bảng công tắc (mặt công tắc chữ nhật 120 × 75, tối đa 4 hạt). Mỗi hạt bật / tắt đúng một cụm; cụm có hạt ở hai bảng là **công tắc hai chiều** — đi thêm dây giữa hai bảng.
 
 | Cụm | Tên | Đèn | W | Hạt ở bảng |
 |---|---|---|---:|---|
@@ -446,9 +449,8 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | BCT4 | CẦU THANG | tường y = 17.85, x 3.75, quay + | 1.25 m | CĐ5 · CĐ6 | Đầu thang — trong tum, vách bắc sát cửa ra mái; cao tính từ mặt mái |
 | BCT5 | PHÒNG NGỦ 1 | tường x = 4.00, y 21.10, quay − | 1.25 m | CĐ8 · CĐ9 | Phòng ngủ 1 — trong cửa D5, phía then cửa |
 | BCT6 | PHÒNG NGỦ 1 | tường x = 0.00, y 20.70, quay + | 0.75 m | CĐ9 · CĐ8 | Phòng ngủ 1 — đầu giường, dưới đèn đọc sách |
-| BCT7 | HÀNH LANG | tường x = 4.00, y 23.60, quay + | 1.25 m | CĐ7 · CĐ11 · CĐ12 | Hành lang — ngoài cửa WC chung D6, gần cửa master |
+| BCT7 | HÀNH LANG | tường x = 3.00, y 23.60, quay + | 1.25 m | CĐ7 · CĐ11 · CĐ12 | Hành lang — ngoài cửa WC chung D6, gần cửa master |
 | BCT8 | PHÒNG NGỦ MASTER | tường y = 24.50, x 3.85, quay + | 1.25 m | CĐ13 · CĐ14 · CĐ15 | Master — trong cửa D8, phía then cửa |
-| BCT9 | PHÒNG NGỦ MASTER | tường y = 24.50, x 1.35, quay + | 1.25 m | CĐ10 | Master — ngoài cửa phòng kho D14, phía then cửa |
 | BCT10 | PHÒNG NGỦ MASTER | tường x = 0.00, y 24.82, quay + | 0.75 m | CĐ15 · CĐ13 | Master — đầu giường, trên tủ đầu giường phía cửa |
 | BCT11 | PHÒNG NGỦ MASTER | tường y = 28.00, x 0.70, quay − | 1.25 m | CĐ16 | Master — cạnh cửa lùa ban công D12 |
 | BCT12 | BẾP + NHÀ ĂN | tường y = 18.00, x 6.45, quay + | 1.25 m | CĐ19 · CĐ20 · CĐ18 · CĐ21 | Bếp — trong cửa D9 ra sân chính, phía then cửa |
@@ -499,10 +501,13 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 
 ## 10. Kết quả bộ kiểm tra
 
-**2 lỗi:**
+**5 lỗi:**
 
-- D5 quét vào nội thất cab @3.3,20.5
+- D5 quét vào nội thất cab @3.3,20.05
+- D6 quét vào nội thất wc @2.4,22.7
+- D14 quét vào nội thất cab @0.1,22.6
 - L2 PHÒNG KHÁCH: độ rọi chung 145 lx, dưới ngưỡng 150
+- Bảng công tắc BCT9 đè lên lỗ D14
 
 1. Cột trái lấp kín phần lô của nó, không hở không chồng
 2. Cột phải lấp kín phần lô còn lại
@@ -594,4 +599,4 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 - **Hai cây bóng mát ở góc sân chính phía cổng** — dọc rào phải, tâm gốc `x` 7.85, `y` 1.75 và 5.05; tán Ø3.30 nối liền thành dải bóng 6.6 m, tới đúng ranh lô phải và ranh mặt tiền, không vươn ra ngoài; mặt dưới tán cao 2.50, đỉnh 5.30; ô gốc 1 × 1 m bó vỉa cao 0.15. Bóng tán rơi vào sân chính từ khoảng 8 h tới 13 h mùa hè
 - **Diềm ốp mép mái hiên cửa chính** — điểm nhấn mặt tiền nhìn thẳng từ cổng: dải cao 0.45 m, khung thép hộp ốp gỗ nhựa nâu, bọc mép ngoài bản hiên 5.27 m và đầu phía sân chính; đỉnh bằng mặt lát mái 4.09, buông thấp hơn mặt dưới bản 0.11 m. Mép bản bê tông mỏng thành một đường ngang đậm, cân với mái ngói cổng phía trước; xây tầng 2 thì thành đường chỉ phân tầng
 - **Giường phòng ngủ 1 1.6 × 1.8 m; giường master 1.8 × 2.0 m** — đầu giường áp tường trái theo đúng chiều ngắn 1.6 m và 1.8 m trong mô hình 3D
-- **Phòng khách 5.0 × 5.85 m** — nhận thêm 1.0 m chiều dài từ việc rút phòng ngủ 1 còn 4.0 × 2.5 m và master còn 5.0 × 3.5 m; WC chung thu còn **1.5 × 2.0 m**, phần ngang còn lại thành **phòng kho master 2.5 × 2.0 m**
+- **Phòng khách 5.0 × 5.85 m** — nhận thêm 1.0 m chiều dài từ việc rút phòng ngủ 1 còn 4.0 × 2.5 m và master còn 5.0 × 3.5 m; WC chung và **phòng kho master cùng 1.5 × 2.0 m**, đoạn hành lang trước hai phòng rộng 2.0 m
