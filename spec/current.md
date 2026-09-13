@@ -1,6 +1,6 @@
 # Đặc tả mặt bằng — Hiện hành — cầu thang lên mái, tum
 
-> Sinh tự động từ `lib/versions/current.js` lúc 00:10:35 12/9/2026. Không chép tay.
+> Sinh tự động từ `lib/versions/current.js` lúc 16:52:10 13/9/2026. Không chép tay.
 > **Quy ước:** toạ độ và kích thước là **tim tường**. Gốc (0,0) = góc trên-trái lô. X→phải (0–9.5). Y→xuống (0–30).
 > Cột **Sử dụng** là kích thước lọt lòng, đã trừ nửa bề dày mỗi tường bao quanh.
 > Tường bao **220 mm** · Tường ngăn **100 mm**.
@@ -318,14 +318,14 @@ Trần thạch cao / nhựa treo dưới bản mái bê tông, phủ phần lọ
 | tbl | 1.40 | 14.55 | 1.30 | 0.80 |
 | shrine | 0.11 | 16.30 | 0.70 | 0.50 |
 | tvShelf | 0.81 | 16.30 | 2.85 | 0.50 |
-| bedw | 0.25 | 19.90 | 2.00 | 1.60 |
+| bedw | 0.25 | 19.90 | 1.80 | 1.60 |
 | cab | 3.30 | 20.30 | 0.60 | 1.50 |
 | cab | 0.10 | 22.10 | 0.60 | 1.75 |
 | cab | 0.70 | 22.10 | 1.60 | 0.60 |
 | lav | 2.50 | 22.15 | 0.45 | 0.55 |
 | wc | 2.50 | 23.05 | 0.42 | 0.68 |
 | shower | 3.05 | 23.05 | 0.80 | 0.80 |
-| bedw | 0.25 | 25.20 | 2.10 | 1.85 |
+| bedw | 0.25 | 25.20 | 2.00 | 1.80 |
 | cab | 0.30 | 24.60 | 0.45 | 0.45 |
 | cab | 0.30 | 27.20 | 0.45 | 0.45 |
 | desk | 4.25 | 25.49 | 0.60 | 1.20 |
@@ -590,3 +590,4 @@ Hai cạnh bên `x = 0` và `x = 9.5` giữ rào 1.80 xây đặc 0.80 + lan can
 - **Hai chậu cây ban công sau** — Ø0.40 ở hai góc sát rào sau, để trống giữa ban công và trước cửa lùa D12 cho chỗ ngồi; chậu cạnh D13 đứng ngoài vùng quét cánh
 - **Hai cây bóng mát ở góc sân chính phía cổng** — dọc rào phải, tâm gốc `x` 7.85, `y` 1.75 và 5.05; tán Ø3.30 nối liền thành dải bóng 6.6 m, tới đúng ranh lô phải và ranh mặt tiền, không vươn ra ngoài; mặt dưới tán cao 2.50, đỉnh 5.30; ô gốc 1 × 1 m bó vỉa cao 0.15. Bóng tán rơi vào sân chính từ khoảng 8 h tới 13 h mùa hè
 - **Diềm ốp mép mái hiên cửa chính** — điểm nhấn mặt tiền nhìn thẳng từ cổng: dải cao 0.45 m, khung thép hộp ốp gỗ nhựa nâu, bọc mép ngoài bản hiên 5.27 m và đầu phía sân chính; đỉnh bằng mặt lát mái 4.09, buông thấp hơn mặt dưới bản 0.11 m. Mép bản bê tông mỏng thành một đường ngang đậm, cân với mái ngói cổng phía trước; xây tầng 2 thì thành đường chỉ phân tầng
+- **Giường phòng ngủ 1 1.6 × 1.8 m; giường master 1.8 × 2.0 m** — đầu giường áp tường trái theo đúng chiều ngắn 1.6 m và 1.8 m trong mô hình 3D

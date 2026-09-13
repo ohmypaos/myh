@@ -1,8 +1,8 @@
 # Kế hoạch triển khai
 
-Cập nhật 11/9/2026.
+Cập nhật 13/9/2026.
 
-**Hiện không còn việc nào đang mở** — 46/46 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Hiện không còn việc nào đang mở** — 47/47 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -61,6 +61,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A27 | Cây xanh sân phụ — hai chậu cây hai bên bậc cửa chính, bồn hoa xây dọc tường bao trái; phép kiểm 18 (2D) và 26 (3D) | ✅ xong | |
 | A28 | Hai chậu cây ban công sau, hai cây bóng mát ở góc sân chính phía cổng | ✅ xong | Sân phơi, dây leo lan can chưa làm |
 | A29 | Diềm ốp mép mái hiên cửa chính — điểm nhấn mặt tiền nhìn từ cổng; phép kiểm 27 (3D) | ✅ xong | Lan can ô giữa hoa văn: để sau |
+| A30 | Cập nhật kích thước giường master và phòng ngủ 1 trong mô hình 3D | ✅ xong | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
@@ -931,6 +932,15 @@ nhà chọn làm **dải diềm** trước. `3d.md` mục 3c.
 > phía sân phơi. Bản hiện hành không khai diềm ở đó nên lỗi chưa từng lộ ra mô hình.
 
 **Để sau:** chia lan can mái hiên ba ô, ô giữa thẳng trục cổng – cửa chính làm tấm hoa văn.
+
+### ✅ A30 · Cập nhật kích thước giường
+
+Chủ nhà chốt (13/9/2026): giường **phòng ngủ 1 1.6 × 1.8 m** và giường **master 1.8 × 2.0 m**.
+
+- [x] Cập nhật hai mục `bedw` trong `lib/versions/current.js`; giữ nguyên vị trí đầu giường sát tường trái,
+      hai tủ đầu giường master và lối đi hiện có. Vì `bedw` có đầu giường ở cạnh trái, trục bản vẽ lần lượt
+      là 1.8 × 1.6 m và 2.0 × 1.8 m để cạnh đầu giường đúng là chiều ngắn 1.6 m và 1.8 m
+- [x] Sinh lại `spec/current.md`; `check:grid` và `check:3d` đều sạch
 
 ## B · Mô hình 3D
 
