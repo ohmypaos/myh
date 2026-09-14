@@ -13,7 +13,7 @@ import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palet
 import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
-         stairsOf, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf,
+         stairsOf, isUnderStair, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf,
          plantersOf, flowerBedsOf, treesOf, overhangsOf } from '../lib/envelope.js';
 import { FASCIA } from '../lib/lot.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
@@ -213,7 +213,7 @@ function check(plan){
   }
 
   /* 6 — diện tích mái. Bắt được cả mảnh thiếu lẫn mảnh chồng của phép khoét giếng trời. */
-  const enclosed = plan.rooms.filter(r => r[6] !== 'yard' && r[0] !== 'R3');
+  const enclosed = plan.rooms.filter(r => r[6] !== 'yard' && r[0] !== 'R3' && !isUnderStair(plan, r));  // phòng gầm thang dùng mái buồng thang
   let want = 0;
   for (const r of enclosed) {
     /* Phòng lợp mái nhẹ được che bằng trần tôn, mà trần tôn bắt vào mặt trong tường nên chỉ
