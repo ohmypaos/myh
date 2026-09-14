@@ -2,7 +2,7 @@
 
 Cập nhật 14/9/2026.
 
-**Còn 2 việc mở** — 51/53 task ✅: **A34** chờ chủ nhà bố trí khoảng trống 1.8 × 1.5 m trước WC chung, **A35** đo lại
+**Còn 1 việc mở** — 52/53 task ✅: **A35** đo lại
 nắng W1 / D2 sau khi thu mái sân chính. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
@@ -66,7 +66,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A31 | Đổi chuỗi phòng: khách 6.35 m, PN1 2.5 m, master 3.5 m; WC chung và kho master cùng 2 × 1.5 m | ✅ xong | |
 | A32 | PN1 tủ ra vách cửa + kệ đầu giường; D9 2 cánh; WC chung, WC khách bố trí lại; buồng thang 4 × 2.0; phòng khách 5 × 5, nhà chính ngắn 1.5 m; D2 mở ra sát tường bếp; D5, D6, D11 sát góc | ✅ xong | |
 | A33 | Bỏ phòng kho master, WC chung 2.2 × 1.5 m dời vào chỗ kho, vào qua khoảng trống thông hành lang (bỏ D6 và vách) | ✅ xong | |
-| A34 | Bố trí khoảng trống 1.8 × 1.5 m trước WC chung (`L6`, tạm một downlight) | ⏸ chờ quyết | Chủ nhà chọn công năng |
+| A34 | Tiền phòng WC chung 1.8 × 1.5 m có tủ đồ; kho dưới gầm vế 2 (`underStairs`, cửa D6 ra đầu bắc hành lang) | ✅ xong | |
 | A35 | Đo lại số nắng W1, D2 trong `warn` — đang theo mái sân chính 6 m và W1 cũ | ⬜ chưa làm | |
 | A36 | Bản nháp `stair-back`: thang lật về sau PN1, WC chung lồng dưới gầm vế 2 (`underStairs`), nhà chính ngắn thêm 1.5 m; mã: `flip` thang, phòng gầm thang | ✅ xong — **bỏ** | Đã dựng thử và bỏ (14/9/2026): WC gầm thang hẹp 0.90 m, trần thấp chỗ bồn cầu, phải đi qua khu tắm, là WC duy nhất trong nhà chính; bỏ WC gầm thì dời thang không còn tiết kiệm được gì. Giữ bản hiện hành; mã `flip`, `underStairs`, `DRAFTS` giữ lại |
 | **Mô hình 3D** ||||
