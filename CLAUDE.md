@@ -53,7 +53,7 @@ trường `changes` trước kia.
 `v1.js`…`v11.js` **đóng băng**: chúng là kho đối chiếu, cho phép so hai phương án cạnh nhau
 trong cùng bản vẽ. Không sửa, trừ khi đó là **lỗi của chính bản đó** (sai số, sai mô tả).
 
-**Bản nháp** (`DRAFTS` trong `lib/versions/index.js`, vd `stair-back.js`) là phương án lớn thử song
+**Bản nháp** (`DRAFTS` trong `lib/versions/index.js`) là phương án lớn thử song
 song khi chủ nhà muốn so cạnh bản hiện hành mà không đè lên nó: tách từ `current.js`, hiện trong
 dropdown ngay trước bản hiện hành, có đặc tả riêng, cũng phải sạch kiểm tra trước khi commit. Chốt
 thì chép sang `current.js` rồi xoá file nháp; bỏ thì xoá. Đây không phải v13 — nháp không đóng băng.
