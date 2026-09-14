@@ -475,7 +475,7 @@ export function init(){
   function drawFurniture(){
     const fr=(x,y,w,h,o={})=>el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),rx:3,...o},gF);
     for(const [k,x,y,w,h] of FURN){
-      if(k==='sofa'||k==='cab'||k==='tbl'||k==='altar'||k==='shrine'||k==='wash'||k==='washRaised'||k==='dishwasher'){
+      if(k==='sofa'||k==='cab'||k==='stairCab'||k==='tbl'||k==='altar'||k==='shrine'||k==='wash'||k==='washRaised'||k==='dishwasher'){
         if(k==='washRaised'){                      // bệ sân nâng dưới máy
           const p=FURNITURE.washPlinth.pad;
           fr(x-p,y-p,w+2*p,h+2*p,{fill:FILL.yard,stroke:'#a6a096'});
@@ -487,7 +487,7 @@ export function init(){
             font_family:'ui-sans-serif,system-ui,sans-serif'},gF);
           t.textContent='THỜ';
         }
-        if(k==='cab') for(let i=1;i<3;i++)
+        if(k==='cab'||k==='stairCab') for(let i=1;i<3;i++)
           el('line',{x1:M(x),y1:M(y+h*i/3),x2:M(x+w),y2:M(y+h*i/3),stroke:'#b9b9b9'},gF);
         if(k==='wash'||k==='washRaised'||k==='dishwasher')
           el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.min(w,h)*0.28),fill:'#f7f7f5'},gF);
