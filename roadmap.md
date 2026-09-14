@@ -2,7 +2,8 @@
 
 Cập nhật 14/9/2026.
 
-**Còn 1 việc mở** — 52/53 task ✅: **A35** đo lại
+**Còn 3 việc mở** — 52/55 task ✅: **A38** chờ chủ nhà chốt hộp kỹ thuật + ống chờ bếp dự phòng trước khi đổ mái;
+**A37** phương án bếp sau khi bán lô 4.5 m (ghi chú, hoãn); **A35** đo lại
 nắng W1 / D2 sau khi thu mái sân chính. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
@@ -69,6 +70,8 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A34 | Tiền phòng WC chung 1.8 × 1.5 m có tủ đồ; tủ module bậc cấp dưới gầm vế 1 (`stairCab`, cao suy theo mặt dưới bậc), gầm vế 2 để trống | ✅ xong | |
 | A35 | Đo lại số nắng W1, D2 trong `warn` — đang theo mái sân chính 6 m và W1 cũ | ⬜ chưa làm | |
 | A36 | Bản nháp `stair-back`: thang lật về sau PN1, WC chung lồng dưới gầm vế 2 (`underStairs`), nhà chính ngắn thêm 1.5 m; mã: `flip` thang, phòng gầm thang | ✅ xong — **bỏ** | Đã dựng thử và bỏ (14/9/2026): WC gầm thang hẹp 0.90 m, trần thấp chỗ bồn cầu, phải đi qua khu tắm, là WC duy nhất trong nhà chính; bỏ WC gầm thì dời thang không còn tiết kiệm được gì. Giữ bản hiện hành; mã `flip`, `underStairs`, `DRAFTS` giữ lại |
+| A37 | Phương án dự phòng: bán lô 4.5 m bên phải khi đã có tầng 2 → bếp + ăn thay PN1 — ghi ở `kitchen-after-lot-split.md` | 💤 hoãn | Chỉ làm khi bán lô; bản hiện hành không đổi |
+| A38 | Đặt sẵn cho bếp dự phòng: hộp kỹ thuật góc tây nam PN1 (lỗ chờ bản mái), ống chờ nước bếp và máy giặt, mạch điện bếp, W1/D2 dễ bịt, khối bếp ngoài tách kết cấu | ⏸ chờ quyết | Phải chốt trước khi đổ bản mái; `kitchen-after-lot-split.md` mục 5 |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |

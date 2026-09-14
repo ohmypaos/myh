@@ -32,6 +32,7 @@ npm run dev
 | `floor-plan.md` | Trang chỉ mục + hiện trạng gốc v1 và đánh giá (viết tay) |
 | `3d.md` | Ghi chú thiết kế mô hình 3D — **vì sao** dựng như đang dựng |
 | `roadmap.md` | **Việc còn dang dở**, có trạng thái từng task. Đọc trước khi nhận việc mới; làm xong thì cập nhật |
+| `kitchen-after-lot-split.md` | Phương án dự phòng (viết tay): bán lô 4.5 m bên phải khi đã có tầng 2 → chuyển bếp vào PN1; những thứ cần đặt sẵn lúc xây. **Không** phải thiết kế — bản hiện hành không đổi |
 | `original-drawing.png` | Bản vẽ gốc của chủ nhà, chỉ để đối chiếu |
 
 Ba thứ phải luôn khớp nhau: **sửa `lib/versions/current.js` → sinh lại `spec/` → cập nhật `floor-plan.md`**.
