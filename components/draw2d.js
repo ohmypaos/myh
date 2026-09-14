@@ -10,7 +10,7 @@ import { toGrid, movableLines } from '../lib/grid.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, frontAzimuth } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { stepsOf, overhangsOf, roofPanels, gutters, downpipes, postsOf, beamsOf, purlinsOf,
-         stairsOf, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf,
+         stairsOf, underStairsOf, isUnderStair, tumOf, roofRailingsOf, tanksOf, racksOf, gateRoofsOf, gateDoorsOf, lightsOf, lightingOf, switchesOf,
          plantersOf, flowerBedsOf, treesOf, fasciasOf } from '../lib/envelope.js';
 import { mountSwitchBoard } from './switchBoard.js';
 
@@ -708,9 +708,19 @@ export function init(){
   /* ── nhãn phòng ── */
   function drawLabels(){
     const SMALL = new Set(ROOMS.filter(r=>r[4]*r[5] < 8).map(r=>r[0]));
+    const nests = underStairsOf(V).filter(u=>!u.error);
     for(const [id,name,x,y,w,h,type] of ROOMS){
-      const cx=M(x+w/2), cy=M(y+h/2), sm=SMALL.has(id);
-      const sw = ROT ? M(h) : M(w), sh = ROT ? M(w) : M(h);
+      /* Buồng thang có phòng gầm thang lồng bên trong (chạy suốt bề ngang): nhãn buồng thang dời sang dải còn lại, không
+         đè nhãn phòng lồng. Diện tích ghi vẫn là của cả buồng thang. */
+      let ly=y, bandH=h;
+      for(const u of nests.filter(u=>u.host===id)){
+        const r=u.rect;
+        if(r.x > x+1e-6 || r.x+r.w < x+w-1e-6) continue;
+        const above=r.y-ly, below=ly+bandH-(r.y+r.h);
+        if(above >= below) bandH=above; else { ly=r.y+r.h; bandH=below; }
+      }
+      const cx=M(x+w/2), cy=M(ly+bandH/2), sm=SMALL.has(id) || bandH < h;
+      const sw = ROT ? M(bandH) : M(w), sh = ROT ? M(w) : M(bandH);
       const rot = sw < 200 && sh > sw;
       // chừa 26 đơn vị mỗi chiều để chữ không chạm bề dày tường (tường bao 22 → nhô 11 vào trong)
       const avail = (rot ? sh : sw) - 26;
@@ -817,7 +827,7 @@ export function init(){
     el('line',{x1:0,y1:ty+62,x2:M(9.5),y2:ty+62,stroke:'#141414',stroke_width:1.4},TB);
     el('line',{x1:M(6.4),y1:ty,x2:M(6.4),y2:ty+200,stroke:'#141414',stroke_width:1.4},TB);
     tt(16, ty+40, 'MẶT BẰNG TẦNG TRỆT', 23, 700);
-    const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3');
+    const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3' && !isUnderStair(V,r));   // phòng gầm thang lồng trong buồng thang
     const sdKin   = sumClear(kinRooms, WALLS);
     const sdChinh = sumClear(kinRooms.filter(r=>r[0][0]==='L'), WALLS);
     const timChinh = kinRooms.filter(r=>r[0][0]==='L').reduce((s,r)=>s+r[4]*r[5],0);
@@ -885,7 +895,7 @@ export function init(){
           + `<td class="n" style="color:#888">${c.a.toFixed(2)}</td>`
           + `<td>${TYPE[type]}</td></tr>`;
     }
-    const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3');
+    const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3' && !isUnderStair(V,r));
     const timChinh = +kinRooms.filter(r=>r[0][0]==='L').reduce((s,r)=>s+r[4]*r[5],0).toFixed(2);
     const sdKin = sumClear(kinRooms, WALLS);
     const sdChinh = sumClear(kinRooms.filter(r=>r[0][0]==='L'), WALLS);
