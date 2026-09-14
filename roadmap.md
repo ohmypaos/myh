@@ -1,8 +1,9 @@
 # Kế hoạch triển khai
 
-Cập nhật 13/9/2026.
+Cập nhật 14/9/2026.
 
-**Hiện không còn việc nào đang mở** — 48/48 task ✅, không có mục nào chờ quyết. Mọi thay đổi từ đây là
+**Còn 2 việc mở** — 50/52 task ✅: **A34** chờ chủ nhà bố trí khoảng trống 1.8 × 1.5 m trước WC chung, **A35** đo lại
+nắng W1 / D2 sau khi thu mái sân chính. Mọi thay đổi từ đây là
 **thiết kế mới**: thêm một mục `A<n>` vào bảng dưới rồi làm theo quy trình ở `CLAUDE.md`. Ô chưa tick duy
 nhất trong file là thứ đã chốt **không làm**, không phải việc tồn.
 
@@ -63,6 +64,10 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | A29 | Diềm ốp mép mái hiên cửa chính — điểm nhấn mặt tiền nhìn từ cổng; phép kiểm 27 (3D) | ✅ xong | Lan can ô giữa hoa văn: để sau |
 | A30 | Cập nhật kích thước giường master và phòng ngủ 1 trong mô hình 3D | ✅ xong | |
 | A31 | Đổi chuỗi phòng: khách 6.35 m, PN1 2.5 m, master 3.5 m; WC chung và kho master cùng 2 × 1.5 m | ✅ xong | |
+| A32 | PN1 tủ ra vách cửa + kệ đầu giường; D9 2 cánh; WC chung, WC khách bố trí lại; buồng thang 4 × 2.0; phòng khách 5 × 5, nhà chính ngắn 1.5 m; D2 mở ra sát tường bếp; D5, D6, D11 sát góc | ✅ xong | |
+| A33 | Bỏ phòng kho master, WC chung 2.2 × 1.5 m dời vào chỗ kho, vào qua khoảng trống thông hành lang (bỏ D6 và vách) | ✅ xong | |
+| A34 | Bố trí khoảng trống 1.8 × 1.5 m trước WC chung (`L6`, tạm một downlight) | ⏸ chờ quyết | Chủ nhà chọn công năng |
+| A35 | Đo lại số nắng W1, D2 trong `warn` — đang theo mái sân chính 6 m và W1 cũ | ⬜ chưa làm | |
 | **Mô hình 3D** ||||
 | B1 | Bỏ dropdown nơi xây, đưa toạ độ thật vào `LOT` | ✅ xong | |
 | B2 | Đi bộ: va chạm và cao độ mắt theo sàn đang đứng | ✅ xong | |
