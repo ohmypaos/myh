@@ -182,7 +182,7 @@ export function init(){
       el('rect',{x:M(g.x),y:M(g.y),width:M(g.w),height:M(g.h),fill:'#ebe6d8',...S},gStep);
       for(const t of s.treads)
         el('rect',{x:M(t.x),y:M(t.y),width:M(t.w),height:M(t.h),fill:'#f3efe4',...S},gStep);
-      const c1 = s.hole.y + s.hole.h - s.width/2, c2 = s.hole.y + s.width/2, xl = g.x + s.width/2;
+      const c1 = (s.band1[0]+s.band1[1])/2, c2 = (s.band2[0]+s.band2[1])/2, xl = g.x + s.width/2;
       const x0 = s.start1 - 0.1, x1 = s.hole.x + s.hole.w - 0.15;
       el('path',{d:`M${M(x0)} ${M(c1)}L${M(xl)} ${M(c1)}L${M(xl)} ${M(c2)}L${M(x1)} ${M(c2)}`,
         stroke:'#5d5a52',stroke_width:2,fill:'none'},gStep);
@@ -191,15 +191,16 @@ export function init(){
       const t=el('text',{x:M(x0)-8,y:M(c1)+6,font_size:15,text_anchor:'end',fill:'#5d5a52',
         font_family:'ui-sans-serif,system-ui,sans-serif',font_weight:600},gStep);
       t.textContent='LÊN';
-      el('line',{x1:M(g.x),y1:M(s.hole.y)+3,x2:M(s.hole.x+s.hole.w),y2:M(s.hole.y)+3,
+      if(s.outerRail) el('line',{x1:M(g.x),y1:M(s.outer2)-3*s.side2,x2:M(s.hole.x+s.hole.w),y2:M(s.outer2)-3*s.side2,
         stroke:'#4f4c46',stroke_width:2,stroke_dasharray:'6 5'},gStep);
-      /* Tay vịn hai bên khe giữa hai vế: mép trong vế 2 chạy hết vế, mép trong vế 1 dừng ở chân thang. */
-      const gap = s.hole.y + s.width, inner1 = s.hole.y + s.hole.h - s.width;
-      if(inner1 > gap + 1e-6){
+      /* Tay vịn hai bên khe giữa hai vế: mép trong vế 2 chạy hết vế, mép trong vế 1 dừng ở chân thang. Nét lệch 3 px
+         về phía mặt bậc của từng vế. */
+      if(Math.abs(s.inner1 - s.inner2) > 1e-6){
         const R = {stroke:'#4f4c46',stroke_width:2,stroke_dasharray:'6 5'};
-        el('line',{x1:M(g.x+g.w),y1:M(gap)-3,x2:M(s.hole.x+s.hole.w),y2:M(gap)-3,...R},gStep);
-        el('line',{x1:M(g.x+g.w),y1:M(inner1)+3,x2:M(s.start1),y2:M(inner1)+3,...R},gStep);
-        el('line',{x1:M(g.x+g.w),y1:M(gap)-3,x2:M(g.x+g.w),y2:M(inner1)+3,...R},gStep);
+        const y2 = M(s.inner2) + 3*s.side2, y1 = M(s.inner1) - 3*s.side2;
+        el('line',{x1:M(g.x+g.w),y1:y2,x2:M(s.hole.x+s.hole.w),y2:y2,...R},gStep);
+        el('line',{x1:M(g.x+g.w),y1:y1,x2:M(s.start1),y2:y1,...R},gStep);
+        el('line',{x1:M(g.x+g.w),y1:y2,x2:M(g.x+g.w),y2:y1,...R},gStep);
       }
     }
   }

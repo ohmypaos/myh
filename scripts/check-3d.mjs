@@ -932,7 +932,7 @@ function check(plan){
       e.push(`cầu thang ${s.id} bậc không đều hoặc quá cao: ${rises.map(n).join(' / ')}`);
 
     const W = s.width, hole = s.hole;
-    const c1 = hole.y + hole.h - W / 2, c2 = hole.y + W / 2, xl = hole.x + W / 2;
+    const c1 = (s.band1[0] + s.band1[1]) / 2, c2 = (s.band2[0] + s.band2[1]) / 2, xl = hole.x + W / 2;
     const xStart = s.start1 + WALK.radius + 0.05, xOut = hole.x + hole.w + 0.45;
     const t = tumOf(plan);
     const route = [[xStart, c1], [xl, c1], [xl, c2], [xOut, c2]];
@@ -980,8 +980,8 @@ function check(plan){
       const rails = [...m.boxes, ...m.prisms].filter(b => b.kind === 'stairRail' && b.id === s.id);
       const xs0 = s.landing.x + s.landing.w;
       const sides = [
-        { name: 'vế 2', edge: s.hole.y + s.width, from: xs0, to: s.hole.x + s.hole.w },
-        { name: 'vế 1', edge: s.hole.y + s.hole.h - s.width, from: xs0, to: s.start1 },
+        { name: 'vế 2', edge: s.inner2, from: xs0, to: s.hole.x + s.hole.w },
+        { name: 'vế 1', edge: s.inner1, from: xs0, to: s.start1 },
       ];
       for (const { name, edge, from, to } of sides) {
         const run = rails.filter(b => b.w > b.d && b.z < edge + RAILING.rail + EPS && b.z + b.d > edge - RAILING.rail - EPS
@@ -990,7 +990,8 @@ function check(plan){
         if (cover < (to - from) * 0.9)
           e.push(`cầu thang ${s.id}: mép trong ${name} giáp khe rộng ${n(well)} m chỉ có tay vịn ${n(cover)} / ${n(to - from)} m`);
       }
-      const head = rails.find(b => b.x + b.w <= xs0 + EPS && b.z < sides[0].edge + EPS && b.z + b.d > sides[1].edge - EPS
+      const eLo = Math.min(s.inner1, s.inner2), eHi = Math.max(s.inner1, s.inner2);
+      const head = rails.find(b => b.x + b.w <= xs0 + EPS && b.z < eLo + EPS && b.z + b.d > eHi - EPS
                                    && b.y1 > s.landingTop + STAIR.rail - EPS);
       if (!head) e.push(`cầu thang ${s.id}: đầu khe giữa hai vế để hở, không có trụ vịn trên chiếu nghỉ`);
     }
