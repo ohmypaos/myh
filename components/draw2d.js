@@ -629,18 +629,21 @@ export function init(){
         }
         continue;
       }
-      // cửa mở quay
-      const hx = ax==='h' ? (hinge==='a'?a:b) : pos;
-      const hy = ax==='h' ? pos               : (hinge==='a'?a:b);
-      const ox = ax==='h' ? (hinge==='a'?b:a) : pos;
-      const oy = ax==='h' ? pos               : (hinge==='a'?b:a);
-      const px = ax==='h' ? hx : hx + open*L;
-      const py = ax==='h' ? hy + open*L : hy;
-      const v1=[px-hx,py-hy], v2=[ox-hx,oy-hy];
-      const sweep = (v1[0]*v2[1]-v1[1]*v2[0]) > 0 ? 1 : 0;
-      el('path',{d:`M${M(px)} ${M(py)}A${M(L)} ${M(L)} 0 0 ${sweep} ${M(ox)} ${M(oy)}`,
-        fill:'none',stroke:'#9a9a9a',stroke_width:1.6},gD);
-      el('line',{x1:M(hx),y1:M(hy),x2:M(px),y2:M(py),stroke:col,stroke_width:5.5},gD);
+      // cửa mở quay: một cánh từ bản lề `hu` tới mép tự do `fu` dọc trục tường
+      const leaf = (hu, fu) => {
+        const r = Math.abs(fu-hu);
+        const hx = ax==='h' ? hu : pos, hy = ax==='h' ? pos : hu;
+        const ox = ax==='h' ? fu : pos, oy = ax==='h' ? pos : fu;
+        const px = ax==='h' ? hx : hx + open*r;
+        const py = ax==='h' ? hy + open*r : hy;
+        const v1=[px-hx,py-hy], v2=[ox-hx,oy-hy];
+        const sweep = (v1[0]*v2[1]-v1[1]*v2[0]) > 0 ? 1 : 0;
+        el('path',{d:`M${M(px)} ${M(py)}A${M(r)} ${M(r)} 0 0 ${sweep} ${M(ox)} ${M(oy)}`,
+          fill:'none',stroke:'#9a9a9a',stroke_width:1.6},gD);
+        el('line',{x1:M(hx),y1:M(hy),x2:M(px),y2:M(py),stroke:col,stroke_width:5.5},gD);
+      };
+      if(kind==='double'){ leaf(a, a+L/2); leaf(b, b-L/2); }   // 2 cánh: bản lề hai đầu
+      else if(hinge==='a') leaf(a, b); else leaf(b, a);
     }
   }
 
@@ -887,7 +890,7 @@ export function init(){
     document.getElementById('sched').innerHTML=rows;
 
     // ── bảng cửa ──
-    const KIND={swing:'Mở quay', slide:'Lùa 2 cánh', slide1:'Lùa 1 cánh',
+    const KIND={swing:'Mở quay', double:'Mở quay 2 cánh', slide:'Lùa 2 cánh', slide1:'Lùa 1 cánh',
                 open:'Mở thông', quad:'4 cánh'};
     let dr='<tr><th>Mã</th><th class="n">Rộng</th><th>Loại</th><th>Nối</th></tr>';
     for(const d of V.doors){

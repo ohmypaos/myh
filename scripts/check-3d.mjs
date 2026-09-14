@@ -665,7 +665,7 @@ function check(plan){
   const leaves = m.boxes.filter(b => b.kind === 'doorLeaf');
   for (const [id, ax, pos, a, b, style, , open] of plan.doors) {
     const mine = leaves.filter(l => l.id === id);
-    const want = style === 'swing' ? 1 : style === 'quad' ? 4 : 0;
+    const want = style === 'swing' ? 1 : style === 'double' ? 2 : style === 'quad' ? 4 : 0;
     if (mine.length !== want) { e.push(`cửa ${id} (${style}) có ${mine.length} cánh, phải ${want}`); continue; }
     const t = Math.max(0, ...plan.walls
       .filter(w => w[0] === ax && Math.abs(w[1] - pos) < EPS && w[2] < b && w[3] > a).map(w => w[4]));
