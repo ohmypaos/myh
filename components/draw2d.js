@@ -515,9 +515,18 @@ export function init(){
         fr(x,y,w,h);
         el('rect',{x:M(x+.05),y:M(y+.05),width:M(w*0.28),height:M(h-.1),rx:4,fill:'#eceff2'},gF);
         el('line',{x1:M(x+w*0.33),y1:M(y),x2:M(x+w*0.33),y2:M(y+h)},gF);
-      } else if(k==='wc'){
-        el('rect',{x:M(x),y:M(y),width:M(w),height:M(h*0.34),rx:3},gF);
-        el('ellipse',{cx:M(x+w/2),cy:M(y+h*0.68),rx:M(w/2),ry:M(h*0.33)},gF);
+      } else if(k==='wc'){                         // két nước áp cạnh gần vách nhất của phòng chứa nó
+        const r=ROOMS.find(([,,rx,ry,rw,rh])=>x>=rx-.01&&y>=ry-.01&&x+w<=rx+rw+.01&&y+h<=ry+rh+.01);
+        const back = !r ? 'n' : w<=h
+          ? (y-r[3] <= r[3]+r[5]-(y+h) ? 'n' : 's')
+          : (x-r[2] <= r[2]+r[4]-(x+w) ? 'w' : 'e');
+        if(back==='n'||back==='s'){
+          el('rect',{x:M(x),y:M(back==='n'?y:y+h*0.66),width:M(w),height:M(h*0.34),rx:3},gF);
+          el('ellipse',{cx:M(x+w/2),cy:M(y+h*(back==='n'?0.68:0.32)),rx:M(w/2),ry:M(h*0.33)},gF);
+        } else {
+          el('rect',{x:M(back==='w'?x:x+w*0.66),y:M(y),width:M(w*0.34),height:M(h),rx:3},gF);
+          el('ellipse',{cx:M(x+w*(back==='w'?0.68:0.32)),cy:M(y+h/2),rx:M(w*0.33),ry:M(h/2)},gF);
+        }
       } else if(k==='lav'){
         fr(x,y,w,h); el('circle',{cx:M(x+w/2),cy:M(y+h/2),r:M(Math.min(w,h)*0.32)},gF);
       } else if(k==='shower'){
