@@ -3,16 +3,17 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { CURRENT } from '../lib/versions/index.js';
-import { houseFloor, validateHouse, slidingPanels } from '../lib/house.js';
+import { houseFloor, validateHouse, slidingPanels, rearStepsOf } from '../lib/house.js';
 import { mountHouseScene } from './houseScene.js';
 import { KEY_DATES } from '../lib/sun.js';
 import { neighborLotsOf } from '../lib/lot.js';
 import { buildNeighborHouse } from '../lib/surroundings.js';
+import { furnitureOf, FURNITURE_SOURCES } from '../lib/furniture.js';
 import '../app/house.css';
 
 const h=CURRENT.house;
 const n=x=>x.toFixed(2).replace('.',',');
-const furnitureNames={bed:'Giường',sofa:'Sofa',table:'Bàn',kitchen:'Bếp',wash:'Giặt',wc:'WC',lav:'Lavabo',shower:'Tắm',cab:'Tủ',desk:'Bàn làm việc',altar:'Bàn thờ'};
+const cm=x=>(Math.round(x*1000)/10).toString().replace('.',',');
 
 function NeighborDrawing(){
   const neighbor=buildNeighborHouse(CURRENT);
@@ -44,16 +45,25 @@ function FloorDrawing({index,site=false}) {
         <text x="2.25" y="-1.05" className="house-room-label">BAN CÔNG TRƯỚC 1,8 m</text>
         <text x="2.25" y="-.62" className="house-small-label">Đua ra sân • che cửa tầng 1</text></>}
       <rect y="15" width={h.width} height="1" fill="#dfeadf" stroke="#678476" strokeWidth=".035"/>
-      {!h.rearBalconyWalls.right&&<g><path d={`M${h.width-.025} 15v${h.rearBalcony}`} stroke="#678476" strokeWidth=".04"/><title>Lan can thoáng phía lô B</title></g>}
+      {!h.rearBalconyWalls.right&&(index!==0||!h.rearSteps)&&<g><path d={`M${h.width-.025} 15v${h.rearBalcony}`} stroke="#678476" strokeWidth=".04"/><title>Lan can thoáng phía lô B</title></g>}
+      {index===0&&h.rearSteps&&<g fill="#ddd5c9" stroke="#9b8164" strokeWidth=".025">
+        {rearStepsOf(CURRENT).map((b,i)=><rect key={i} x={b.x} y={b.z-front} width={b.w} height={b.d}><title>{`Bậc xuống sân cao ${n(b.y1)} m`}</title></rect>)}
+      </g>}
       <text x="2.25" y="15.58" className="house-room-label">{index?'BAN CÔNG SAU 1 m':'HIÊN SAU 1 m'}</text>
       {f.rooms.map(r=><g key={r.id}>
         <rect x={r.x} y={r.y} width={r.w} height={r.d} fill={r.type==='wet'?'#e4edf2':r.id==='altar'?'#f1e5da':'#f7eedc'}/>
       </g>)}
-      {f.furniture.map(([kind,x,y,w,d],i)=><g key={i}>
+      {f.furniture.map(([kind,x,y,w,d,meta])=><g key={meta.id}>
+        <title>{`${meta.id} — ${meta.name} · ${cm(w)} × ${cm(d)} × ${cm(meta.height)} cm · ${meta.note}`}</title>
         <rect x={x} y={y} width={w} height={d} rx=".045" fill={kind==='bed'?'#e7dccb':'#c7b398'} stroke="#9c896e" strokeWidth=".025"/>
-        {kind==='bed'&&<><rect x={x+.08} y={y+.08} width={w-.16} height={d-.16} rx=".04" fill="#fffaf1"/>
+        {kind==='sofa'&&<>
+          <rect x={x+.12} y={y+.12} width={w-.24} height={d-.24} rx=".05" fill="#f1e5d1"/>
+          <path d={meta.facing==='left'?`M${x+w-.1} ${y+.1}v${d-.2}`:meta.facing==='front'?`M${x+.1} ${y+d-.1}h${w-.2}`:`M${x+.1} ${y+.1}h${w-.2}`} stroke="#8c704f" strokeWidth=".06"/>
+        </>}
+        {kind==='shelf'&&[1,2].map(i=><path key={i} d={`M${x+w*i/3} ${y}v${d}`} stroke="#9c896e" strokeWidth=".025"/>)}
+        {kind==='bed'&&<><rect x={x+.045} y={y+.08} width={w-.09} height={d-.16} rx=".04" fill="#fffaf1"/>
           <path d={`M${x+w-.5} ${y+.12}v${d-.24}`} stroke="#c7b398" strokeWidth=".04"/></>}
-        <text x={x+w/2} y={y+d/2+.045} className="house-furniture-label">{furnitureNames[kind]}</text>
+        <text x={x+w/2} y={y+d/2+.045} className="house-furniture-label">{meta.id}</text>
       </g>)}
       {f.walls.map((w,i)=><rect key={i} x={w.ax==='h'?w.a:w.pos-w.t/2} y={w.ax==='h'?w.pos-w.t/2:w.a} width={w.ax==='h'?w.b-w.a:w.t} height={w.ax==='h'?w.t:w.b-w.a} fill="#3c4846"/>)}
       {f.openings.map(o=><g key={o.id}>
@@ -81,11 +91,14 @@ function FloorDrawing({index,site=false}) {
         <text x="2.55" y="9.82" className="house-small-label">THANG U · 3 × 2 m</text>
         <text x="3.77" y="10.06" className="house-small-label">Nghỉ</text>
       </g>
-      {f.rooms.map(r=><g key={`label-${r.id}`}>
-        <rect x={r.x+.06} y={r.y+r.d-.72} width={r.w-.12} height=".62" rx=".06" fill="#faf8f2" opacity=".86"/>
-        <text x={r.x+r.w/2} y={r.y+r.d-.5} className="house-room-label">{r.name}</text>
-        <text x={r.x+r.w/2} y={r.y+r.d-.19} className="house-small-label">{n(r.w)} × {n(r.d)} m · {n(r.w*r.d)} m²</text>
-      </g>)}
+      {f.rooms.map(r=>{
+        const living=r.id==='living',x=living?.22:r.x+.06,y=living?3.65:r.y+r.d-.72,w=living?1.2:r.w-.12;
+        return <g key={`label-${r.id}`}>
+          <rect x={x} y={y} width={w} height=".62" rx=".06" fill="#faf8f2" opacity=".86"/>
+          <text x={x+w/2} y={y+.22} className="house-room-label" style={living?{fontSize:'.14px'}:undefined}>{r.name}</text>
+          <text x={x+w/2} y={y+.53} className="house-small-label" style={living?{fontSize:'.1px'}:undefined}>{n(r.w)} × {n(r.d)} m · {n(r.w*r.d)} m²</text>
+        </g>;
+      })}
       <text x=".65" y={index?7.25:9.6} className="house-small-label" transform={`rotate(-90 .65 ${index?7.25:9.6})`}>HÀNH LANG {index?'1,0':'0,9'} m</text>
       <path d="M0 16.55H4.5M0 16.4v.3M4.5 16.4v.3" stroke="#a25543" strokeWidth=".022"/>
       <text x="2.25" y="16.93" className="house-dim-label">4,50 m</text>
@@ -110,47 +123,59 @@ function PlanViewer({floor,site}) {
     <button onClick={()=>zoom(.8)} aria-label="Phóng to">＋</button><button onClick={()=>zoom(1.25)} aria-label="Thu nhỏ">−</button><button onClick={()=>setView(null)}>Vừa khung</button><button onClick={save}>Lưu SVG</button>
   </div><svg ref={svg} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={`Bản vẽ ${floor==='both'?'hai tầng':`tầng ${+floor+1}`}`} viewBox={v.join(' ')}
     onWheel={e=>zoom(e.deltaY>0?1.1:.9)} onPointerDown={e=>{drag.current={x:e.clientX,y:e.clientY,view:v};e.currentTarget.setPointerCapture(e.pointerId);}} onPointerMove={move} onPointerUp={()=>drag.current=null} onPointerCancel={()=>drag.current=null}>
-    <style>{`.house-room-label{font:700 .21px 'Segoe UI',sans-serif;text-anchor:middle;fill:#263f3b}.house-small-label{font:.16px 'Segoe UI',sans-serif;text-anchor:middle;fill:#6a665c}.house-furniture-label{font:.11px 'Segoe UI',sans-serif;text-anchor:middle;fill:#65513e}.house-dim-label{font:.18px 'Segoe UI',sans-serif;text-anchor:middle;fill:#a25543}.house-floor-title{font:700 .26px 'Segoe UI',sans-serif;text-anchor:middle;fill:#263f3b}.house-yard-label{font:.2px 'Segoe UI',sans-serif;text-anchor:middle;fill:#66715e}`}</style>
+    <style>{`.house-room-label{font:700 .21px 'Segoe UI',sans-serif;text-anchor:middle;fill:#263f3b}.house-small-label{font:.16px 'Segoe UI',sans-serif;text-anchor:middle;fill:#6a665c}.house-furniture-label{font:700 .18px 'Segoe UI',sans-serif;text-anchor:middle;fill:#65513e}.house-dim-label{font:.18px 'Segoe UI',sans-serif;text-anchor:middle;fill:#a25543}.house-floor-title{font:700 .26px 'Segoe UI',sans-serif;text-anchor:middle;fill:#263f3b}.house-yard-label{font:.2px 'Segoe UI',sans-serif;text-anchor:middle;fill:#66715e}`}</style>
     <FloorDrawing index={floor==='both'?0:+floor} site={site}/>
     {floor==='both'&&<g transform="translate(5.65 0)"><FloorDrawing index={1}/></g>}
   </svg></div>;
 }
 
-function SceneViewer({floor,roof,ceiling,furniture,camera,day,hour}) {
-  const host=useRef(null),api=useRef(null),[error,setError]=useState('');
-  useEffect(()=>{try{api.current=mountHouseScene(host.current,CURRENT);}catch(e){setError(`Không mở được WebGL: ${e.message}`);}return()=>{api.current?.dispose();api.current=null;};},[]);
+function FurnitureLegend({index}){
+  return <section><h2>Nội thất tầng {index+1}</h2><table className="house-furniture-table"><thead><tr><th scope="col">Mã</th><th scope="col">Đồ / vị trí</th><th scope="col">D × S × C<br/>(cm)</th></tr></thead><tbody>
+    {furnitureOf(CURRENT,index).map(item=><tr key={item.id}><th scope="row">{item.id}</th><td><strong>{item.name}</strong><small>{item.room} · {item.note}</small></td><td>{[item.length,item.depth,item.height].map(cm).join(' × ')}</td></tr>)}
+  </tbody></table></section>;
+}
+
+function SceneViewer({floor,roof,ceiling,furniture,camera,day,hour,api,onWalkChange}) {
+  const host=useRef(null),[error,setError]=useState(''),[doorHint,setDoorHint]=useState('');
+  useEffect(()=>{try{api.current=mountHouseScene(host.current,CURRENT,{onWalkChange,onWalkError:setError,onDoorHint:setDoorHint});}catch(e){setError(`Không mở được WebGL: ${e.message}`);}return()=>{api.current?.dispose();api.current=null;};},[]);
   useEffect(()=>api.current?.setView({floor,roof,ceiling,furniture,camera,day,hour}),[floor,roof,ceiling,furniture,camera,day,hour]);
-  return <div className="house-scene" ref={host}>{error&&<p role="alert">{error}</p>}</div>;
+  return <div className="house-scene"><div className="house-scene-canvas" ref={host}/>{doorHint&&<div className="house-door-prompt" role="status"><button onClick={()=>api.current?.interactDoor()}>{doorHint}</button></div>}{error&&<p className="house-scene-message" role="status">{error}</p>}</div>;
 }
 
 export default function HouseDesign({mode,onArchive}) {
+  const sceneApi=useRef(null),[walking,setWalking]=useState(false);
   const [floor,setFloor]=useState(mode==='3d'?'all':'both'),[roof,setRoof]=useState(true),[ceiling,setCeiling]=useState(true),[furniture,setFurniture]=useState(true),[site,setSite]=useState(false),[camera,setCamera]=useState('overview');
   const [day,setDay]=useState(172),[hour,setHour]=useState(10);
   const errors=validateHouse(CURRENT);
   return <main className="house-app"><header>
     <h1>NHÀ CHÍNH HAI TẦNG — 4,5 × 16 m</h1><p className="sub">Sân trước 14 m · Tầng 2 tường 100 mm · Mái tôn hai dốc + trần nhựa</p>
-    <div className="bar"><label htmlFor="house-floor">Xem</label><select id="house-floor" value={floor} onChange={e=>{setFloor(e.target.value);if(mode==='2d')setSite(false);}}>
+    <div className="bar"><label htmlFor="house-floor">Xem</label><select id="house-floor" value={floor} disabled={walking} onChange={e=>{setFloor(e.target.value);if(mode==='2d')setSite(false);}}>
       <option value={mode==='3d'?'all':'both'}>{mode==='3d'?'Toàn bộ nhà':'Cả hai tầng'}</option><option value="0">Tầng 1</option><option value="1">Tầng 2</option></select>
       {mode==='2d'?<button className={site?'on':''} onClick={()=>{setSite(!site);setFloor(!site?'0':'both');}}>Cả khu đất</button>:<>
         <button className={roof?'on':''} disabled={floor!=='all'} aria-pressed={roof} onClick={()=>setRoof(!roof)}>{roof?'Ẩn mái tôn':'Hiện mái tôn'}</button>
         <button className={ceiling?'on':''} disabled={floor!=='all'} aria-pressed={ceiling} onClick={()=>setCeiling(!ceiling)}>{ceiling?'Ẩn trần nhựa':'Hiện trần nhựa'}</button>
         <button onClick={()=>setFurniture(!furniture)}>{furniture?'Ẩn nội thất':'Hiện nội thất'}</button>
-        <select aria-label="Góc nhìn" value={camera} onChange={e=>setCamera(e.target.value)}><option value="overview">Phối cảnh nhà</option><option value="front">Mặt trước</option><option value="rear">Mặt sau</option><option value="top">Từ trên xuống</option><option value="site">Toàn khu đất</option></select>
+        <select aria-label="Góc nhìn" value={camera} disabled={walking} onChange={e=>setCamera(e.target.value)}><option value="overview">Phối cảnh nhà</option><option value="front">Mặt trước</option><option value="rear">Mặt sau</option><option value="top">Từ trên xuống</option><option value="site">Toàn khu đất</option></select>
+        <button className={walking?'on':''} aria-pressed={walking} onClick={()=>{setFloor('all');sceneApi.current?.toggleWalk();}}>Đi bộ trong nhà</button>
       </>}
       <Link className="nav" href={mode==='2d'?'/3d':'/'}>{mode==='2d'?'Xem 3D →':'← Bản vẽ 2D'}</Link><button onClick={onArchive}>Kho phương án cũ</button>
     </div>
   </header><div className="house-content"><section className="house-viewer">
-    {mode==='2d'?<PlanViewer floor={floor} site={site}/>:<SceneViewer floor={floor} roof={roof} ceiling={ceiling} furniture={furniture} camera={camera} day={day} hour={hour}/>}
-    <div className="house-help">{mode==='2d'?'Kéo để di chuyển · Lăn chuột để phóng / thu · Kích thước phòng là lọt lòng':'Kéo để xoay · Chuột phải để dịch · Lăn để phóng / thu · Chọn một tầng sẽ bỏ lớp che phía trên'}</div>
+    {mode==='2d'?<PlanViewer floor={floor} site={site}/>:<SceneViewer floor={floor} roof={roof} ceiling={ceiling} furniture={furniture} camera={camera} day={day} hour={hour} api={sceneApi} onWalkChange={setWalking}/>}
+    {walking&&<div className="house-walk-hint" role="status">Chuột: nhìn · WASD / ↑ ↓ ← →: đi · E: đóng/mở cửa gần · Esc: thoát</div>}
+    <div className="house-help">{mode==='2d'?'Kéo để di chuyển · Lăn chuột để phóng / thu · Kích thước phòng là lọt lòng':walking?'Xuất phát từ cổng · Đi qua sân, vào nhà và lên cầu thang · Tầm mắt 1,58 m':'Kéo để xoay · Chuột phải để dịch · Lăn để phóng / thu · Đi bộ trong nhà: dùng chuột và bàn phím'}</div>
   </section><aside className="house-sidebar">
     {mode==='3d'&&<section><h2>Xem bóng nắng</h2><p>Bắc Giang · mặt tiền Bắc lệch Đông 16°. Giữ cả lô A, lô B và nhà hàng xóm theo mô hình cũ; bóng nắng có tính các khối này.</p>
       <label htmlFor="house-sun-day">Ngày </label><select id="house-sun-day" value={day} onChange={e=>setDay(+e.target.value)}>{KEY_DATES.map(d=><option key={d.n} value={d.n}>{d.name}</option>)}</select>
       <p><label htmlFor="house-sun-hour">Giờ: {Math.floor(hour)}:{Math.round(hour%1*60).toString().padStart(2,'0')}</label><input id="house-sun-hour" type="range" min="6" max="18" step=".25" value={hour} onChange={e=>setHour(+e.target.value)}/></p></section>}
     <h2>Bố trí đã chốt</h2><p>{CURRENT.note}</p><p className={errors.length?'house-error':'house-ok'}>{errors.length?errors.map(e=>e.msg).join(' '):'✓ Kiểm tra bố trí và hình học đạt'}</p>
     {h.floors.map((f,i)=><section key={i}><h2>Tầng {i+1} — tường {f.wall*1000} mm</h2><table><thead><tr><th>Phòng</th><th>Ngang × sâu</th><th>m²</th></tr></thead><tbody>{f.rooms.map(r=><tr key={r.id}><td>{r.name}</td><td>{n(r.w)} × {n(r.d)}</td><td>{n(r.w*r.d)}</td></tr>)}</tbody></table></section>)}
+    <p>Mã trên bản vẽ 2D khớp bảng dưới. D × S × C là dài × sâu × cao, tính cả khung giường; đệm 160 × 200 cm, mặt đệm cao 50 cm. Ô tắm ghi chiều cao bệ sàn.</p>
+    {h.floors.map((_,i)=>(floor==='all'||floor==='both'||+floor===i)&&<FurnitureLegend key={i} index={i}/>)}
+    <details><summary>Kích thước tham khảo</summary><p>Số đo đại diện cho đồ thông dụng, chưa chốt sản phẩm mua.</p>{FURNITURE_SOURCES.map(s=><p key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></p>)}</details>
     <h2>Cầu thang và mái</h2><p>Thang chữ U 3 × 2 m, đặt ngang nhà. Vế rộng 0,95 m, mặt bậc 25 cm; 18 nấc cao 17 cm theo giả định cao tầng 3,06 m. Đầu thang tầng 2 ra hành lang.</p>
-    <h2>Cửa chính và ban công</h2><p>Cửa chính nhôm kính ghi đậm, lùa 4 cánh {n(h.doorDesign.main.width)} × {n(h.doorDesign.main.height)} m. Cửa ra ban công trước / sau và hiên sau {n(h.doorDesign.balcony.width)} × {n(h.doorDesign.balcony.height)} m, từ mặt sàn lên; hai cánh giữa trượt sang hai bên, lối mở giữa rộng {n(h.doorDesign.balcony.width/2)} m.</p>
-    <p>Ba phòng ngủ bỏ cửa sổ bên hông hướng lô B. Hiên / ban công sau phía lô A xây tường cao cả hai tầng: tầng 1 lên sàn tầng 2, tầng 2 lên kín tới mái. Bên còn lại dùng lan can thoáng cả hai tầng.</p>
+    <h2>Cửa chính và ban công</h2><p>Chỉ cửa chính nhôm kính ghi đậm lùa 4 cánh {n(h.doorDesign.main.width)} × {n(h.doorDesign.main.height)} m, mở giữa. Cửa phòng ngủ ra ban công trước / sau và hiên sau lùa 2 cánh {n(h.doorDesign.balcony.width)} × {n(h.doorDesign.balcony.height)} m, trên hai ray, từ mặt sàn lên; trượt chồng sang trái hoặc phải, lối đi rộng {n(h.doorDesign.balcony.width/2)} m. Mô hình mặc định chồng sang trái. Cửa WC cả hai tầng mở vào trong WC.</p>
+    <p>Ba phòng ngủ bỏ cửa sổ bên hông hướng lô B. Hiên / ban công sau phía lô A xây tường cao cả hai tầng: tầng 1 lên sàn tầng 2, tầng 2 lên kín tới mái. Phía lô phụ bỏ lan can hiên sau tầng 1, thêm tam cấp rộng 80 cm xuống sân: ba nấc cao 15 cm tính cả mặt hiên, mặt bậc sâu 30 cm. Chậu cây sát lối xuống chuyển sang sân phơi. Tầng 2 giữ lan can.</p>
     <p>Sống mái chạy dọc nhà, hai mặt dốc trái / phải. Mô hình lấy dáng mái trong ảnh; mặt tiền dựng đơn giản. Trần nhựa phẳng cao 2,8 m.</p>
     <p className="note">{CURRENT.warn}</p>
   </aside></div></main>;

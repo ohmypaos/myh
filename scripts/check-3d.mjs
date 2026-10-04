@@ -11,7 +11,7 @@
 import {accessOf,accessSurfaceAt} from '../lib/access.js';
 import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { PLANS } from '../lib/versions/index.js';
-import { validateHouse } from '../lib/house.js';
+import { validateHouse, houseFloor } from '../lib/house.js';
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palette.js';
 import { lotOf, neighborLotsOf, siteLevelsOf, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
@@ -20,6 +20,7 @@ import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, flo
          plantersOf, flowerBedsOf, treesOf, overhangsOf } from '../lib/envelope.js';
 import { FASCIA } from '../lib/lot.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';
+import { houseDoors, houseWalkSolids, nearestHouseDoor, doorTouchesWalker } from '../lib/houseDoors.js';
 
 const EPS = 1e-6;
 const AREA_EPS = 1e-4;
@@ -1508,10 +1509,71 @@ function check(plan){
   return { errors: e, boxes: m.boxes.length, glass: m.glass.length };
 }
 
+/* Đi thử trên khối thật: lối vào, thang cả hai chiều, mọi cửa và một bước dài đâm vào tường. */
+function checkHouseWalk(plan){
+  const errors=[],h=plan.house,s=h.stair,doors=houseDoors(plan),openMassing=buildMassing(plan),solids=houseWalkSolids(openMassing,doors);
+  function route(name,points,base,endBase,parts=solids){
+    let p={x:points[0][0],z:points[0][1],foot:supportAt(parts,...points[0],base)};
+    for(const [x,z] of points.slice(1)){
+      p=stepWalk(parts,p,x-p.x,z-p.z);
+      if(Math.hypot(p.x-x,p.z-z)>EPS){errors.push(`Đi bộ ${name}: vướng ${p.hit?.kind??'khối'} trước đích`);return;}
+    }
+    if(Math.abs(p.foot-endBase)>EPS)errors.push(`Đi bộ ${name}: đứng sai cốt sàn (${p.foot} thay vì ${endBase})`);
+  }
+  const entry=[[h.width/2,.6],[h.width/2,h.front+.5],[1.35,h.front+.5],[1.35,h.front+1.3]],ground=supportAt(solids,...entry[0],0);
+  route('cổng → nhà',entry,ground,h.base);route('nhà → cổng',[...entry].reverse(),h.base,ground);
+  const stairs=[[s.x-.4,h.front+s.y+.45],[s.x+2.5,h.front+s.y+.45],[s.x+2.5,h.front+s.y+1.55],[s.x-.4,h.front+s.y+1.55]];
+  route('lên thang',stairs,h.base,h.base+h.floorRise);
+  route('xuống thang',[...stairs].reverse(),h.base+h.floorRise,h.base);
+  const inside=points=>points.map(([x,y])=>[x,h.front+y]);
+  const livingKitchen=inside([[1.35,1.3],[1.35,3.9],[.9,3.9],[.9,5.3],[3.15,5.3],[3.15,8.3],[.9,8.3],[.9,9.45]]);
+  route('khách → bếp → cầu thang',livingKitchen,h.base,h.base);
+  route('cầu thang → bếp → khách',[...livingKitchen].reverse(),h.base,h.base);
+  route('lối vào bộ ghế chữ U',inside([[1.35,1.9],[3.1,1.9],[3.1,2.55]]),h.base,h.base);
+  route('phòng ngủ tầng 1 → hiên sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base,h.base);
+  route('master → ban công trước',inside([[.65,3.95],[.65,3.1],[1.4,3.1],[1.4,.4],[3.05,.4],[3.05,-.6]]),h.base+h.floorRise,h.base+h.floorRise);
+  route('phòng ngủ tầng 2 → ban công sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base+h.floorRise,h.base+h.floorRise);
+  if(h.rearSteps){
+    const r=h.rearSteps,z=h.front+15+r.offset+r.width/2;
+    const rear=[[h.width-1.2,z],[h.width+r.tread*(r.risers-1)+.35,z]];
+    route('hiên sau → sân',rear,h.base,0);route('sân → hiên sau',[...rear].reverse(),0,h.base);
+    const lowRails=openMassing.boxes.filter(b=>b.kind==='railing'&&b.floorIndex===0&&b.x>=h.width-.04-EPS&&b.z>=h.front+15-EPS);
+    if(lowRails.length)errors.push('Lan can tầng 1 vẫn chắn lối hiên sau xuống sân');
+    if(!openMassing.boxes.some(b=>b.kind==='stairRail'&&b.floorIndex===1&&b.x>=h.width-.04-EPS&&b.z>=h.front+15-EPS))errors.push('Thiếu lan can bên lô phụ của ban công sau tầng 2');
+  }
+  // Kiểm lỗ cửa riêng với đồ đạc: WC có thiết bị ngay phía sau cửa, cần rẽ sau khi vào.
+  const structure=solids.filter(b=>!['furniture','mattress'].includes(b.kind));
+  for(let i=0;i<h.floors.length;i++){
+    const f=houseFloor(plan,i);
+    for(const o of f.openings.filter(o=>o.type==='door')){
+      const mid=o.style==='slide'&&o.panels===2?o.a+(o.b-o.a)*.75:(o.a+o.b)/2,points=o.ax==='h'?[[mid,h.front+o.pos-.4],[mid,h.front+o.pos+.4]]:[[o.pos-.4,h.front+mid],[o.pos+.4,h.front+mid]];
+      route(o.id,points,f.base,f.base,structure);route(`${o.id} ngược`,[...points].reverse(),f.base,f.base,structure);
+      const closed=buildMassing(plan,{doorStates:{[o.id]:false}}),closedSolids=houseWalkSolids(closed,doors,false);
+      for(const [from,to] of [points,[...points].reverse()]){
+        const p={x:from[0],z:from[1],foot:f.base},blocked=stepWalk(closedSolids,p,to[0]-p.x,to[1]-p.z);
+        if(!blocked.hit||Math.hypot(blocked.x-to[0],blocked.z-to[1])<.1)errors.push(`Cửa đóng ${o.id}: vẫn đi xuyên được`);
+        if(nearestHouseDoor(doors,p,closedSolids)?.id!==o.id)errors.push(`Không tương tác được ${o.id} ở gần cửa`);
+      }
+      const center={x:(points[0][0]+points[1][0])/2,z:(points[0][1]+points[1][1])/2,foot:f.base};
+      if(!doorTouchesWalker(closed,o.id,center))errors.push(`Cửa ${o.id}: không phát hiện người đứng chắn cửa`);
+      const parts=m=>[...m.boxes,...m.glass].filter(b=>b.id&&b.id!==o.id);
+      if(JSON.stringify(parts(closed))!==JSON.stringify(parts(openMassing)))errors.push(`Đóng ${o.id} làm đổi cửa khác`);
+    }
+    const blocked=stepWalk(solids,{x:.6,z:h.front+1,foot:f.base},-2,0);
+    if(!blocked.hit||blocked.x<.2)errors.push(`Đi bộ tầng ${i+1}: xuyên tường với bước dài`);
+  }
+  if(nearestHouseDoor(doors,{x:h.width/2,z:.6,foot:ground},solids))errors.push('Gợi ý cửa hiện khi còn đứng xa ở cổng');
+  const door=doors[0],mid=(door.a+door.b)/2,p={x:mid,z:door.pos-.8,foot:door.base};
+  if(nearestHouseDoor([door],{...p,foot:door.base+h.floorRise},solids))errors.push('Tương tác nhầm cửa khác tầng');
+  const wall={x0:mid-.5,x1:mid+.5,z0:door.pos-.5,z1:door.pos-.3,y0:door.base,y1:door.base+3,kind:'houseWall'};
+  if(nearestHouseDoor([door],p,[wall]))errors.push('Tương tác được cửa xuyên qua tường');
+  return errors;
+}
+
 let failed = 0;
 for (const plan of PLANS) {
   let r;
-  try { r = plan.house ? {errors:validateHouse(plan).map(e=>e.msg),boxes:buildMassing(plan).boxes.length,glass:buildMassing(plan).glass.length} : check(plan); }
+  try { r = plan.house ? {errors:[...validateHouse(plan).map(e=>e.msg),...checkHouseWalk(plan)],boxes:buildMassing(plan).boxes.length,glass:buildMassing(plan).glass.length} : check(plan); }
   catch (err) { failed++; console.log(`GÃY    ${plan.id.padEnd(8)} ${err.message}`); continue; }
 
   const size = `${r.boxes} hộp, ${r.glass} kính`;

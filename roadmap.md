@@ -29,12 +29,20 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | Mã | Việc | Trạng thái | Chặn bởi |
 |---|---|---|---|
 | **Chuyển sang Next.js** ||||
+| C7 | Tới gần cửa đi để bấm E đóng / mở riêng từng cửa; kính và cánh cửa chặn đường đúng trạng thái; tránh đóng / mở đè vào người | ✅ xong, đã kiểm tra | |
+| C6 | Đi bộ trong bản hai tầng: chuột + WASD / mũi tên, va chạm theo khối thật, lên xuống thang và Esc thoát | ✅ xong, đã kiểm tra | |
 | C1 | Chặng 1 — khởi tạo Next, chuyển dữ liệu sang module ES | ✅ xong | |
 | C2 | Chặng 2 — trang bản vẽ 2D | ✅ xong | |
 | C3 | Chặng 3 — trang 3D, khối nhà và đường đi của nắng | ✅ xong | |
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
+| A58 | Thu SF2 / SF3 thành ghế đơn 80 × 80 cm, giữ bố trí chữ U với sofa SF1 và bàn trà | ✅ xong, đã kiểm tra | |
+| A57 | Kệ TV bên trái thay sofa cũ; bộ ghế chữ U và bàn phía cửa sổ; kệ thoáng ngăn khách / bếp chừa lối 1.25 m; mã đồ chỉ hiện trên 2D | ✅ xong, đã kiểm tra | SF2 / SF3 đổi thành ghế đơn theo A58 |
+| A56 | Chỉnh kích thước và vị trí nội thất; mã đồ, bảng chú thích và đặc tả; kiểm khoảng dùng đồ và lối đi | ✅ xong, đã kiểm tra | Nhãn 3D đã bỏ theo A57 |
+| A55 | Hiên sau tầng 1 bỏ lan can bên lô phụ, thêm tam cấp 80 cm xuống sân; chuyển chậu CC4 khỏi lối xuống | ✅ xong, đã kiểm tra | |
+| A54 | Chỉ cửa chính lùa 4 cánh; cửa phòng ngủ ra ban công / hiên lùa 2 cánh trên hai ray, giữ 3.2 × 2.5 m; cửa WC mở vào trong | ✅ xong, đã kiểm tra | |
+| A53 | Bỏ cửa sổ cầu thang tầng 1, xây kín ô cũ; giữ cửa sổ cầu thang tầng 2 | ✅ xong, đã kiểm tra | |
 | A52 | Bậc rộng hết lô chính 4.5 m; kéo sàn ra 1.2 m làm hiên nhỏ, hai cây đứng sát hai mép ngoài hiên cùng cốt sàn nhà | ✅ xong, đã kiểm tra | |
 | A51 | Bỏ cửa sổ bên hông hướng lô B của ba phòng ngủ; hiên / ban công sau phía lô A xây tường cao cả hai tầng, phía còn lại giữ lan can | Đã sửa và kiểm tra; chưa commit | |
 | A50 | Mở rộng cửa chính 3.2 × 2.6 m kiểu nhôm kính hiện đại; cửa ban công trước/sau và hiên sau lùa 4 cánh 3.2 × 2.5 m, từ sàn lên | Đã sửa và kiểm tra; chưa commit | Kích thước tạm để hiệu chỉnh |
