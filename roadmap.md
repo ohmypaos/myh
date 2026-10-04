@@ -1,6 +1,6 @@
 # Kế hoạch triển khai
 
-Cập nhật 4/10/2026.
+Cập nhật 5/10/2026.
 
 **Thay đổi hiện hành:** khuôn 8 × 30 m, lô chính 5 m và lô phụ 3 m; bỏ bếp + nhà ăn, hành lang ngoài, WC khách, mái sân chính. A35 không còn áp dụng vì mái sân chính đã bỏ; A37/A38 là phương án cũ, cần xem lại khi chốt bếp mới.
 
@@ -37,6 +37,9 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
+| A61 | Bỏ tường bao riêng phía sau nhà, dùng tường sau nhà tại Y=30 m làm tường bao; giữ tường bao phía sân phơi, sân trước 16.6 m | ✅ xong, đã kiểm tra | |
+| A60 | Dịch nhà để mặt sau Y=29.89 m áp sát mặt trong tường bao; sân trước 16.49 m; giữ thân nhà 60.3 m²/tầng, chuyển chậu sau sang sân phơi, thu mép mái trong ranh đất | ✅ xong, đã kiểm tra | |
+| A59 | Thân nhà 4.5 × 13.4 m = 60.3 m²/tầng; phòng thờ 3.2 × 2 m; bỏ hiên / ban công sau, thay cửa đi bằng cửa sổ; đồng bộ 2D/3D và bố trí đồ | ✅ xong, đã kiểm tra | |
 | A58 | Thu SF2 / SF3 thành ghế đơn 80 × 80 cm, giữ bố trí chữ U với sofa SF1 và bàn trà | ✅ xong, đã kiểm tra | |
 | A57 | Kệ TV bên trái thay sofa cũ; bộ ghế chữ U và bàn phía cửa sổ; kệ thoáng ngăn khách / bếp chừa lối 1.25 m; mã đồ chỉ hiện trên 2D | ✅ xong, đã kiểm tra | SF2 / SF3 đổi thành ghế đơn theo A58 |
 | A56 | Chỉnh kích thước và vị trí nội thất; mã đồ, bảng chú thích và đặc tả; kiểm khoảng dùng đồ và lối đi | ✅ xong, đã kiểm tra | Nhãn 3D đã bỏ theo A57 |

@@ -1526,13 +1526,13 @@ function checkHouseWalk(plan){
   route('lên thang',stairs,h.base,h.base+h.floorRise);
   route('xuống thang',[...stairs].reverse(),h.base+h.floorRise,h.base);
   const inside=points=>points.map(([x,y])=>[x,h.front+y]);
-  const livingKitchen=inside([[1.35,1.3],[1.35,3.9],[.9,3.9],[.9,5.3],[3.15,5.3],[3.15,8.3],[.9,8.3],[.9,9.45]]);
+  const livingKitchen=inside([[1.35,1.3],[1.35,3.9],[.9,3.9],[.9,4.85],[3.15,4.85],[3.15,s.y-.5],[3.15,4.85],[.55,4.85],[.55,s.y-.3],[.9,s.y-.3],[.9,s.y+.65]]);
   route('khách → bếp → cầu thang',livingKitchen,h.base,h.base);
   route('cầu thang → bếp → khách',[...livingKitchen].reverse(),h.base,h.base);
   route('lối vào bộ ghế chữ U',inside([[1.35,1.9],[3.1,1.9],[3.1,2.55]]),h.base,h.base);
-  route('phòng ngủ tầng 1 → hiên sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base,h.base);
-  route('master → ban công trước',inside([[.65,3.95],[.65,3.1],[1.4,3.1],[1.4,.4],[3.05,.4],[3.05,-.6]]),h.base+h.floorRise,h.base+h.floorRise);
-  route('phòng ngủ tầng 2 → ban công sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base+h.floorRise,h.base+h.floorRise);
+  if(h.rearBalcony>0)route('phòng ngủ tầng 1 → hiên sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base,h.base);
+  route('master → ban công trước',inside([[.65,h.floors[1].rooms.find(r=>r.id==='office').y+.35],[.65,2.5],[1.4,2.5],[1.4,.4],[3.05,.4],[3.05,-.6]]),h.base+h.floorRise,h.base+h.floorRise);
+  if(h.rearBalcony>0)route('phòng ngủ tầng 2 → ban công sau',inside([[.7,12.7],[1.4,12.7],[1.4,14.55],[3.05,14.55],[3.05,15.45]]),h.base+h.floorRise,h.base+h.floorRise);
   if(h.rearSteps){
     const r=h.rearSteps,z=h.front+15+r.offset+r.width/2;
     const rear=[[h.width-1.2,z],[h.width+r.tread*(r.risers-1)+.35,z]];
