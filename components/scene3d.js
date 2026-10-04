@@ -14,7 +14,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from './palette.js';
-import { LOT, heightsOf } from '../lib/lot.js';
+import { LOT, NEIGHBOR_LOTS, heightsOf } from '../lib/lot.js';
+import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { mountSwitchBoard } from './switchBoard.js';
@@ -26,6 +27,8 @@ import { KEY_DATES, sunPosition, sunriseSunset, toSceneVector, compassName, dayL
   from '../lib/sun.js';
 
 const CENTER = new THREE.Vector3(LOT.w / 2, 0, LOT.d / 2);
+const MIN_X = Math.min(0, ...NEIGHBOR_LOTS.map(l => l.x));
+const MAX_X = Math.max(LOT.w, ...NEIGHBOR_LOTS.map(l => l.x + l.w));
 
 /* Màu nắng và màu trời theo cao độ mặt trời — nội suy giữa hai đầu cho gọn. */
 const SUN_LOW   = new THREE.Color(0xff9c4a);
@@ -75,10 +78,11 @@ export function init(){
   sun.target.position.copy(CENTER);
   scene.add(sun, sun.target);
 
-  /* Cảnh dài 30 m: bó khung camera bóng sát đúng lô, nếu để mặc định thì bóng răng cưa
-     (3d.md mục 6). Chéo lô ~31.5 m nên nửa khung 18 m là vừa đủ mọi góc mặt trời. */
+  /* Khung bóng phủ cả hai lô bên cạnh, tính bán kính quanh tâm chiếu sáng của nhà. */
   const shadowCam = sun.shadow.camera;
-  shadowCam.left = -18; shadowCam.right = 18; shadowCam.top = 18; shadowCam.bottom = -18;
+  const shadowRadius = Math.ceil(Math.hypot(Math.max(CENTER.x-MIN_X, MAX_X-CENTER.x), LOT.d/2, 6));
+  shadowCam.left = -shadowRadius; shadowCam.right = shadowRadius;
+  shadowCam.top = shadowRadius; shadowCam.bottom = -shadowRadius;
   shadowCam.near = 1; shadowCam.far = 140;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.bias = -0.0006;
@@ -120,11 +124,33 @@ export function init(){
     tip.rotation.x = -Math.PI / 2;
     tip.position.z = -1.85;
     g.add(shaft, tip);
-    g.position.set(LOT.w + 1.6, 0.05, 2.2);
+    g.position.set(MAX_X + 1.6, 0.05, 2.2);
     return g;
   }
   const compass = northArrow();
   scene.add(compass);
+
+  /* Chú thích nằm trên đất, đọc được khi xem toàn cảnh và từ trên xuống. */
+  const lotLabels = NEIGHBOR_LOTS.map(lot => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#514a3e';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 48px sans-serif';
+    ctx.fillText(lot.name, 256, 52);
+    ctx.font = '32px sans-serif';
+    ctx.fillText(`${lot.w} × ${lot.d} m`, 256, 100);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.9),
+      new THREE.MeshBasicMaterial({ map:texture, transparent:true, depthWrite:false }));
+    label.rotation.x = -Math.PI / 2;
+    const labelDepth = lot.house ? lot.d-lot.house.rearGap-lot.house.depth-lot.house.yard.depth : lot.d;
+    label.position.set(lot.x+lot.w/2, 0.02, lot.z+labelDepth/2);
+    scene.add(label);
+    return label;
+  });
 
   /* Thân mũi tên dựng theo chiều −z cục bộ, nên xoay để −z trùng với hướng bắc trong cảnh.
      Gọi lại mỗi lần đổi hướng mặt tiền. */
@@ -199,9 +225,10 @@ export function init(){
       group.traverse(o => { if (o.isMesh && o.geometry !== UNIT_BOX && o.geometry !== UNIT_BALL) o.geometry.dispose(); });
     }
     const massing = buildMassing(plan, { doorsOpen });
+    const neighbor = buildNeighborHouse(plan);
     LEVELS = massing.levels;
     solids = walkSolids(massing);
-    BOUNDS.max.y = LEVELS.top;
+    BOUNDS.max.y = Math.max(LEVELS.top, neighbor.top);
     group = new THREE.Group();
     for (const b of massing.boxes) {
       const mesh = b.shape === 'cyl' ? cylinder(b, materialOf(b), b.kind)
@@ -209,7 +236,9 @@ export function init(){
       if (LAMP_KINDS.has(b.kind)) { mesh.castShadow = false; mesh.userData.id = b.id; }
       group.add(mesh);
     }
-    for (const p of massing.prisms) {
+    for (const b of buildSurroundings(plan)) group.add(box(b, materialOf(b), b.kind));
+    for (const b of neighbor.boxes) group.add(box(b, materialOf(b), b.kind));
+    for (const p of [...massing.prisms, ...neighbor.prisms]) {
       /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
       const sash = GLASS_KINDS.has(p.kind);
       const m = new THREE.Mesh(prismGeometry(p), sash ? glassMat : solidMats[p.kind] || solidMats.houseWall);
@@ -294,7 +323,7 @@ export function init(){
   function updateAzimuth(){
     const deg = Number.isFinite(CFG?.azimuth) ? CFG.azimuth : LOT.frontAzimuth;
     setHtml('lblAzimuth', `<b>${deg.toFixed(0)}°</b> · ${compassName(deg)}`);
-    setHtml('subAzimuth', `Mặt tiền quay ${compassName(deg)}`);
+    setHtml('subAzimuth', `Cổng chính quay ${deg.toFixed(0)}° · ${compassName(deg)}`);
     const slider = document.getElementById('azimuth');
     if (slider && Math.abs(+slider.value - deg) > 0.5) slider.value = deg;
     aimNorth();
@@ -310,8 +339,8 @@ export function init(){
 
   /* Khung bao cả lô, kể cả mái. Chiều cao lấy đỉnh thật của phương án đang mở (`levels.top`) —
      nóc mái tôn bếp nhô trên mái bê tông nên ghim một con số là hụt mất chỏm. */
-  const BOUNDS = new THREE.Box3(new THREE.Vector3(0, 0, 0),
-                                new THREE.Vector3(LOT.w, 4.2, LOT.d));
+  const BOUNDS = new THREE.Box3(new THREE.Vector3(MIN_X, 0, 0),
+                                new THREE.Vector3(MAX_X, 4.2, LOT.d));
 
   /* Ngắm theo một hướng, lùi vừa đủ để lô lọt khung ở mọi tỉ lệ cửa sổ — lô dài 30 m mà
      ngang có 9.5 m nên phải xét cả nửa góc mở dọc lẫn ngang, lấy cái chặt hơn.
@@ -656,6 +685,11 @@ export function init(){
     Object.values(solidMats).forEach(m => m.dispose());
     glassMat.dispose();
     lampOff.dispose();
+    for (const label of lotLabels) {
+      label.geometry.dispose();
+      label.material.map.dispose();
+      label.material.dispose();
+    }
     renderer.dispose();
     host.replaceChildren();
   };

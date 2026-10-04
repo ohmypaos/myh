@@ -1,7 +1,8 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua bộ kiểm tra và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
-import { LOT } from '../lib/lot.js';
+import { LOT, NEIGHBOR_LOTS } from '../lib/lot.js';
+import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
@@ -30,7 +31,9 @@ export function init(){
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.getElementById('plan');
   const PAD = {l:265, r:265, t:225, b:415};
-  const BOX = {x:-PAD.l, y:-PAD.t, w:M(LOT.w)+PAD.l+PAD.r, h:M(LOT.d)+PAD.t+PAD.b};
+  const minX = Math.min(0, ...NEIGHBOR_LOTS.map(l => l.x));
+  const maxX = Math.max(LOT.w, ...NEIGHBOR_LOTS.map(l => l.x + l.w));
+  const BOX = {x:M(minX)-PAD.l, y:-PAD.t, w:M(maxX-minX)+PAD.l+PAD.r, h:M(LOT.d)+PAD.t+PAD.b};
   const BCX = BOX.x + BOX.w/2, BCY = BOX.y + BOX.h/2;
 
   const scene = document.createElementNS(NS,'g');
@@ -62,6 +65,28 @@ export function init(){
   /* ═══════════ CÁC LỚP VẼ ═══════════ */
 
   function drawRooms(){
+    for (const lot of NEIGHBOR_LOTS) {
+      el('rect',{x:M(lot.x),y:M(lot.z),width:M(lot.w),height:M(lot.d),fill:'#eee9dd'},gRoom);
+      const labelDepth = lot.house ? lot.d-lot.house.rearGap-lot.house.depth-lot.house.yard.depth : lot.d;
+      const label = el('text',{x:M(lot.x+lot.w/2),y:M(lot.z+labelDepth/2),
+        text_anchor:'middle',font_size:24,fill:'#756e60'},gRoom);
+      label.textContent = `${lot.name} · ${lot.w} × ${lot.d} m`;
+    }
+    const { footprint:f, porch:p, yard:s } = buildNeighborHouse(V);
+    el('rect',{x:M(s.x),y:M(s.z),width:M(s.w),height:M(s.d),fill:'#d5d8d3',
+      stroke:'#73787a',stroke_width:2},gRoom);
+    el('rect',{x:M(f.x),y:M(f.z),width:M(f.w),height:M(f.d),fill:'#c68773',
+      stroke:'#9e4f3d',stroke_width:2},gRoom);
+    el('line',{x1:M(f.x),y1:M(f.z+f.d/2),x2:M(f.x+f.w),y2:M(f.z+f.d/2),
+      stroke:'#9e4f3d',stroke_width:3},gRoom);
+    el('rect',{x:M(p.x),y:M(p.z),width:M(p.w),height:M(p.d),fill:'#e3ded2',
+      stroke:'#8d8778',stroke_width:2},gRoom);
+    for (const [rect,text] of [[f,'THÂN NHÀ LÔ B · 10 × 6 m'],[p,'HIÊN 2 m · TƯỜNG KÍN TỚI TRẦN'],
+      [s,'SÂN MÁI TÔN · DÀI 8.5 m · MÉP THẤP 3.5 m']]) {
+      const label = el('text',{x:M(rect.x+rect.w/2),y:M(rect.z+rect.d/2),
+        text_anchor:'middle',font_size:22,fill:'#514a3e'},gRoom);
+      label.textContent = text;
+    }
     for(const [id,name,x,y,w,h,type] of ROOMS)
       el('rect',{x:M(x),y:M(y),width:M(w),height:M(h),
         fill:FILL[type],stroke:'#d5d1c6',stroke_width:1},gRoom);
@@ -87,6 +112,10 @@ export function init(){
   }
 
   function drawWalls(){
+    for (const b of buildSurroundings(V).filter(b => b.kind === 'fenceWall'))
+      el('rect',{x:M(b.x),y:M(b.z),width:M(b.w),height:M(b.d),fill:'#141414'},gWall);
+    for (const b of buildNeighborHouse(V).boxes.filter(b => b.part === 'porchWall'))
+      el('rect',{x:M(b.x),y:M(b.z),width:M(b.w),height:M(b.d),fill:'#141414'},gWall);
     for(const [ax,pos,a,b,t,material] of WALLS){
       const o = M(t)/2;
       const r = ax==='h' ? {x:M(a)-o, y:M(pos)-o, width:M(b-a)+2*o, height:M(t)}
@@ -837,7 +866,7 @@ export function init(){
     tt(16, ty+164,'Toàn bộ kích thước ghi theo TIM TƯỜNG · Tường bao 220 · Tường ngăn 100', 19, 400, '#555');
     tt(M(6.4)+16, ty+40, 'TỈ LỆ 1:100', 25, 700);
     tt(M(6.4)+16, ty+96, V.date, 19, 400, '#555');
-    tt(M(6.4)+16, ty+130,'Mặt tiền hướng ĐÔNG BẮC', 19, 400, '#555');
+    tt(M(6.4)+16, ty+130,`Mặt tiền ${compassName(frontAzimuth()).toUpperCase()} · ${+frontAzimuth().toFixed(1)}°`, 19, 400, '#555');
     tt(M(6.4)+16, ty+164,'Nguồn: original-drawing.png', 19, 400, '#555');
 
     const sy = M(30)+110;
@@ -853,7 +882,7 @@ export function init(){
       stroke:'#141414',stroke_width:2.6,fill:'none'},TB);
     const mt=el('text',{x:ax0,y:ay0+96,font_size:19,text_anchor:'middle',
       fill:'#141414',font_weight:600},TB);
-    mt.textContent='MẶT TIỀN · ĐÔNG BẮC';
+    mt.textContent=`MẶT TIỀN · ${compassName(frontAzimuth()).toUpperCase()} · ${+frontAzimuth().toFixed(1)}°`;
   }
 
   /* ── lớp ghi chú: vẽ lại khi xoay ── */

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import '../app/plan3d.css';
 import { init } from './scene3d.js';
+import { LOT } from '../lib/lot.js';
 
 /* Giống Plan2D: React chỉ dựng khung DOM rỗng với đúng các id mà scene3d.js trông đợi,
    rồi gọi init() một lần sau khi mount. init() trả về hàm dọn cảnh. */
@@ -60,7 +61,7 @@ export default function Plan3D() {
             <label className="sl" htmlFor="azimuth">
               Phương vị mặt tiền — <b id="lblAzimuth" />
             </label>
-            <input id="azimuth" type="range" min="0" max="359" step="1" defaultValue="45" />
+            <input id="azimuth" type="range" min="0" max="359" step="1" defaultValue={LOT.frontAzimuth} />
             <div className="mocs">
               <button id="azReset">Về hướng thiết kế</button>
             </div>
