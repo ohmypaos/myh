@@ -15,7 +15,7 @@ export default function Plan3D() {
     <>
       <header>
         <div className="titles">
-          <h1>MÔ HÌNH 3D — LÔ 9.5 × 30 m</h1>
+          <h1>MÔ HÌNH 3D — LÔ 8.5 × 30 m</h1>
           <p className="sub">
             <span id="subAzimuth" />&nbsp;·&nbsp; dựng từ đúng dữ liệu của bản vẽ 2D
           </p>
@@ -109,7 +109,7 @@ export default function Plan3D() {
             <h2>Đọc mô hình này thế nào</h2>
             <p className="doc">
               Mô hình để <b>tự soi phương án</b>, không phải ảnh render bán hàng: chỉ có khối
-              tường, sàn, mái — chưa có nội thất và vật liệu.
+              tường, sàn, mái và nội thất theo mặt bằng đang chọn.
             </p>
             <div className="note">
               <b>Đừng tin ảnh về độ sáng.</b> Ở đây không có ánh sáng gián tiếp (không mô phỏng
@@ -123,8 +123,7 @@ export default function Plan3D() {
               không còn chọn được — quên đổi là đọc sai toàn bộ phần nắng.
             </div>
             <p className="doc">
-              <b>Chưa dựng dù đã chốt:</b> mái bàn trà, mái tôn bếp, mái sân phơi — cần loại khối
-              mái dốc mà mô hình chưa có. Xem <code>roadmap.md</code> A4.
+              Mái nhẹ, cột, máng và ống thoát nước được dựng từ dữ liệu của từng mặt bằng.
             </p>
           </section>
         </aside>

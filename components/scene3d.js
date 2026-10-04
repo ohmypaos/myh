@@ -14,7 +14,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from './palette.js';
-import { LOT, NEIGHBOR_LOTS, heightsOf } from '../lib/lot.js';
+import { accessOf } from '../lib/access.js';
+import { LOT, lotOf, neighborLotsOf, NEIGHBOR_LOTS, siteLevelsOf, heightsOf } from '../lib/lot.js';
 import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
@@ -109,7 +110,10 @@ export function init(){
      Thứ tự mặt của BoxGeometry: +x, −x, +y, −y, +z, −z. */
   const SLAB_MATS = [solidMats.houseWall, solidMats.houseWall, solidMats.roof, solidMats.ceiling,
                      solidMats.houseWall, solidMats.houseWall];
-  const materialOf = b => b.kind === 'roof' || b.kind === 'overhang'
+  /* Cạnh khối nâng nền cùng màu tường bao; mặt sân giữ màu nền. */
+  const GROUND_MATS = [solidMats.fenceWall, solidMats.fenceWall, solidMats.ground, solidMats.ground,
+                       solidMats.fenceWall, solidMats.fenceWall];
+  const materialOf = b => b.kind === 'ground' ? GROUND_MATS : b.kind === 'roof' || b.kind === 'overhang'
     ? SLAB_MATS : solidMats[b.tone || b.kind] || solidMats.houseWall;
 
   /* ═══════════ MŨI TÊN CHỈ BẮC ═══════════ */
@@ -216,6 +220,7 @@ export function init(){
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(tri.flat(), 3));
     g.computeVertexNormals();
+    for(let i=0;i<6;i++) g.addGroup(i*6,6,i);
     return g;
   }
 
@@ -228,6 +233,7 @@ export function init(){
     const neighbor = buildNeighborHouse(plan);
     LEVELS = massing.levels;
     solids = walkSolids(massing);
+    BOUNDS.min.z = accessOf(plan) ? accessOf(plan).front-accessOf(plan).roadWidth : 0;
     BOUNDS.max.y = Math.max(LEVELS.top, neighbor.top);
     group = new THREE.Group();
     for (const b of massing.boxes) {
@@ -241,7 +247,7 @@ export function init(){
     for (const p of [...massing.prisms, ...neighbor.prisms]) {
       /* Cánh lật cửa sổ và lá kính ô thoáng tum là kính: trong suốt, không đổ bóng. */
       const sash = GLASS_KINDS.has(p.kind);
-      const m = new THREE.Mesh(prismGeometry(p), sash ? glassMat : solidMats[p.kind] || solidMats.houseWall);
+      const m = new THREE.Mesh(prismGeometry(p), sash ? glassMat : p.kind==='ramp' ? [solidMats.fenceWall,solidMats.ground,solidMats.fenceWall,solidMats.fenceWall,solidMats.fenceWall,solidMats.fenceWall] : solidMats[p.kind] || solidMats.houseWall);
       m.castShadow = !sash; m.receiveShadow = true;
       m.userData.kind = p.kind;
       group.add(m);
@@ -470,8 +476,8 @@ export function init(){
       if (right) walk.moveRight(right * step);
       const to = stepWalk(solids, { x: from.x, z: from.z, foot }, p.x - from.x, p.z - from.z);
       /* Cổng mở ra ngõ nên va chạm không giữ được người trong lô — chặn ở mép lô như trước. */
-      p.x = Math.max(0.3, Math.min(LOT.w - 0.3, to.x));
-      p.z = Math.max(0.3, Math.min(LOT.d - 0.3, to.z));
+      p.x = Math.max(0.3, Math.min(lotOf(plan).w - 0.3, to.x));
+      p.z = Math.max(BOUNDS.min.z+0.3, Math.min(LOT.d - 0.3, to.z));
       foot = to.foot;
     }
     eyeY += (foot + WALK.eye - eyeY) * Math.min(1, dt * 12);
@@ -512,6 +518,9 @@ export function init(){
 
   /* Dựng lại khối từ mặt bằng đã áp cấu hình. Camera và mặt trời giữ nguyên. */
   function rebuild(){
+    const activeLot = lotOf(plan);
+    document.querySelector('.titles h1').textContent = `MÔ HÌNH 3D — LÔ ${activeLot.w} × ${activeLot.d} m`;
+    neighborLotsOf(plan).forEach((lot, i) => { lotLabels[i].position.x = lot.x + lot.w / 2; lotLabels[i].position.y = (lot.x < 0 ? siteLevelsOf(plan).left : siteLevelsOf(plan).right) + 0.02; });
     build(applyConfig(plan, CFG));
     const saved = readConfig();
     setHtml('cfgState3', isEmpty(CFG)
@@ -561,7 +570,7 @@ export function init(){
     /* Mặt bằng nào khai mái nhẹ trùm hành lang ngoài thì cao độ mái ấy nằm trong `roofs`, thanh
        trượt HEIGHTS.alley không chạm tới — giấu đi cho khỏi kéo mà không thấy gì đổi. */
     const r3 = plan.rooms.find(r => r[0] === 'R3');
-    const rows = HEIGHT_ROWS.filter(r => r.key !== 'alley' || !(r3 && roofCovering(plan, r3)));
+    const rows = HEIGHT_ROWS.filter(r => r.key !== 'alley' || (r3 && !roofCovering(plan, r3)));
     for (const r of rows)
       slider(host, { name: r.name, value: eff[r.key], min: r.min, max: r.max, step: 0.05,
         onInput: v => { CFG.heights[r.key] = v; rebuild(); } });

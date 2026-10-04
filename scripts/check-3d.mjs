@@ -8,9 +8,11 @@
  *
  * Chạy được trong node vì lib/massing.js cố ý không dính three.js (xem 3d.md mục 5).
  */
+import {accessOf,accessSurfaceAt} from '../lib/access.js';
+import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { PLANS } from '../lib/versions/index.js';
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palette.js';
-import { LOT, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
+import { lotOf, neighborLotsOf, siteLevelsOf, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
 import { openingFloor, stepsOf, lightRoofs, roofOver, clearRect, roomsAlong, floorOf, wallThickness, purlinsOf,
          stairsOf, isUnderStair, tumOf, roofHoles, roofWalkTop, roofRailingsOf, tanksOf, racksOf, solidFencesOf, gateRoofsOf, lightsOf, switchesOf,
@@ -90,6 +92,10 @@ const CHECKS = [
   'Đèn: mỗi đèn khai có đúng khối ở đúng tâm; đèn trần áp đúng mặt dưới vật che ngay trên, đáy cách sàn ít nhất 2 m, đèn thả đáy chao đúng cốt; đèn tường lưng áp mặt tường và sau lưng là tường thật; bảng công tắc đúng một khối, lưng áp tường thật',
   'Cây xanh: mỗi chậu đúng một thân chậu đứng trên cốt sân, đúng tâm và cao khai, có cây cắm gốc vào miệng chậu; bồn hoa có bó vỉa từ cốt sân lên đúng mép khai, đất thấp hơn mép đúng cấu tạo, mặt bằng bồn kín không hở không chồng, lưng đất áp tường thật, có khóm hoa đứng trên đất; cây bóng mát có ô gốc kín bó vỉa đúng cốt, một thân đúng tâm cắm từ đất lên lọt vào tán, tán đúng tâm và mặt dưới tán không thấp hơn khoảng thông thiết kế',
   'Diềm mép mái hiên: bản khai diềm có dải áp kín mặt ngoài mép bản suốt bề dài, dải ở mọi đầu bản không nằm trên ranh lô; đỉnh bằng mặt lát mái, cao đúng khai, buông thấp hơn mặt dưới bản; bản không khai thì không có diềm',
+  'Chênh nền: sân nhà mình và lô A cao hơn lô B đúng số khai; tường giáp hai bên bằng nhau tính từ sân; nhà, mái và rào lô B bám đúng nền thấp',
+  'Khối nền phủ sát mặt ngoài tường bao; các lô nối kín, không hở hoặc chồng khối đất',
+  'Cổng ngang đường, sân mở cổng bằng phẳng, dốc nối kín lên sân và đi được cả hai chiều',
+  'Tường mặt cổng xây kín cùng đỉnh; nối sát trụ khi có, không còn khối trụ/mái khi đã bỏ',
 ];
 
 function check(plan){
@@ -100,6 +106,96 @@ function check(plan){
   const all = [...m.boxes, ...m.glass, ...m.prisms];
   const out = outset(plan);
   const n = x => +x.toFixed(4);
+
+  /* So viền nền với tường thực đã dựng, không chỉ so với số khai tim tường. */
+  const mainParts=[...m.boxes,...m.prisms].filter(b=>b.siteLot==='main');
+  const mainExtent={...mainParts[0],x:Math.min(...mainParts.map(b=>b.x)),z:Math.min(...mainParts.map(b=>b.z))};
+  mainExtent.w=Math.max(...mainParts.map(b=>b.x+b.w))-mainExtent.x;
+  mainExtent.d=Math.max(...mainParts.map(b=>b.z+b.d))-mainExtent.z;
+  const grounds=[mainExtent, ...buildSurroundings(plan).filter(b=>b.kind==='ground')];
+  const ownGround=grounds.find(b=>b.siteLot==='main');
+  const boundaryWalls=m.boxes.filter(b=>b.kind==='houseWall'||b.kind==='fenceWall');
+  const wallEdges=[Math.min(...boundaryWalls.map(b=>b.x)), Math.max(...boundaryWalls.map(b=>b.x+b.w)),
+    Math.min(...boundaryWalls.map(b=>b.z)), Math.max(...boundaryWalls.map(b=>b.z+b.d))];
+  const groundEdges=[ownGround.x, ownGround.x+ownGround.w, ownGround.z, ownGround.z+ownGround.d];
+  if(groundEdges.some((v,i)=>Math.abs(v-wallEdges[i])>EPS)) e.push('Viền nền không khớp mặt ngoài tường bao');
+  const orderedGrounds=grounds.sort((a,b)=>a.x-b.x);
+  for(let i=1;i<orderedGrounds.length;i++){
+    const a=orderedGrounds[i-1],b=orderedGrounds[i];
+    if(Math.abs(a.x+a.w-b.x)>EPS || Math.abs(a.z-b.z)>EPS || Math.abs(a.d-b.d)>EPS)
+      e.push('Khối nền các lô không nối kín hoặc đang chồng nhau');
+  }
+
+  /* Cao độ địa hình kiểm từ khối thực, gồm cả lô hàng xóm. Mốc nội bộ là sân nhà mình. */
+  if(plan.site?.groundRise != null){
+    const rise=plan.site.groundRise;
+    const grounds=buildSurroundings(plan).filter(b=>b.kind==='ground');
+    const left=grounds.find(b=>b.x<0), right=grounds.find(b=>b.x>0);
+    const own=m.boxes.find(b=>b.siteLot==='main');
+    if(!left || !right || !own || Math.abs(left.y1-own.y1)>EPS || Math.abs(own.y1-right.y1-rise)>EPS)
+      e.push('Nền nhà mình/lô A không cao hơn nền lô B đúng chênh nền đã chốt');
+    const boundary=m.boxes.filter(b=>b.kind==='fenceWall' && Math.abs(b.x+b.w/2-lotOf(plan).w)<0.06);
+    const upperBoundary=boundary.filter(b=>b.y1>own.y1+EPS);
+    if(!upperBoundary.length || boundary.some(b=>Math.abs(b.y0-right.y1)>EPS)
+      || upperBoundary.some(b=>Math.abs(b.y1-own.y1-(H.fenceSolid ?? H.fence))>EPS))
+      e.push('Tường xây giáp lô B không cao bằng phía giáp lô A tính từ sân nhà mình');
+    const neighbor=buildNeighborHouse(plan), house=neighbor.boxes.find(b=>b.kind==='houseWall');
+    const h=neighborLotsOf(plan).find(l=>l.house).house;
+    if(Math.abs(house.y0-right.y1)>EPS || Math.abs(neighbor.top-(right.y1+h.ceiling+h.roofRise))>EPS)
+      e.push('Nhà hoặc mái lô B chưa dời theo nền thấp');
+    const neighborFences=buildSurroundings(plan).filter(b=>b.kind==='fenceWall' && b.x>lotOf(plan).w);
+    if(neighborFences.some(b=>Math.abs(b.y0-right.y1)>EPS || Math.abs(b.y1-right.y1-H.fencePrivate)>EPS))
+      e.push('Tường bao lô B chưa bám nền thấp');
+  }
+
+  /* 30 — kiểm trực tiếp mặt đường, điểm nối dốc và hành trình đi qua cổng. */
+  const access=accessOf(plan);
+  if(access){
+    const ramp=m.prisms.find(b=>b.kind==='ramp'), road=m.boxes.find(b=>b.kind==='road');
+    const pad=m.boxes.find(b=>b.siteLot==='main' && Math.abs(b.y1-access.bottom)<EPS);
+    const x=(plan.gates[access.gate][2]+plan.gates[access.gate][3])/2;
+    if(!ramp || !road || !pad || Math.abs(road.y1-access.bottom)>EPS
+      || Math.abs(road.z+road.d-pad.z)>EPS || Math.abs(pad.z+pad.d-ramp.z)>EPS
+      || Math.abs(ramp.yt[0]-pad.y1)>EPS || Math.abs(ramp.yt[1])>EPS
+      || Math.abs((ramp.yt[1]-ramp.yt[0])/ramp.d-access.slope)>EPS)
+      e.push('Đường, sân mở cổng và dốc không nối kín đúng cao độ');
+    const pillars=m.boxes.filter(b=>b.kind==='gatePillar');
+    if(pillars.some(b=>Math.abs(b.y0-road.y1)>EPS)) e.push('Chân trụ cổng chưa hạ ngang đường');
+    const gateWidth=plan.gates[access.gate][3]-plan.gates[access.gate][2];
+    const gateRoof=gateRoofsOf(plan).find(r=>r.gate===access.gate);
+    if(gateRoof && (gateRoof.rect.z<-EPS || gateRoof.pillars.some(p=>p.z<-EPS))) e.push('Mái hoặc trụ cổng lấn ra đường');
+    if(access.landing<gateWidth/2) e.push('Sân mở cổng ngắn hơn cánh cổng');
+    const solids=walkSolids(m).filter(b=>!['doorLeaf','gateDoor','furniture'].includes(b.kind));
+    const start={x,z:-0.6,foot:access.bottom};
+    const up=stepWalk(solids,start,0,access.end+0.8);
+    const down=stepWalk(solids,up,0,start.z-up.z);
+    if(up.hit || Math.abs(up.foot)>EPS || down.hit || Math.abs(down.foot-access.bottom)>EPS
+      || Math.abs(down.z-start.z)>EPS) e.push('Không đi trọn được đường → cổng → dốc → sân và quay lại');
+  }
+
+  /* 31 — soi tiếp xúc thật tại mặt ngoài hai trụ, và đỉnh từng đoạn mặt cổng. */
+  if(access){
+    const roof=gateRoofsOf(plan).find(r=>r.gate===access.gate);
+    const fenceAt=(x,z,y)=>m.boxes.some(b=>b.kind==='fenceWall' && x>=b.x-EPS && x<=b.x+b.w+EPS
+      && z>=b.z-EPS && z<=b.z+b.d+EPS && y>=b.y0-EPS && y<=b.y1+EPS);
+    const top=H.fencePrivate;
+    for(const [i,p] of (roof?.pillars || []).entries()){
+      const x=i===0 ? p.x-0.01 : p.x+roof.pillar+0.01;
+      for(const y of [access.bottom+0.1,top-0.01])
+        if(!fenceAt(x,roof.pos,y)) e.push('Tường mặt cổng chưa nối kín vào trụ '+(i+1));
+    }
+    if(!roof && (m.boxes.some(b=>['gatePillar','gateBeam','gateCap'].includes(b.kind)) || m.prisms.some(b=>b.kind==='gateRoofTile')))
+      e.push('Cổng đã bỏ trụ/mái nhưng vẫn còn khối đỡ hoặc mái');
+    const frontage=plan.solidFences.filter(([ax,pos,a,b])=>
+      ax==='h' ? pos===0 || Math.abs(pos-access.gatePos)<EPS : b<=access.gatePos+EPS);
+    for(const [ax,pos,a,b] of frontage){
+      const pieces=m.boxes.filter(q=>q.kind==='fenceWall' && q.y1>EPS && (ax==='h'
+        ? Math.abs(q.z+q.d/2-pos)<0.06 && q.x+q.w>a+EPS && q.x<b-EPS
+        : Math.abs(q.x+q.w/2-pos)<0.06 && q.z+q.d>a+EPS && q.z<b-EPS));
+      if(pieces.some(q=>q.y1>top+EPS) || !pieces.some(q=>Math.abs(q.y1-top)<EPS))
+        e.push('Đỉnh tường mặt cổng không bằng nhau trên tuyến '+ax+' '+pos);
+    }
+  }
 
   /* 1 — hộp suy biến hoặc NaN. */
   for (const b of all) {
@@ -112,9 +208,9 @@ function check(plan){
   for (const b of all) {
     /* Mái cổng có nửa mái chìa qua ranh y = 0 ra phía đường; đó là chủ ý của cấu tạo,
        không phải khối nhà lấn lô. Còn mọi khối khác vẫn giữ giới hạn nửa dày tường. */
-    if (b.kind === 'gateRoofTile' || b.kind === 'gatePillar' || b.kind === 'gateCap') continue;
-    if (b.x < -out - EPS || b.x + b.w > LOT.w + out + EPS
-     || b.z < -out - EPS || b.z + b.d > LOT.d + out + EPS)
+    if (b.kind === 'road' || b.kind === 'gateRoofTile' || b.kind === 'gatePillar' || b.kind === 'gateCap') continue;
+    if (b.x < -out - EPS || b.x + b.w > lotOf(plan).w + out + EPS
+     || b.z < -out - EPS || b.z + b.d > lotOf(plan).d + out + EPS)
       e.push(`hộp ${b.kind} thò ra ngoài lô: x ${n(b.x)}…${n(b.x + b.w)}, z ${n(b.z)}…${n(b.z + b.d)}`);
   }
 
@@ -293,7 +389,7 @@ function check(plan){
      Sàn và nền không tính: sàn lọt trong chân tường, không có mặt nào lộ ra trùng.
      Mái tôn dốc và đầu hồi có mặt nghiêng nên đo bằng độ đâm sâu (penetration) chứ không phải
      thể tích hộp bao — hộp bao của một mặt dốc chồng lên hàng xóm là chuyện thường. */
-  const solid = [...m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground'), ...m.prisms];
+  const solid = [...m.boxes.filter(b => b.kind !== 'floor' && b.kind !== 'ground' && b.kind !== 'ramp' && b.kind !== 'road'), ...m.prisms.filter(b=>b.kind!=='ramp')];
   /* Đồ đạc và cánh cửa chạm nhau (cánh quét vào tủ, hai món kê sát) là chuyện bố trí trên mặt bằng —
      validate() đã soi, và kho đối chiếu còn lỗi loại đó là bình thường. Ở đây chỉ đòi chúng không đâm
      vào phần xây. */
@@ -481,20 +577,23 @@ function check(plan){
      lấy rộng hơn là vơ luôn thanh lan can **của tuyến vuông góc** đứng ở góc, sát mặt trong bức rào kín —
      thanh ấy là của cạnh bên, hợp lệ. */
   const onPriv = b => (plan.solidFences || []).some(([ax, pos, a, c]) => {
+    if(b.railAxis && b.railAxis!==ax) return false;
     const [mid, s0, s1] = ax === 'h' ? [b.z + b.d / 2, b.x, b.x + b.w] : [b.x + b.w / 2, b.z, b.z + b.d];
-    return Math.abs(mid - pos) < 0.06 && s1 > a - 0.12 && s0 < c + 0.12;
+    const endHalf=u=>Math.max(0,...plan.walls.filter(([wax,wpos,wa,wb])=>wax!==ax && Math.abs(wpos-u)<EPS && pos>=wa-EPS && pos<=wb+EPS).map(w=>w[4]/2));
+    return Math.abs(mid - pos) < 0.06 && s1 > a - endHalf(a) + EPS && s0 < c + endHalf(c) - EPS;
   });
   const privRail = railBoxes.find(onPriv);
   if (privRail) e.push(`đoạn rào khai xây kín vẫn có thanh lan can quanh x ${n(privRail.x)}, z ${n(privRail.z)}`);
   /* Mỗi đoạn một đỉnh riêng: mảnh rào trên đoạn nào phải cao đúng đỉnh đoạn ấy — không thấp hơn (hụt kín)
      cũng không cao hơn. So với chính đỉnh khai, không so với một số chung. */
   for (const f of solidFencesOf(plan)) {
-    const mine = m.boxes.filter(b => b.kind === 'fenceWall' && (f.ax === 'h'
+    const mine = m.boxes.filter(b => b.kind === 'fenceWall' && b.y1 > EPS && (f.ax === 'h'
       ? Math.abs(b.z + b.d / 2 - f.pos) < 0.06 && b.x + b.w > f.a + EPS && b.x < f.b - EPS
       : Math.abs(b.x + b.w / 2 - f.pos) < 0.06 && b.z + b.d > f.a + EPS && b.z < f.b - EPS));
     if (!mine.length) { e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} (${n(f.a)}–${n(f.b)}) không dựng mảnh tường nào`); continue; }
-    const bad = mine.find(b => Math.abs(b.y1 - f.top) > EPS && b.y1 < f.top - EPS);
-    const over = mine.find(b => b.y1 > f.top + EPS);
+    const target=()=>f.top;
+    const bad = mine.find(b => Math.abs(b.y1 - target(b)) > EPS && b.y1 < target(b) - EPS);
+    const over = mine.find(b => b.y1 > target(b) + EPS);
     if (over) e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} có mảnh cao ${n(over.y1)}, quá đỉnh khai ${n(f.top)}`);
     else if (bad) e.push(`đoạn rào xây kín trục ${f.ax} ${n(f.pos)} có mảnh chỉ cao ${n(bad.y1)}, hụt đỉnh khai ${n(f.top)}`);
   }
@@ -568,7 +667,10 @@ function check(plan){
       const depth = r ? (o.ax === 'h' ? r[5] : r[4]) - 0.11 - WALK.radius - 0.02 : 1.2;
       const st = stepList.find(s => s.id === o.id && s.dir === dir);
       const want = half + (st ? st.depth : 0) + WALK.radius + 0.15;
-      return { level: r ? floorOf(plan, r, H.floor) : 0, c: o.pos + dir * Math.min(want, depth) };
+      const c=o.pos+dir*Math.min(want,depth), [px,pz]=at(o,mid,c);
+      const level=r ? (r[6]==='yard' && floorOf(plan,r,H.floor)===0 ? accessSurfaceAt(plan,px,pz) : floorOf(plan,r,H.floor))
+        : (accessOf(plan) && o.ax==='h' && (o.pos===0 || Math.abs(o.pos-accessOf(plan).gatePos)<EPS) ? accessOf(plan).bottom : 0);
+      return {level,c};
     };
     const sides = { [-1]: side(-1), [1]: side(1) };
     /* Thử **cả bề ngang lỗ**, không chỉ tim lỗ: lỗ rộng thì tim lỗ không nhất thiết là lối đi — D4 là cả
@@ -615,7 +717,7 @@ function check(plan){
     for (const dir of [-1, 1]) {
       const c0 = pos - dir * 0.5;
       const [x0, z0] = alongX ? [u, c0] : [c0, u];
-      if (x0 < 0 || x0 > LOT.w || z0 < 0 || z0 > LOT.d) continue;
+      if (x0 < 0 || x0 > lotOf(plan).w || z0 < 0 || z0 > lotOf(plan).d) continue;
       /* Không có nội thất trong `solids` cũng là điều phải có ở đây: tủ kê sát tường chặn trước thì phép
          thử "tường có chặn không" qua mà chẳng soi gì. */
       const foot = supportAt(solids, x0, z0, H.floor);
@@ -1024,7 +1126,7 @@ function check(plan){
     /* Diềm gập: mỗi cạnh có đua một dải, cao đúng TUM.fascia, mặt trên bằng mặt tôn, áp mép ngoài mái. Ô văng: mỗi cửa một
        tấm phía ngoài tum, phủ bề ngang cửa cộng lề hai bên, đua đủ, nằm giữa đầu cửa và mặt dưới mái tum. */
     const fas = m.boxes.filter(b => b.kind === 'tumFascia');
-    const eaveSides = [tm.x0 > EPS, tm.x1 < LOT.w - EPS, tm.y0 > EPS, tm.y1 < LOT.d - EPS].filter(Boolean).length;
+    const eaveSides = [tm.x0 > EPS, tm.x1 < lotOf(plan).w - EPS, tm.y0 > EPS, tm.y1 < lotOf(plan).d - EPS].filter(Boolean).length;
     if (fas.length !== eaveSides) e.push(`mái tum có ${fas.length} dải diềm, phải ${eaveSides} (mỗi cạnh có đua một dải)`);
     if (fas.some(b => Math.abs(b.y1 - tm.top) > EPS || Math.abs(b.y1 - b.y0 - TUM.fascia) > EPS))
       e.push('diềm mái tum sai cao độ — mặt trên phải bằng mặt tôn');
@@ -1062,10 +1164,10 @@ function check(plan){
                              Math.min(...tr.map(b => b.z)), Math.max(...tr.map(b => b.z + b.d))];
     const hw = TUM.wall / 2, need = (u, edge) => (Math.abs(u) < EPS || Math.abs(u - edge) < EPS ? 0 : TUM.eave);
     if (!bx) e.push('tum không có mái');
-    else if (bx[0] > tm.x0 - hw - need(tm.x0, LOT.w) + EPS || bx[1] < tm.x1 + hw + need(tm.x1, LOT.w) - EPS
-          || bx[2] > tm.y0 - hw - need(tm.y0, LOT.d) + EPS || bx[3] < tm.y1 + hw + need(tm.y1, LOT.d) - EPS)
+    else if (bx[0] > tm.x0 - hw - need(tm.x0, lotOf(plan).w) + EPS || bx[1] < tm.x1 + hw + need(tm.x1, lotOf(plan).w) - EPS
+          || bx[2] > tm.y0 - hw - need(tm.y0, lotOf(plan).d) + EPS || bx[3] < tm.y1 + hw + need(tm.y1, lotOf(plan).d) - EPS)
       e.push(`mái tum đua không đủ ${TUM.eave} m ra khỏi mặt tường`);
-    else if (bx[0] < -hw - EPS || bx[1] > LOT.w + hw + EPS || bx[2] < -hw - EPS || bx[3] > LOT.d + hw + EPS)
+    else if (bx[0] < -hw - EPS || bx[1] > lotOf(plan).w + hw + EPS || bx[2] < -hw - EPS || bx[3] > lotOf(plan).d + hw + EPS)
       e.push('mái tum đua ra ngoài ranh lô');
   }
   for (const d of tm ? tm.doors : []) {
@@ -1377,7 +1479,7 @@ function check(plan){
     const outer = o.dir > 0 ? (o.ax === 'h' ? slab.z + slab.d : slab.x + slab.w) : (o.ax === 'h' ? slab.z : slab.x);
     const [s0, s1] = o.ax === 'h' ? [slab.x, slab.x + slab.w] : [slab.z, slab.z + slab.d];
     let miss = null;
-    const [edge, depthEdge] = o.ax === 'h' ? [LOT.w, LOT.d] : [LOT.d, LOT.w];
+    const [edge, depthEdge] = o.ax === 'h' ? [lotOf(plan).w, lotOf(plan).d] : [lotOf(plan).d, lotOf(plan).w];
     /* Mép ngoài nằm trên ranh lô (trần ban công đua tới y = 30) thì không ốp — chọc ở đó là đòi ốp sang đất bên cạnh. */
     const frontOnLot = outer <= EPS || outer >= depthEdge - EPS;
     for (let i = 0; i <= 8 && !miss && !frontOnLot; i++) {

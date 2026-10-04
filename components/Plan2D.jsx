@@ -14,9 +14,9 @@ export default function Plan2D() {
     <>
       <header>
         <div className="titles">
-          <h1>MẶT BẰNG TẦNG TRỆT — LÔ 9.5 × 30 m</h1>
+          <h1>MẶT BẰNG TẦNG TRỆT — LÔ 8.5 × 30 m</h1>
           <p className="sub" id="subline">
-            285 m² &nbsp;·&nbsp; Tỉ lệ 1:100 &nbsp;·&nbsp; Kích thước tim tường
+            255 m² &nbsp;·&nbsp; Tỉ lệ 1:100 &nbsp;·&nbsp; Kích thước tim tường
           </p>
         </div>
 

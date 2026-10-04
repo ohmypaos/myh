@@ -1,6 +1,8 @@
 # Kế hoạch triển khai
 
-Cập nhật 14/9/2026.
+Cập nhật 4/10/2026.
+
+**Thay đổi hiện hành:** khuôn 8 × 30 m, lô chính 5 m và lô phụ 3 m; bỏ bếp + nhà ăn, hành lang ngoài, WC khách, mái sân chính. A35 không còn áp dụng vì mái sân chính đã bỏ; A37/A38 là phương án cũ, cần xem lại khi chốt bếp mới.
 
 **Còn 3 việc mở** — 52/55 task ✅: **A38** chờ chủ nhà chốt hộp kỹ thuật + ống chờ bếp dự phòng trước khi đổ mái;
 **A37** phương án bếp sau khi bán lô 4.5 m (ghi chú, hoãn); **A35** đo lại
@@ -33,6 +35,16 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
+| A48 | Bỏ tường hồi gấp khúc; đưa cổng ra thẳng tuyến mặt tiền y=0, nối lại sân và dốc | Xong | Build, spec, lưới và 31 phép kiểm 3D sạch cả 12 phương án |
+| A47 | Bỏ trụ/mái cổng, mở hết ngang lô chính 4.5 m; cánh bắt vào tường, sân mở 2.3 m | Đã sửa và kiểm tra; chưa commit | |
+| A46 | Khuôn 8.5 m, nhà 4.5 m + lô phụ 4 m; lô A 4.5 m; chỉnh cổng, thang và đồ đạc | Đã sửa và kiểm tra; chưa commit | |
+| A45 | Xây kín tường hồi chạm hai trụ; thống nhất đỉnh tường mặt cổng +2.10 m so với sân trên | Đã sửa và kiểm tra; chưa commit | |
+| A44 | Lùi cổng 1 m để trụ và mái nằm trọn trong ranh đất, nối tường và dốc | Đã sửa và kiểm tra; chưa commit | |
+| A43 | Hạ cổng ngang đường, sân mở cổng 2 m + dốc 6.4 m, dựng đường minh hoạ 4 m | Đã sửa và kiểm tra; chưa commit | |
+| A42 | Khối nâng nền cùng màu cạnh tường, ôm mặt ngoài tường bao và nối kín các lô | Đã sửa và kiểm tra; chưa commit | |
+| A41 | Nâng tường giáp lô B bằng phía giáp lô A tính từ sân; giữ chênh nền 0.80 m | Đã sửa và kiểm tra; chưa commit | |
+| A40 | Nền nhà mình và lô A ngang đỉnh phần xây giáp lô B; giữ sàn nhà +0.45 m so với sân | Đã sửa và kiểm tra; chưa commit | |
+| A39 | Thu khuôn 8 m, bỏ khối phụ; đồng bộ 2D/3D, điện, mái sân phơi và đặc tả | Đã sửa và kiểm tra; chưa commit | |
 | A0 | Chốt nơi xây — **Bắc Giang** | ✅ xong | |
 | A1 | Che nắng tây cho master — chốt **đổ trần ban công + tường trái lên mái** (thay lam đứng) | ✅ xong | |
 | A2 | Mái phụ — chốt **mái bàn trà sân chính**, bỏ mái che xe | ✅ xong | |

@@ -33,6 +33,8 @@ export const COLORS = {
   railing:     0x4f4c46,     // lan can sắt sơn tối trên tường rào thấp
   floor:       0xe8e3d6,
   ground:      0xcfccc0,
+  ramp:        0xcfccc0,
+  road:        0x777b7e,
   roof:        0xc9c2b2,
   alleyRoof:   0xbdb6a6,
   overhang:    0xc9c2b2,

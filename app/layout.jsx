@@ -1,8 +1,8 @@
 import './common.css';
 
 export const metadata = {
-  title: 'Mặt bằng 9.5 × 30',
-  description: 'Bản vẽ mặt bằng tương tác và mô hình 3D cho lô đất 9.5 × 30 m',
+  title: 'Mặt bằng 8.5 × 30',
+  description: 'Bản vẽ mặt bằng tương tác và mô hình 3D cho lô đất 8.5 × 30 m',
 };
 
 export default function RootLayout({ children }) {

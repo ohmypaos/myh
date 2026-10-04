@@ -1,7 +1,8 @@
 /* Mã vẽ SVG chuyển nguyên văn từ bản vẽ HTML một-file trước đây — cố ý KHÔNG viết lại theo lối React.
    Nó đã qua bộ kiểm tra và hàng chục vòng chỉnh tay; bọc lại rẻ và an toàn hơn viết lại.
    React chỉ dựng khung DOM rỗng rồi gọi init() một lần sau khi mount. */
-import { LOT, NEIGHBOR_LOTS } from '../lib/lot.js';
+import { accessOf, buildAccess } from '../lib/access.js';
+import { LOT, lotOf, neighborLotsOf, NEIGHBOR_LOTS } from '../lib/lot.js';
 import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
@@ -30,7 +31,7 @@ export function init(){
   const M = v => v*100;                          // 1 m = 100 đơn vị (=1cm @1:100)
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.getElementById('plan');
-  const PAD = {l:265, r:265, t:225, b:415};
+  const PAD = {l:265, r:265, t:625, b:415};
   const minX = Math.min(0, ...NEIGHBOR_LOTS.map(l => l.x));
   const maxX = Math.max(LOT.w, ...NEIGHBOR_LOTS.map(l => l.x + l.w));
   const BOX = {x:M(minX)-PAD.l, y:-PAD.t, w:M(maxX-minX)+PAD.l+PAD.r, h:M(LOT.d)+PAD.t+PAD.b};
@@ -65,7 +66,7 @@ export function init(){
   /* ═══════════ CÁC LỚP VẼ ═══════════ */
 
   function drawRooms(){
-    for (const lot of NEIGHBOR_LOTS) {
+    for (const lot of neighborLotsOf(V)) {
       el('rect',{x:M(lot.x),y:M(lot.z),width:M(lot.w),height:M(lot.d),fill:'#eee9dd'},gRoom);
       const labelDepth = lot.house ? lot.d-lot.house.rearGap-lot.house.depth-lot.house.yard.depth : lot.d;
       const label = el('text',{x:M(lot.x+lot.w/2),y:M(lot.z+labelDepth/2),
@@ -94,19 +95,32 @@ export function init(){
 
   /* Hệ tọa độ giao tiếp: gốc (0,0) ở góc trên-trái lô, X tăng sang phải và Y tăng xuống dưới.
      Lưới 1 m đủ để gọi nhanh một vị trí như `x=2, y=23` mà không nhầm chiều. */
+  function drawAccess(){
+    const a=accessOf(V); if(!a) return;
+    const road=buildAccess(V).boxes.find(b=>b.kind==='road');
+    el('rect',{x:M(road.x),y:M(road.z),width:M(road.w),height:M(road.d),fill:'#c8cbcd'},gRoom);
+    el('rect',{x:M(a.x),y:M(a.front),width:M(a.w),height:M(a.landingEnd-a.front),fill:'#d9d7cd'},gRoom);
+    el('rect',{x:M(a.x),y:M(a.landingEnd),width:M(a.w),height:M(a.length),fill:'url(#pCirc)'},gRoom);
+    const label=(x,y,text)=>{const t=el('text',{x:M(x),y:M(y),text_anchor:'middle',font_size:20,fill:'#514a3e'},gRoom);t.textContent=text;};
+    label(lotOf(V).w/2,road.z+0.7,'ĐƯỜNG MINH HOẠ 4 m · NGANG NỀN LÔ B');
+    label(V.dims.bottom[1]/2,a.gatePos+1.2,'SÂN MỞ CỔNG '+a.landing+' m · CỐT −0.80 m');
+    label(2.5,a.landingEnd+a.length/2,'DỐC '+(a.slope*100).toFixed(1)+'% · DÀI '+a.length+' m');
+    el('path',{d:`M${M(V.dims.bottom[1]/2)} ${M(a.landingEnd+0.6)}v190m0-190l-10 20m10-20l10 20`,stroke:'#8a7660',stroke_width:3,fill:'none'},gRoom);
+  }
+
   function drawAxes(){
     const C='#52707b', faint={stroke:C,stroke_width:1,stroke_opacity:.24,stroke_dasharray:'5 7'};
-    for(let x=0;x<=9;x++) el('line',{x1:M(x),y1:0,x2:M(x),y2:M(30),...faint},gAxis);
-    for(let y=0;y<=30;y++) el('line',{x1:0,y1:M(y),x2:M(9.5),y2:M(y),...faint},gAxis);
-    el('line',{x1:0,y1:-52,x2:M(9.5),y2:-52,stroke:C,stroke_width:2},gAxis);
-    el('path',{d:`M${M(9.5)} -52l-16 -8m16 8l-16 8`,stroke:C,stroke_width:2,fill:'none'},gAxis);
+    for(let x=0;x<=lotOf(V).w;x++) el('line',{x1:M(x),y1:0,x2:M(x),y2:M(30),...faint},gAxis);
+    for(let y=0;y<=30;y++) el('line',{x1:0,y1:M(y),x2:M(lotOf(V).w),y2:M(y),...faint},gAxis);
+    el('line',{x1:0,y1:-52,x2:M(lotOf(V).w),y2:-52,stroke:C,stroke_width:2},gAxis);
+    el('path',{d:`M${M(lotOf(V).w)} -52l-16 -8m16 8l-16 8`,stroke:C,stroke_width:2,fill:'none'},gAxis);
     el('line',{x1:-52,y1:0,x2:-52,y2:M(30),stroke:C,stroke_width:2},gAxis);
     el('path',{d:`M-52 ${M(30)}l-8 -16m8 16l8 -16`,stroke:C,stroke_width:2,fill:'none'},gAxis);
     const label=(x,y,s,o={})=>{const t=el('text',{x,y,fill:C,font_size:o.fs||16,
       text_anchor:o.anchor||'middle',font_weight:o.weight||600},gAxis); t.textContent=s;};
-    label(M(9.5)/2,-68,'X (m) →',{fs:20});
+    label(M(lotOf(V).w)/2,-68,'X (m) →',{fs:20});
     label(-68,M(15),'Y (m) ↓',{fs:20,anchor:'middle'});
-    for(let x=0;x<=9;x++) label(M(x),-18,`x=${x}`,{fs:15});
+    for(let x=0;x<=lotOf(V).w;x++) label(M(x),-18,`x=${x}`,{fs:15});
     for(let y=0;y<=30;y++) label(-17,M(y)+5,`y=${y}`,{fs:15,anchor:'end'});
     label(8,24,'(0,0)',{fs:16,anchor:'start'});
   }
@@ -717,15 +731,16 @@ export function init(){
     }
 
     // ngang — trên
-    dimH(0,5.0,-95,F(5.0),0); dimH(5.0,9.5,-95,F(4.5),0);
-    dimH(0,9.5,-175,'9.5 m',0);
+    const split=V.dims.bottom[1];
+    dimH(0,split,-95,F(split),0); dimH(split,lotOf(V).w,-95,F(lotOf(V).w-split),0);
+    dimH(0,lotOf(V).w,-175,F(lotOf(V).w),0);
     // dọc — trái (chuỗi theo phiên bản)
     const cl = DIMS.left;
     for(let i=0;i<cl.length-1;i++) dimV(cl[i],cl[i+1],-105,F(cl[i+1]-cl[i]),0);
     dimV(0,30,-215,'30.0 m',0);
     // dọc — phải
-    [[0,18],[18,25],[25,30]].forEach(([a,b])=>dimV(a,b,M(9.5)+105,F(b-a),M(9.5)));
-    dimV(0,30,M(9.5)+215,'30.0 m',M(9.5));
+    ROOMS.filter(r=>r[0].startsWith('R')&&r[0]!=='R5').map(r=>[r[3],r[3]+r[5]]).forEach(([a,b])=>dimV(a,b,M(lotOf(V).w)+105,F(b-a),M(lotOf(V).w)));
+    dimV(0,30,M(lotOf(V).w)+215,'30.0 m',M(lotOf(V).w));
     // ngang — dưới (chuỗi theo phiên bản)
     const cb = DIMS.bottom;
     for(let i=0;i<cb.length-1;i++) dimH(cb[i],cb[i+1],M(30)+95,F(cb[i+1]-cb[i]),M(30));
@@ -778,10 +793,10 @@ export function init(){
       let sub;
       if(LABELMODE === 'sd'){
         const c = clearOf(ROOMS.find(r=>r[0]===id), WALLS);
-        const a = id==='R4' ? c.a - clearOf(r5, WALLS).a : c.a;
+        const a = id==='R4' && r5 ? c.a - clearOf(r5, WALLS).a : c.a;
         sub = [`${c.w.toFixed(2)} × ${c.h.toFixed(2)} m`, `${a.toFixed(2)} m² sd`];
       } else {
-        const a = id==='R4' ? w*h - r5[4]*r5[5] : w*h;
+        const a = id==='R4' && r5 ? w*h - r5[4]*r5[5] : w*h;
         sub = [`${w.toFixed(1)} × ${h.toFixed(1)} m`, `${a.toFixed(2)} m²`];
       }
       sub.forEach((s,i)=>{
@@ -852,15 +867,15 @@ export function init(){
     const ty = M(30)+185;
     const tt=(x,y,s,fs,fw,col)=>{const t=el('text',{x,y,font_size:fs,font_weight:fw||400,
       fill:col||'#111'},TB); t.textContent=s;};
-    el('rect',{x:0,y:ty,width:M(9.5),height:200,fill:'#fff',stroke:'#141414',stroke_width:2.5},TB);
-    el('line',{x1:0,y1:ty+62,x2:M(9.5),y2:ty+62,stroke:'#141414',stroke_width:1.4},TB);
+    el('rect',{x:0,y:ty,width:M(lotOf(V).w),height:200,fill:'#fff',stroke:'#141414',stroke_width:2.5},TB);
+    el('line',{x1:0,y1:ty+62,x2:M(lotOf(V).w),y2:ty+62,stroke:'#141414',stroke_width:1.4},TB);
     el('line',{x1:M(6.4),y1:ty,x2:M(6.4),y2:ty+200,stroke:'#141414',stroke_width:1.4},TB);
     tt(16, ty+40, 'MẶT BẰNG TẦNG TRỆT', 23, 700);
     const kinRooms = ROOMS.filter(r=>r[6]!=='yard' && r[0]!=='R3' && !isUnderStair(V,r));   // phòng gầm thang lồng trong buồng thang
     const sdKin   = sumClear(kinRooms, WALLS);
     const sdChinh = sumClear(kinRooms.filter(r=>r[0][0]==='L'), WALLS);
     const timChinh = kinRooms.filter(r=>r[0][0]==='L').reduce((s,r)=>s+r[4]*r[5],0);
-    tt(16, ty+96, `Lô đất 285.0 m² · Sân ${V.areas.san.toFixed(1)} m²`
+    tt(16, ty+96, `Lô đất ${(lotOf(V).w*lotOf(V).d).toFixed(1)} m² · Sân ${V.areas.san.toFixed(1)} m²`
         + ` · Sử dụng ${sdChinh.toFixed(1)} / ${sdKin.toFixed(1)} m²`, 20);
     tt(16, ty+130, `TIM TƯỜNG — nhà chính ${timChinh.toFixed(1)} m² · toàn bộ ${V.areas.kin.toFixed(1)} m²`, 20, 700);
     tt(16, ty+164,'Toàn bộ kích thước ghi theo TIM TƯỜNG · Tường bao 220 · Tường ngăn 100', 19, 400, '#555');
@@ -877,7 +892,7 @@ export function init(){
       text_anchor:'middle',fill:'#333'},TB); t.textContent=i;});
     tt(M(5)+18, sy+14, 'mét', 20, 400, '#333');
 
-    const ax0=M(9.5)-40, ay0=-160;
+    const ax0=M(lotOf(V).w)-40, ay0=-160;
     el('path',{d:`M${ax0} ${ay0+70}L${ax0} ${ay0}M${ax0} ${ay0}l-13 22M${ax0} ${ay0}l13 22`,
       stroke:'#141414',stroke_width:2.6,fill:'none'},TB);
     const mt=el('text',{x:ax0,y:ay0+96,font_size:19,text_anchor:'middle',
@@ -904,7 +919,7 @@ export function init(){
                font_size:17,text_anchor:'middle'});
     TB    = g({font_family:'ui-sans-serif,system-ui,sans-serif'});
 
-    drawRooms(); drawAxes(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
+    drawRooms(); drawAccess(); drawAxes(); drawSteps(); drawStairs(); drawWalls(); drawSkylights(); drawOverhangs(); drawRoofs(); drawTum();
     drawFurniture(); drawGarden(); drawRacks(); drawSwitches(); drawLights();
     drawWindows(); drawDoors(); drawAnnot(); drawTitleBlock();
     scene.setAttribute('transform', ROT ? `rotate(${ROT} ${BCX} ${BCY})` : '');
@@ -934,7 +949,7 @@ export function init(){
     rows+=`<tr class="tot"><td colspan="3">Toàn bộ phần kín</td>`
         + `<td class="n">${V.areas.kin.toFixed(2)}</td>`
         + `<td class="n" style="color:#888">${sdKin.toFixed(2)}</td><td>—</td></tr>`;
-    rows+=`<tr class="tot"><td colspan="3">Tổng lô đất</td><td class="n">285.00</td>`
+    rows+=`<tr class="tot"><td colspan="3">Tổng lô đất</td><td class="n">${(lotOf(V).w*lotOf(V).d).toFixed(2)}</td>`
         + `<td class="n" style="color:#888">—</td><td>—</td></tr>`;
     document.getElementById('sched').innerHTML=rows;
 
@@ -997,6 +1012,7 @@ export function init(){
       document.getElementById('tblLights').innerHTML = lr;
     }
 
+    document.querySelector('.titles h1').textContent = `MẶT BẰNG TẦNG TRỆT — LÔ ${lotOf(V).w} × ${lotOf(V).d} m`;
     document.getElementById('vTitle').textContent = V.label;
     document.getElementById('vMeta').textContent  = V.note;
     document.getElementById('vChanges').innerHTML = V.changes.map(c=>`<li>${c}</li>`).join('');
@@ -1008,7 +1024,7 @@ export function init(){
         + errs.map(e=>`<li>${e}</li>`).join('') + `</ul></div>`
       : `<div class="chk ok"><b>✓ Qua toàn bộ ${CHECKS.length} phép kiểm</b></div>`;
     document.getElementById('subline').innerHTML  =
-      `285 m² &nbsp;·&nbsp; Tỉ lệ 1:100 &nbsp;·&nbsp; Tim tường &nbsp;·&nbsp; <b>${V.label}</b> &nbsp;·&nbsp; `
+      `${lotOf(V).w * lotOf(V).d} m² &nbsp;·&nbsp; Tỉ lệ 1:100 &nbsp;·&nbsp; Tim tường &nbsp;·&nbsp; <b>${V.label}</b> &nbsp;·&nbsp; `
       + `<b>Nhà chính ${timChinh.toFixed(2)} m² · toàn bộ ${V.areas.kin.toFixed(2)} m²</b>`
       + ` &nbsp;<span style="color:#888">(sử dụng ${sdChinh.toFixed(2)} / ${sdKin.toFixed(2)})</span>`;
   }

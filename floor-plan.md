@@ -1,7 +1,19 @@
-# Mặt bằng nhà cấp 4 — 9.5 × 30 m
+# Mặt bằng nhà cấp 4 — 8.5 × 30 m
 
 > **Bắt đầu từ đâu:** `npm run dev`, rồi mở `/` — bản vẽ tương tác, chọn được cả 12 phiên bản.
 > Trang `/3d` là mô hình khối và đường đi của nắng.
+
+**Lối vào cổng:** hạ chân cổng ngang đường và nền lô B (-0.80 m so với sân trên). Chừa sân bằng 2 m để mở hai cánh, rồi dốc 6.4 m lên 0.80 m, độ dốc 12.5%; toàn bộ nằm trong sân phụ. Mái cổng giữ cao độ cũ, chân trụ kéo xuống đường. Bồn hoa lùi sau đầu dốc. Đường minh hoạ rộng 4 m, chưa có số đo thực tế. Mặt dốc cùng màu sân, cạnh cùng màu tường bao.
+
+**Cổng lùi vào sân:** tim hai trụ và cánh cổng ở y=1.00 m, mép mái trước y=0.15 m; chân trụ trước y=0.75 m, toàn bộ nằm trong ranh đất. Tường hai bên nối vào cổng lùi. Sân bằng sau cổng dài 2 m, dốc từ y=3.00 tới 9.40 m; bồn hoa bắt đầu y=9.65 m. Cao độ đường/cổng và độ dốc 12.5% giữ nguyên.
+
+**Tường mặt cổng:** các đoạn tường phía trước và hai đoạn hồi nối vào cổng đều xây kín, cùng đỉnh +2.10 m so với sân trên (+2.90 m so với đường). Chân tường vùng cổng hạ xuống nền đường; đoạn hồi trái không dùng lan can, tường ngang tại y=1 nối sát mặt ngoài hai trụ. Giữ cổng lùi 1 m.
+
+**Khuôn mới 4/10/2026:** lô đất 8.5 × 30 m = 255 m²; nhà/lô chính ngang 4.5 m, lô phụ 4 m. Lô A bên trái còn 4.5 × 30 m; lô B bám ranh x=8.5 m. Hành lang trong giữ 1 m theo tim tường. Cổng rộng 3.1 m, lùi 1 m; tường mặt cổng cùng đỉnh và nối kín hai trụ. Mái sân phơi 4 × 3 m. Thang lên mái hai vế rộng 0.76 m, mặt bậc 0.25 m, 11 + 11 nấc; cửa tum 0.70 m, hẹp hơn bản cũ. Phòng, cửa, đồ đạc và đèn đã điều chỉnh theo ranh mới.
+
+**Cổng gọn, hết bề ngang:** bỏ hai trụ gạch, giằng và mái cổng; bỏ tường ngang tại y=1 và các đoạn thu hẹp lối vào. Cổng phủ hết ngang lô chính 4.5 m theo tim tường; lọt lòng 4.28 m giữa hai mặt tường 220 mm. Hai cánh bắt vào tường, mở vào sân; sân bằng tăng lên 2.3 m, dốc từ y=3.30 tới 9.70 m, bồn hoa từ y=9.95 m. Đèn cổng chuyển sang tường trái.
+
+**Mặt cổng thẳng:** bỏ đoạn tường hồi tại x=4.5, y=0–1; đưa cổng về y=0 cùng tuyến tường mặt tiền. Giữ cổng toàn ngang 4.5 m theo tim (lọt lòng 4.28 m), không trụ hoặc mái. Sân bằng dài 2.3 m, dốc từ y=2.30 tới 8.70 m; bồn hoa từ y=8.95 m.
 
 ## Cấu trúc
 
@@ -35,7 +47,7 @@ Mỗi file trong `spec/` **sinh tự động** bằng `npm run spec`, không s�
 | [v9](./spec/v9.md) | Khách 5×5, cửa dồn sát mép | 107.7 | 5 lỗi |
 | [v10](./spec/v10.md) | Nội thất áp tường trái | 107.7 | 2 lỗi |
 | [v11](./spec/v11.md) | Bàn làm việc, kệ bếp áp tường sau | 107.7 | 2 lỗi |
-| **[hiện hành](./spec/current.md)** ← | **Phòng khách 5.0 × 5.0 m, mặt tiền lùi vào y 13.5 — nhà chính ngắn đi 1.5 m, sân phụ dài 13.5 m; buồng thang 4.0 × 2.0 m; phòng ngủ 1 4.0 × 2.5 m; master 5.0 × 3.5 m; bỏ phòng kho master, WC chung 2.2 × 1.5 m chiếm chỗ kho, vào qua tiền phòng 1.8 × 1.5 m thông hành lang có tủ đồ; gầm vế 1 xếp tủ module, gầm vế 2 để trống. Ban công sau 2 m, bếp chữ L; sân giếng 1.5 m sát bếp với hai vòi âm tường và máy giặt/sấy trên bệ nâng. Bếp lợp tôn trùm hành lang ngoài, mái sân chính và sân phơi gá dưới mép đua; bậc tam cấp, mái hiên cửa chính; rào riêng tư, cổng 3.6 m; mái ngược XPS lát tấm bê tông rời; cầu thang chữ U, tum và lan can mái chuẩn bị tầng 2; 40 bộ đèn trên 14 bảng công tắc; cây xanh sân phụ, ban công và sân chính; diềm gỗ nhựa mép mái hiên** (v12 + sửa sau) | **100.00** | **sạch 18/18** |
+| **[hiện hành](./spec/current.md)** ← | **Khuôn 8 × 30 m: lô chính 5 m + lô phụ 3 m. Bỏ khối bếp + nhà ăn, hành lang ngoài, WC khách và mái sân chính. Giữ nhà chính, hành lang trong, mái sân phơi độc lập; sân chính 3 × 25 m thông sân phơi 3 × 5 m. Nền nhà mình và lô A cao hơn lô B 0.80 m, sàn nhà cao hơn sân 0.45 m. Chưa bố trí bếp mới.** | **72.50** | **sạch 18/18** |
 
 Các bản cũ còn lỗi kiểm tra là chuyện bình thường — chúng là **bước trung gian**, đúng lỗi nào
 thì bản sau sửa lỗi đó. Chỉ bản hiện hành mới bắt buộc sạch.
