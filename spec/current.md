@@ -2,7 +2,7 @@
 
 > Sinh tự động từ `lib/versions/current.js`. Không sửa tay.
 
-Nhà chính 4.5 × 13.4 m = 60.30 m² mỗi tầng (chưa cộng hiên và ban công trước). Sân trước 16.6 m, tường sau nhà tại Y=30 m làm tường bao, bỏ đoạn tường bao riêng phía sau nhà. Giữ ba phòng ngủ; thu gọn khách, bếp, master và làm việc. Phòng thờ lọt lòng 3,2 × 2 m. Bỏ hiên / ban công sau, thay cửa đi bằng cửa sổ lùa có bệ ở cả hai tầng. Ban công trước đua 1,8 m. Thang U ngang nhà 3 × 2 m; WC thẳng tầng; mái tôn hai dốc + trần nhựa.
+Nhà chính 4.5 × 13.4 m = 60.30 m² mỗi tầng (chưa cộng hiên và ban công trước). Sân trước 16.6 m, tường sau nhà tại Y=30 m làm tường bao, bỏ đoạn tường bao riêng phía sau nhà. Giữ ba phòng ngủ; thu gọn khách, bếp, master và làm việc. Phòng thờ lọt lòng 3,2 × 2 m. Bỏ hiên / ban công sau, thay cửa đi bằng cửa sổ lùa có bệ ở cả hai tầng. Ban công trước đua 1,8 m. Thang U ngang nhà 3 × 2 m ở ngay sau khách; bếp + ăn lùi sau thang. Tầng 2: làm việc trước thang (3,2 × 1,6 m), thờ sau thang (3,2 × 2 m); WC thẳng tầng; mái tôn hai dốc + trần nhựa.
 
 - Khối chính: 4.5 × 13.4 m, mặt tiền tại Y=16.6 m. Diện tích thân nhà 60.30 m² mỗi tầng, chưa cộng hiên và ban công trước. Ban công trước 1.8 m; tường sau nhà Y=30 m làm tường bao, bỏ tường bao riêng sau nhà; giữ đoạn phía sân phơi. Không có sân sau hoặc hiên / ban công sau.
 - Cao từ sàn tầng 1 đến tầng 2: 3.06 m (giả định để dựng mô hình).
@@ -26,7 +26,7 @@ Hiên trước ngang 4.5 m, sâu 1.2 m, cùng cốt sàn nhà +0.45 m. Hai bậc
 | Phòng | Lọt lòng ngang × sâu (m) | Diện tích (m²) |
 |---|---:|---:|
 | PHÒNG NGỦ MASTER | 4.30 × 2.80 | 12.04 |
-| PHÒNG LÀM VIỆC | 3.20 × 2.00 | 6.40 |
+| PHÒNG LÀM VIỆC | 3.20 × 1.60 | 5.12 |
 | PHÒNG THỜ | 3.20 × 2.00 | 6.40 |
 | WC2 | 3.20 × 1.40 | 4.48 |
 | PHÒNG NGỦ PHỤ | 4.30 × 2.50 | 10.75 |
@@ -43,16 +43,16 @@ Số đo là kích thước bao ngoài dài × rộng/sâu × cao, đơn vị m�
 | SF2 | Ghế đơn phía trước | PHÒNG KHÁCH | 0.80 × 0.80 × 0.85 | 2.25 / 0.80 | Ghế một người phía cửa chính, quay vào bàn trà; nhánh trước của bộ chữ U. |
 | SF3 | Ghế đơn phía sau | PHÒNG KHÁCH | 0.80 × 0.80 × 0.85 | 2.25 / 3.30 | Ghế một người phía bếp, quay vào bàn trà; nhánh sau của bộ chữ U, lưng về kệ ngăn. |
 | TV1 | Kệ TV | PHÒNG KHÁCH | 2.20 × 0.40 × 0.55 | 0.25 / 1.10 | Ở vị trí sofa cũ, áp tường trái, đối diện bộ ghế chữ U. |
-| KN1 | Kệ ngăn khách / bếp | PHÒNG KHÁCH | 2.80 × 0.35 × 1.40 | 1.45 / 4.20 | Kệ thoáng ngăn khách và bếp; chừa lối 125 cm bên trái. |
+| KN1 | Kệ ngăn khách / cầu thang | PHÒNG KHÁCH | 2.80 × 0.35 × 1.40 | 1.45 / 4.20 | Kệ thoáng giữa khách và cầu thang; chừa lối 125 cm bên trái. |
 | BT1 | Bàn trà | PHÒNG KHÁCH | 1.00 × 0.65 × 0.45 | 2.30 / 2.05 | Ở giữa ba sofa phía cửa sổ; cách ghế chính và hai nhánh 45 cm. |
-| BK1 | Tủ bếp dưới | BẾP + ĂN | 2.10 × 0.60 × 0.85 | 3.65 / 4.90 | Áp tường phải; mặt thao tác sâu 60 cm. |
-| BA1 | Bàn ăn 4 người | BẾP + ĂN | 1.20 × 0.75 × 0.75 | 1.45 / 5.15 | Bốn ghế hai bên; lối đi bên bếp rộng 95 cm. |
-| GA1 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 0.95 / 5.20 | Ghế phía trái bàn ăn. |
-| GA2 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 0.95 / 5.80 | Ghế phía trái bàn ăn. |
-| GA3 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 2.25 / 5.20 | Ghế phía phải bàn ăn. |
-| GA4 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 2.25 / 5.80 | Ghế phía phải bàn ăn. |
-| TL1 | Tủ lạnh | BẾP + ĂN | 0.70 × 0.70 × 1.75 | 1.45 / 6.35 | Cuối bếp, chừa 5 cm tới tường sau; cửa mở sang phải, giữ lối bên trái tới cầu thang. |
-| MG1 | Máy giặt cửa trước | DƯỚI CẦU THANG | 0.65 × 0.60 × 0.85 | 1.60 / 8.35 | Dưới vế thang trên; mở cửa về hành lang bên trái. |
+| BK1 | Tủ bếp dưới | BẾP + ĂN | 2.10 × 0.60 × 0.85 | 3.65 / 7.00 | Áp tường phải; mặt thao tác sâu 60 cm. |
+| BA1 | Bàn ăn 4 người | BẾP + ĂN | 1.20 × 0.75 × 0.75 | 1.45 / 7.25 | Bốn ghế hai bên; lối đi bên bếp rộng 95 cm. |
+| GA1 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 0.95 / 7.30 | Ghế phía trái bàn ăn. |
+| GA2 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 0.95 / 7.90 | Ghế phía trái bàn ăn. |
+| GA3 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 2.25 / 7.30 | Ghế phía phải bàn ăn. |
+| GA4 | Ghế ăn | BẾP + ĂN | 0.45 × 0.45 × 0.85 | 2.25 / 7.90 | Ghế phía phải bàn ăn. |
+| TL1 | Tủ lạnh | BẾP + ĂN | 0.70 × 0.70 × 1.75 | 1.45 / 8.45 | Cuối bếp, chừa 5 cm tới tường sau; cửa mở sang phải, giữ lối bên trái tới WC và phòng ngủ sau. |
+| MG1 | Máy giặt cửa trước | DƯỚI CẦU THANG | 0.65 × 0.60 × 0.85 | 1.60 / 5.85 | Dưới vế thang trên; mở cửa về hành lang bên trái. |
 | BC1 | Bồn cầu | WC1 | 0.70 × 0.40 × 0.75 | 2.10 / 9.95 | Lưng về tường sau; chừa 65 cm phía trước. |
 | LV1 | Lavabo treo | WC1 | 0.60 × 0.45 × 0.80 | 2.60 / 9.35 | Áp tường trước, đứng dùng phía sau. |
 | VT1 | Vùng tắm đứng | WC1 | 1.20 × 0.90 × 0.05 | 3.30 / 9.40 | Ô tắm 90 × 120 cm; chiều cao ghi là bệ sàn, chưa có vách kính. |
@@ -65,10 +65,10 @@ Số đo là kích thước bao ngoài dài × rộng/sâu × cao, đơn vị m�
 |---|---|---|---|---|---|
 | GN2 | Giường đệm 160 × 200 | PHÒNG NGỦ MASTER | 2.09 × 1.76 × 0.95 | 2.21 / 0.80 | Kích thước gồm khung; đầu giường về tường phải, thoáng lối ra ban công. |
 | TA2 | Tủ quần áo cửa lùa | PHÒNG NGỦ MASTER | 1.80 × 0.60 × 2.10 | 0.15 / 0.30 | Áp tường trái, không chắn cửa vào master. |
-| BL1 | Bàn làm việc | PHÒNG LÀM VIỆC | 1.20 × 0.60 × 0.75 | 3.75 / 3.25 | Áp tường phải gần cửa sổ; ghế quay vào bàn. |
-| GL1 | Ghế làm việc | PHÒNG LÀM VIỆC | 0.50 × 0.50 × 0.95 | 3.05 / 3.60 | Chừa 70 cm phía sau để kéo ghế. |
-| TS1 | Tủ sách | PHÒNG LÀM VIỆC | 1.20 × 0.35 × 1.80 | 1.40 / 4.50 | Áp tường sau; chiều sâu 35 cm. |
-| TT1 | Bàn thờ đứng | PHÒNG THỜ | 1.53 × 0.61 × 1.27 | 2.20 / 6.39 | Áp tường sau, mặt hướng ra khoảng đứng hành lễ. |
+| BL1 | Bàn làm việc | PHÒNG LÀM VIỆC | 1.20 × 0.60 × 0.75 | 3.75 / 3.15 | Áp tường phải gần cửa sổ; ghế quay vào bàn. |
+| GL1 | Ghế làm việc | PHÒNG LÀM VIỆC | 0.50 × 0.50 × 0.95 | 3.05 / 3.50 | Chừa 70 cm phía sau để kéo ghế. |
+| TS1 | Tủ sách | PHÒNG LÀM VIỆC | 1.20 × 0.35 × 1.80 | 1.40 / 4.15 | Áp tường sau; chiều sâu 35 cm. |
+| TT1 | Bàn thờ đứng | PHÒNG THỜ | 1.53 × 0.61 × 1.27 | 2.20 / 8.09 | Áp tường sau, mặt hướng ra khoảng đứng hành lễ. |
 | BC2 | Bồn cầu | WC2 | 0.70 × 0.40 × 0.75 | 2.10 / 9.95 | Thẳng vị trí BC1; lưng về tường sau. |
 | LV2 | Lavabo treo | WC2 | 0.60 × 0.45 × 0.80 | 2.60 / 9.35 | Thẳng vị trí LV1. |
 | VT2 | Vùng tắm đứng | WC2 | 1.20 × 0.90 × 0.05 | 3.30 / 9.40 | Thẳng vị trí VT1; chiều cao ghi là bệ sàn, chưa có vách kính. |

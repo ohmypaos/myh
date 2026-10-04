@@ -93,7 +93,7 @@ function FloorDrawing({index,site=false}) {
           <text x={x+w/2} y={y+.53} className="house-small-label" style={living?{fontSize:'.1px'}:undefined}>{n(r.w)} × {n(r.d)} m · {n(r.w*r.d)} m²</text>
         </g>;
       })}
-      <text x=".65" y={index?5.65:h.stair.y+.8} className="house-small-label" transform={`rotate(-90 .65 ${index?5.65:h.stair.y+.8})`}>HÀNH LANG {index?'1,0':'0,9'} m</text>
+      <text x=".65" y={index?h.stair.y+1:h.stair.y+.8} className="house-small-label" transform={`rotate(-90 .65 ${index?h.stair.y+1:h.stair.y+.8})`}>HÀNH LANG {index?'1,0':'0,9'} m</text>
       <path d={`M0 ${h.depth+.55}H${h.width}M0 ${h.depth+.4}v.3M${h.width} ${h.depth+.4}v.3`} stroke="#a25543" strokeWidth=".022"/>
       <text x="2.25" y={h.depth+.93} className="house-dim-label">4,50 m</text>
       <path d={`M-.4 0V${h.depth}M-.53 0h.26M-.53 ${h.depth}h.26`} stroke="#a25543" strokeWidth=".022"/>
@@ -167,7 +167,7 @@ export default function HouseDesign({mode,onArchive}) {
     <p>Mã trên bản vẽ 2D khớp bảng dưới. D × S × C là dài × sâu × cao, tính cả khung giường; đệm 160 × 200 cm, mặt đệm cao 50 cm. Ô tắm ghi chiều cao bệ sàn.</p>
     {h.floors.map((_,i)=>(floor==='all'||floor==='both'||+floor===i)&&<FurnitureLegend key={i} index={i}/>)}
     <details><summary>Kích thước tham khảo</summary><p>Số đo đại diện cho đồ thông dụng, chưa chốt sản phẩm mua.</p>{FURNITURE_SOURCES.map(s=><p key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></p>)}</details>
-    <h2>Cầu thang và mái</h2><p>Thang chữ U 3 × 2 m, đặt ngang nhà. Vế rộng 0,95 m, mặt bậc 25 cm; 18 nấc cao 17 cm theo giả định cao tầng 3,06 m. Đầu thang tầng 2 ra hành lang.</p>
+    <h2>Cầu thang và mái</h2><p>Thang chữ U 3 × 2 m, đặt ngang nhà ngay sau phòng khách; bếp + ăn nằm sau cầu thang. Vế rộng 0,95 m, mặt bậc 25 cm; 18 nấc cao 17 cm theo giả định cao tầng 3,06 m. Đầu thang tầng 2 ra hành lang.</p>
     <h2>Cửa chính và ban công</h2><p>Chỉ cửa chính nhôm kính ghi đậm lùa 4 cánh {n(h.doorDesign.main.width)} × {n(h.doorDesign.main.height)} m, mở giữa. Cửa master ra ban công trước lùa 2 cánh {n(h.doorDesign.balcony.width)} × {n(h.doorDesign.balcony.height)} m, trên hai ray, từ mặt sàn lên; trượt chồng sang trái hoặc phải, lối đi rộng {n(h.doorDesign.balcony.width/2)} m. Mô hình mặc định chồng sang trái. Cửa WC cả hai tầng mở vào trong WC.</p>
     <p>Thân nhà 60,3 m² mỗi tầng, chưa cộng hiên và ban công trước. Phòng thờ 3,2 × 2 m. Bỏ hiên / ban công sau, lan can, tường bên và tam cấp sau; hai phòng ngủ sau mở cửa sổ lùa 2 × 1,3 m, bệ cao 90 cm. Tường sau nhà làm tường bao, bỏ đoạn tường bao riêng phía sau nhà; giữ đoạn phía sân phơi; giữ cửa ra ban công trước của master.</p>
     <p>Sống mái chạy dọc nhà, hai mặt dốc trái / phải. Mô hình lấy dáng mái trong ảnh; mặt tiền dựng đơn giản. Trần nhựa phẳng cao 2,8 m.</p>

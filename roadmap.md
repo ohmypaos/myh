@@ -37,6 +37,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
+| A62 | Đưa thang U về sau khách (Y=4.7 m), lùi bếp về Y=6.8 m; tầng 2 làm việc 3.2 × 1.6 m trước thang, thờ 3.2 × 2 m sau thang; chỉnh vách, lỗ thang, máy giặt và đường đi | ✅ xong, đã kiểm tra | |
 | A61 | Bỏ tường bao riêng phía sau nhà, dùng tường sau nhà tại Y=30 m làm tường bao; giữ tường bao phía sân phơi, sân trước 16.6 m | ✅ xong, đã kiểm tra | |
 | A60 | Dịch nhà để mặt sau Y=29.89 m áp sát mặt trong tường bao; sân trước 16.49 m; giữ thân nhà 60.3 m²/tầng, chuyển chậu sau sang sân phơi, thu mép mái trong ranh đất | ✅ xong, đã kiểm tra | |
 | A59 | Thân nhà 4.5 × 13.4 m = 60.3 m²/tầng; phòng thờ 3.2 × 2 m; bỏ hiên / ban công sau, thay cửa đi bằng cửa sổ; đồng bộ 2D/3D và bố trí đồ | ✅ xong, đã kiểm tra | |
