@@ -35,6 +35,7 @@ trạng thái trong bảng **và** tick ô trong phần chi tiết. Task nào đ
 | C4 | Chặng 4 — xoá bản HTML cũ, viết lại tài liệu | ✅ xong | |
 | C5 | Chặng 5 — bỏ quy ước phiên bản, đổi định danh sang tiếng Anh | ✅ xong | |
 | **Thiết kế — sửa vào bản hiện hành** ||||
+| A52 | Bậc rộng hết lô chính 4.5 m; kéo sàn ra 1.2 m làm hiên nhỏ, hai cây đứng sát hai mép ngoài hiên cùng cốt sàn nhà | ✅ xong, đã kiểm tra | |
 | A51 | Bỏ cửa sổ bên hông hướng lô B của ba phòng ngủ; hiên / ban công sau phía lô A xây tường cao cả hai tầng, phía còn lại giữ lan can | Đã sửa và kiểm tra; chưa commit | |
 | A50 | Mở rộng cửa chính 3.2 × 2.6 m kiểu nhôm kính hiện đại; cửa ban công trước/sau và hiên sau lùa 4 cánh 3.2 × 2.5 m, từ sàn lên | Đã sửa và kiểm tra; chưa commit | Kích thước tạm để hiệu chỉnh |
 | A49 | Nhà chính hai tầng theo bố trí đã chốt; thang U ngang nhà 3 × 2 m, tường tầng 2 100 mm, mái tôn hai dốc + trần nhựa; chọn tầng 2D/3D | Đã sửa và kiểm tra; chưa commit | Chưa tính kết cấu nâng tầng; cao tầng / dốc mái là giả định |

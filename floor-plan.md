@@ -8,6 +8,8 @@ Các đoạn dưới ghi lại thay đổi sân, cổng và lịch sử trước
 
 **Cửa đi hiện hành:** cửa chính nhôm kính ghi đậm, lùa 4 cánh 3.2 × 2.6 m; cửa ra ban công trước, ban công sau và hiên sau lùa 4 cánh 3.2 × 2.5 m. Ô cửa từ mặt sàn lên, không có bệ cửa sổ; hai cánh giữa mở sang hai bên tạo lối đi 1.6 m. Kích thước tạm, chưa chọn hệ nhôm và phụ kiện để đặt mua.
 
+**Hiên và bậc trước cửa:** sàn nhà kéo ra sân 1.2 m thành hiên nhỏ ngang 4.5 m, cùng cốt sàn +0.45 m. Hai bậc dưới sâu 0.3 m mỗi bậc, cũng hết ngang lô chính; tổng phần hiên và bậc đua ra 1.8 m, dưới ban công trước. Hai chậu đứng trực tiếp trên hiên, sát hai mép ngoài, tâm X=0.35 / 4.15 m, Y=13.25 m, giữ thoáng lối giữa.
+
 **Phòng ngủ / ban công sau:** bỏ cửa sổ bên hông hướng lô B của cả ba phòng ngủ, giữ cửa đi lùa trước / sau. Phía lô A của hiên / ban công sau xây tường cao cả hai tầng: tầng 1 tường 200 mm lên dưới sàn tầng 2, tầng 2 tường 100 mm kín tới mái. Phía còn lại giữ lan can thoáng cả hai tầng; cạnh sau tầng 2 cũng giữ lan can. Cửa sổ các phòng khác giữ nguyên.
 
 **Lối vào cổng:** hạ chân cổng ngang đường và nền lô B (-0.80 m so với sân trên). Chừa sân bằng 2 m để mở hai cánh, rồi dốc 6.4 m lên 0.80 m, độ dốc 12.5%; toàn bộ nằm trong sân phụ. Mái cổng giữ cao độ cũ, chân trụ kéo xuống đường. Bồn hoa lùi sau đầu dốc. Đường minh hoạ rộng 4 m, chưa có số đo thực tế. Mặt dốc cùng màu sân, cạnh cùng màu tường bao.

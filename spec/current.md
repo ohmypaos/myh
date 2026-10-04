@@ -10,6 +10,8 @@ Nhà chính 4,5 × 16 m, sân trước 14 m. Tầng 1: khách, bếp + ăn, WC1,
 - Mái tôn hai dốc 30°, sống mái chạy dọc nhà, đầu hồi nhìn ra cổng; trần nhựa phẳng cách sàn tầng 2 2.8 m. Không có sàn mái bê tông.
 - Thang nằm ngang nhà 3 × 2 m, vế 0,95 m; minh họa 18 nấc cao 0.17 m, 8 mặt bậc 0,25 m mỗi vế và chiếu nghỉ 1 m.
 
+Hiên trước ngang 4.5 m, sâu 1.2 m, cùng cốt sàn nhà +0.45 m. Hai bậc dưới sâu 0,3 m mỗi bậc, chạy hết ngang lô chính; tổng phần hiên và bậc đua ra 1.80 m. Hai cây trước cửa đứng trên hiên, giữ thoáng lối giữa.
+
 ## Tầng 1
 
 | Phòng | Lọt lòng ngang × sâu (m) | Diện tích (m²) |

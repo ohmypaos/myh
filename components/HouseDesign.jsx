@@ -67,7 +67,12 @@ function FloorDrawing({index,site=false}) {
             <path d={o.ax==='h'?`M${hinge+(k?-span:span)} ${o.pos}A${span} ${span} 0 0 ${sign*(k?-1:1)>0?1:0} ${hinge} ${o.pos+sign*span}`:`M${o.pos} ${hinge+span}A${span} ${span} 0 0 ${sign>0?0:1} ${o.pos+sign*span} ${hinge}`} fill="none" stroke="#8b704b" strokeWidth=".018" strokeDasharray=".06 .035"/></g>;})}
           <title>{o.name}</title></>}
       </g>)}
-      {index===0&&<g stroke="#9b8164" strokeWidth=".025" fill="#ddd5c9">{[0,1,2].map(i=><rect key={i} x={(h.width-h.doorDesign.main.width-.4)/2} y={-.9+i*.3} width={h.doorDesign.main.width+.4} height=".3"/>)}</g>}
+      {index===0&&<g stroke="#9b8164" strokeWidth=".025" fill="#ddd5c9">
+        <rect y={-h.frontPorch} width={h.width} height={h.frontPorch}/>
+        {[0,1].map(i=><rect key={i} y={-h.frontPorch-.6+i*.3} width={h.width} height=".3"/>)}
+        <text x="2.25" y={-h.frontPorch/2} className="house-small-label">HIÊN NHỎ · {n(h.frontPorch)} m · CÙNG CỐT SÀN</text>
+        {CURRENT.planters.filter(p=>p[0]==='CC1'||p[0]==='CC2').map(([id,x,y,desc])=><circle key={id} cx={x} cy={y-front} r=".22" fill="#78975c" stroke="#567443"><title>{desc}</title></circle>)}
+      </g>}
       <g>
         <rect x={h.stair.x} y={h.stair.y} width="3" height="2" fill="#ddd5c9" stroke="#9b8164" strokeWidth=".035"/>
         {Array.from({length:9},(_,i)=><path key={i} d={`M${h.stair.x+i*.25} ${h.stair.y}v.95M${h.stair.x+i*.25} ${h.stair.y+1.05}v.95`} stroke="#9b8164" strokeWidth=".022"/>)}
@@ -86,8 +91,8 @@ function FloorDrawing({index,site=false}) {
       <text x="2.25" y="16.93" className="house-dim-label">4,50 m</text>
       <path d="M-.4 0V16M-.53 0h.26M-.53 16h.26" stroke="#a25543" strokeWidth=".022"/>
       <text x="-.58" y="8" className="house-dim-label" transform="rotate(-90 -.58 8)">16,00 m (gồm ban công / hiên sau)</text>
-      <text x="2.25" y={index?-2.15:-1} className="house-floor-title">TẦNG {index+1} · TƯỜNG {f.wall*1000} mm</text>
-      {!site&&<text x="2.25" y={index?-2.65:-1.5} className="house-small-label">↑ PHÍA CỔNG CHÍNH</text>}
+      <text x="2.25" y="-2.15" className="house-floor-title">TẦNG {index+1} · TƯỜNG {f.wall*1000} mm</text>
+      {!site&&<text x="2.25" y="-2.65" className="house-small-label">↑ PHÍA CỔNG CHÍNH</text>}
     </g>
   </g>;
 }
