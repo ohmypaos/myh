@@ -11,6 +11,7 @@
 import {accessOf,accessSurfaceAt} from '../lib/access.js';
 import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { PLANS } from '../lib/versions/index.js';
+import { validateHouse } from '../lib/house.js';
 import { COLORS, GLASS_KINDS, ROOF_KINDS, LAMP_KINDS } from '../components/palette.js';
 import { lotOf, neighborLotsOf, siteLevelsOf, STEP, ROOF, ROOF_INSULATION, POST, BEAM, PURLIN, RAILING, FURNITURE, STAIR, TUM, TANK, RACK, ROOF_RAILING, GARDEN, heightsOf } from '../lib/lot.js';
 import { buildMassing, levels, GARDEN_KINDS } from '../lib/massing.js';
@@ -1510,7 +1511,7 @@ function check(plan){
 let failed = 0;
 for (const plan of PLANS) {
   let r;
-  try { r = check(plan); }
+  try { r = plan.house ? {errors:validateHouse(plan).map(e=>e.msg),boxes:buildMassing(plan).boxes.length,glass:buildMassing(plan).glass.length} : check(plan); }
   catch (err) { failed++; console.log(`GÃY    ${plan.id.padEnd(8)} ${err.message}`); continue; }
 
   const size = `${r.boxes} hộp, ${r.glass} kính`;
@@ -1529,5 +1530,5 @@ console.log(CHECKS.map((c, i) => `${i + 1}. ${c}`).join('\n'));
 console.log();
 console.log(failed
   ? `${failed}/${PLANS.length} phương án có lỗi hình học 3D.`
-  : `Cả ${PLANS.length} phương án qua ${CHECKS.length} phép kiểm hình học 3D.`);
+  : `${PLANS.filter(p=>!p.house).length} phương án cũ qua ${CHECKS.length} phép kiểm; bản hai tầng qua bộ kiểm riêng (phòng, cửa, thang, mái, tường và sàn).`);
 process.exit(failed ? 1 : 0);

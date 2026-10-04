@@ -20,7 +20,7 @@ import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
 import { applyConfig, readConfig, writeConfig, emptyConfig, isEmpty } from '../lib/config.js';
 import { mountSavedConfigs } from './savedConfigs.js';
 import { mountSwitchBoard } from './switchBoard.js';
-import { PLANS } from '../lib/versions/index.js';
+import { ARCHIVE as PLANS } from '../lib/versions/index.js';
 import { buildMassing } from '../lib/massing.js';
 import { roofCovering } from '../lib/envelope.js';
 import { WALK, walkSolids, supportAt, stepWalk } from '../lib/walk.js';

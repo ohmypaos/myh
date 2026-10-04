@@ -1,4 +1,4 @@
-# Dự án mặt bằng nhà 9.5 × 30 m
+# Dự án mặt bằng nhà hai tầng — lô 8.5 × 30 m
 
 **Ngôn ngữ.** Tài liệu, chú thích trong mã và trao đổi viết bằng **tiếng Việt**.
 Mọi **định danh** — tên file, tên hàm, tên biến, khoá của object, `id` trong DOM — viết bằng
@@ -7,6 +7,8 @@ Mọi **định danh** — tên file, tên hàm, tên biến, khoá của object
 ## Cấu trúc
 
 Ứng dụng Next.js, hai trang: `/` bản vẽ 2D, `/3d` mô hình khối và đường đi của nắng.
+
+Bản hiện hành hai tầng dùng `house` trong `lib/versions/current.js`: phòng là **lọt lòng**, X sang lô phụ, Y tính từ mặt tiền nhà tại Y=14 m trên lô. `lib/house.js` suy tường, lỗ mở, sàn có lỗ thang, hai mái tôn và trần nhựa; `validateHouse()` kiểm riêng 17 nhóm cho mô hình hai tầng. `HouseDesign.jsx` và `houseScene.js` vẽ trực tiếp dữ liệu này. Không dùng các thanh chỉnh lưới một tầng cũ cho `house`; các bộ vẽ cũ chỉ dành cho kho đối chiếu. Quy ước tim tường và tường bao 220 mm bên dưới áp dụng cho kho cũ; bản hiện hành tầng 1 200 mm, tầng 2 100 mm.
 
 ```bash
 npm run dev

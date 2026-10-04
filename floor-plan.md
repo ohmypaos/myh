@@ -1,7 +1,14 @@
-# Mặt bằng nhà cấp 4 — 8.5 × 30 m
+# Mặt bằng nhà hai tầng — lô 8.5 × 30 m
 
-> **Bắt đầu từ đâu:** `npm run dev`, rồi mở `/` — bản vẽ tương tác, chọn được cả 12 phiên bản.
-> Trang `/3d` là mô hình khối và đường đi của nắng.
+> **Bắt đầu từ đâu:** `npm run dev`, rồi mở `/` — chọn tầng 1, tầng 2 hoặc cả hai tầng. Trang `/3d` có xoay mô hình, chọn tầng, ẩn mái tôn và trần nhựa riêng. Nút **Kho phương án cũ** mở 11 bản một tầng để đối chiếu.
+
+**Hiện hành — hai tầng, 4/10/2026:** nhà chính ngang 4.5 m, sâu 16 m gồm hiên / ban công sau 1 m; mặt tiền nhà tại Y=14 m. Ban công trước tầng 2 đua 1.8 m vào sân, làm mái hiên tầng 1. Tầng 1 có khách, bếp + ăn, WC1, phòng ngủ sau; tầng 2 có master, làm việc, thờ, WC2, phòng ngủ phụ. Không có giếng trời; cửa sổ lùa bên phải khi nhìn ra cổng, hướng lô phụ. WC hai tầng thẳng vị trí. Thang chữ U **nằm ngang nhà**, phần chiếm theo chiều dài **2 m**, vế 0.95 m; lên hành lang tầng 2 1 m (tầng 1 0.9 m). Tường bao tầng 1 200 mm, tầng 2 100 mm; vách ngăn 100 mm. Mái tôn hai dốc, sống mái chạy dọc nhà, trần nhựa phẳng; không có sàn mái bê tông. Kích thước phòng là lọt lòng và nằm trong [đặc tả hiện hành](./spec/current.md). Cao tầng 3.06 m và dốc mái 30° là giả định dựng mô hình, chưa tính kết cấu nâng tầng.
+
+Các đoạn dưới ghi lại thay đổi sân, cổng và lịch sử trước khi chuyển sang hai tầng; bố trí nhà cũ không còn là bản hiện hành.
+
+**Cửa đi hiện hành:** cửa chính nhôm kính ghi đậm, lùa 4 cánh 3.2 × 2.6 m; cửa ra ban công trước, ban công sau và hiên sau lùa 4 cánh 3.2 × 2.5 m. Ô cửa từ mặt sàn lên, không có bệ cửa sổ; hai cánh giữa mở sang hai bên tạo lối đi 1.6 m. Kích thước tạm, chưa chọn hệ nhôm và phụ kiện để đặt mua.
+
+**Phòng ngủ / ban công sau:** bỏ cửa sổ bên hông hướng lô B của cả ba phòng ngủ, giữ cửa đi lùa trước / sau. Phía lô A của hiên / ban công sau xây tường cao cả hai tầng: tầng 1 tường 200 mm lên dưới sàn tầng 2, tầng 2 tường 100 mm kín tới mái. Phía còn lại giữ lan can thoáng cả hai tầng; cạnh sau tầng 2 cũng giữ lan can. Cửa sổ các phòng khác giữ nguyên.
 
 **Lối vào cổng:** hạ chân cổng ngang đường và nền lô B (-0.80 m so với sân trên). Chừa sân bằng 2 m để mở hai cánh, rồi dốc 6.4 m lên 0.80 m, độ dốc 12.5%; toàn bộ nằm trong sân phụ. Mái cổng giữ cao độ cũ, chân trụ kéo xuống đường. Bồn hoa lùi sau đầu dốc. Đường minh hoạ rộng 4 m, chưa có số đo thực tế. Mặt dốc cùng màu sân, cạnh cùng màu tường bao.
 

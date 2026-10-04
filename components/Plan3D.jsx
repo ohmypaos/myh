@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import HouseDesign from './HouseDesign.jsx';
 import Link from 'next/link';
 import '../app/plan3d.css';
 import { init } from './scene3d.js';
@@ -9,6 +10,11 @@ import { LOT } from '../lib/lot.js';
 /* Giống Plan2D: React chỉ dựng khung DOM rỗng với đúng các id mà scene3d.js trông đợi,
    rồi gọi init() một lần sau khi mount. init() trả về hàm dọn cảnh. */
 export default function Plan3D() {
+  const [archive,setArchive]=useState(false);
+  return archive?<><button className="house-archive-back" onClick={()=>setArchive(false)}>← Nhà hai tầng hiện hành</button><LegacyPlan3D/></>:<HouseDesign mode="3d" onArchive={()=>setArchive(true)}/>;
+}
+
+function LegacyPlan3D() {
   useEffect(() => init(), []);
 
   return (

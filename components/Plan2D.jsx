@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import HouseDesign from './HouseDesign.jsx';
 import Link from 'next/link';
 import '../app/plan2d.css';
 import { init } from './draw2d.js';
@@ -8,6 +9,11 @@ import { init } from './draw2d.js';
 /* React chỉ dựng khung DOM rỗng với đúng các id mà draw2d.js trông đợi, rồi gọi init()
    một lần sau khi mount. Toàn bộ việc vẽ do mã cũ đảm nhiệm — xem đầu file draw2d.js. */
 export default function Plan2D() {
+  const [archive,setArchive]=useState(false);
+  return archive?<><button className="house-archive-back" onClick={()=>setArchive(false)}>← Nhà hai tầng hiện hành</button><LegacyPlan2D/></>:<HouseDesign mode="2d" onArchive={()=>setArchive(true)}/>;
+}
+
+function LegacyPlan2D() {
   useEffect(() => init(), []);
 
   return (

@@ -4,7 +4,7 @@
 import { accessOf, buildAccess } from '../lib/access.js';
 import { LOT, lotOf, neighborLotsOf, NEIGHBOR_LOTS } from '../lib/lot.js';
 import { buildSurroundings, buildNeighborHouse } from '../lib/surroundings.js';
-import { PLANS } from '../lib/versions/index.js';
+import { ARCHIVE as PLANS } from '../lib/versions/index.js';
 import { clearOf, sumClear, CHECKS, validate } from '../lib/plan.js';
 import { compassName } from '../lib/sun.js';
 import { MIN_CLEAR, FURNITURE, SWITCH } from '../lib/lot.js';
